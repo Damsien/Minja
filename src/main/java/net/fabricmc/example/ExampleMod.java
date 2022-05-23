@@ -13,17 +13,16 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ExampleMod implements ModInitializer {
-	// an instance of our new item
-	public static final Item CUSTOM_ITEM = new Item(new FabricItemSettings().group(ItemGroup.MISC));
-	//private static Item WAND = Wand.getWand();
-	//private static Wand WAND = new Wand(new FabricItemSettings().group(GroupItemsMinja.Minja).maxCount(1).maxDamage(0));
-	private static Wand WAND = new Wand(new FabricItemSettings().group(ItemGroup.MISC).maxCount(1).maxDamage(0));
+	
+	//Every item created by Minja
+	private static Wand WAND = new Wand(new FabricItemSettings().group(GroupItemsMinja.Minja).maxCount(1).maxDamage(0));
+	//private static Wand WAND = new Wand(new FabricItemSettings().group(ItemGroup.MISC).maxCount(1).maxDamage(0));
 
 
 	// This logger is used to write text to the console and the log file.
 	// It is considered best practice to use your mod id as the logger's name.
 	// That way, it's clear which mod wrote info, warnings, and errors.
-	public static final Logger LOGGER = LoggerFactory.getLogger("modid");
+	public static final Logger LOGGER = LoggerFactory.getLogger("LOGS");
 
 
 	public static Map<String, Spell> SPELLS_MAP = initializeAllSpells();
@@ -42,9 +41,10 @@ public class ExampleMod implements ModInitializer {
 		// This code runs as soon as Minecraft is in a mod-load-ready state.
 		// However, some things (like resources) may still be uninitialized.
 		// Proceed with mild caution.
-		Registry.register(Registry.ITEM, new Identifier("tutorial", "custom_item"), CUSTOM_ITEM);
-
-		Registry.register(Registry.ITEM, new Identifier("wand", "wand"), WAND);
+		Registry.register(Registry.ITEM, new Identifier("objects", "wand"), WAND);
 		LOGGER.info("Wand launched");
+
+		Registry.register(Registry.ITEM, new Identifier("spells", "lightningball"), SpellProjectile.getSpell("lightningball"));
+
 	}
 }

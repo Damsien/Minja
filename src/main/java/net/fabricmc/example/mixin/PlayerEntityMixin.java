@@ -2,6 +2,7 @@ package net.fabricmc.example.mixin;
 
 import net.fabricmc.example.Exceptions.NotEnoughtManaException;
 import net.fabricmc.example.Exceptions.SpellNotFoundException;
+import net.fabricmc.example.PlayerMinja;
 import net.fabricmc.example.Spell;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -16,7 +17,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.List;
 
 @Mixin(PlayerEntity.class)
-public abstract class PlayerEntityMixin extends LivingEntity {
+public abstract class PlayerEntityMixin extends LivingEntity implements PlayerMinja {
 
     private static final int MAX_MANA = 100;
     private int mana;
@@ -28,6 +29,7 @@ public abstract class PlayerEntityMixin extends LivingEntity {
     }
 
     // Spells
+    @Override
     public void setSpell(int pos, Spell spell) {
         if(pos >= 0 && pos <= 7) {
             spells.set(pos, spell);
@@ -36,10 +38,12 @@ public abstract class PlayerEntityMixin extends LivingEntity {
         }
     }
 
+    @Override
     public Spell getSpell(int pos) {
         return spells.get(pos);
     }
 
+    @Override
     public Spell getSpell(String name, String type) throws SpellNotFoundException {
         for(Spell spell : spells) {
             if(spell.getName().equals(name) && spell.getType().equals(type)) {
@@ -49,15 +53,18 @@ public abstract class PlayerEntityMixin extends LivingEntity {
         throw new SpellNotFoundException("(" + name + " - " + type + ") spell not found in the user's spells");
     }
 
+    @Override
     public List<Spell> getSpells() {
         return spells;
     }
 
     // Active spells
+    @Override
     public void setActiveSpell(int activeSpell) {
         this.activeSpell = activeSpell;
     }
 
+    @Override
     public void setActiveSplell(String name, String type) throws SpellNotFoundException {
         activeSpell = spells.indexOf(getSpell(name, type));
     }
@@ -68,10 +75,12 @@ public abstract class PlayerEntityMixin extends LivingEntity {
         else mana = Math.min(amount, 100);
     }
 
+    @Override
     public void addMana(int amount) {
         setMana(mana+amount);
     }
 
+    @Override
     public void removeMana(int amount) throws NotEnoughtManaException {
         if(mana-amount < 0) {
             throw new NotEnoughtManaException("Not enought mana", amount, mana);
@@ -79,8 +88,14 @@ public abstract class PlayerEntityMixin extends LivingEntity {
         setMana(mana-amount);
     }
 
+    @Override
     public int getMana() {
         return mana;
+    }
+
+    @Override
+    public int getManaMax() {
+        return MAX_MANA;
     }
 
     @Inject(method = "writeCustomDataToNbt", at = @At("RETURN"))

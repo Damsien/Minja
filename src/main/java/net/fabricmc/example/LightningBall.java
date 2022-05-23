@@ -5,6 +5,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.projectile.SmallFireballEntity;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
@@ -47,6 +48,7 @@ public class LightningBall extends SpellProjectile {
 
     @Override
     public void cast(LivingEntity player) {
+        player.playSound(SoundEvents.ENTITY_PIG_AMBIENT, 1.0F, 1.0F);
         Vec3d playerPos = player.getPos();
         LightningBallProjectile proj = new LightningBallProjectile(player.world, playerPos.x, playerPos.y, playerPos.z, 1, 0, 0);
     }

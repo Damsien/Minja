@@ -27,6 +27,10 @@ public class Wand extends Item  {
 
 	public Wand(Settings settings) {
 		super(settings);
+		settings.maxCount(1); //Sets the maximum stack count for the item
+		settings.rarity(Rarity.valueOf("rare")); //Sets the rarity of the object (change the color of the name)
+		settings.maxDamage(0); //Sets the maximum damage the item can make
+		settings.maxDamageIfAbsent(0);
 		WAND = this;
 	}
 
@@ -53,7 +57,7 @@ public class Wand extends Item  {
 
 	@Override
 	public void usageTick(World world, LivingEntity user, ItemStack stack, int remainingUseTicks){
-		playerEntity.playSound(SoundEvents.ENTITY_SILVERFISH_AMBIENT, 1.0F, 1.0F);
+		user.playSound(SoundEvents.ENTITY_SILVERFISH_AMBIENT, 1.0F, 1.0F);
 		LightningBall test = new LightningBall();
 		test.cast(user);
 	}
@@ -62,7 +66,7 @@ public class Wand extends Item  {
 	//Click gauche
 	public boolean onClicked(ItemStack stack, ItemStack otherStack, Slot slot, ClickType clickType, PlayerEntity player, StackReference cursorStackReference)
 	{
-		playerEntity.playSound(SoundEvents.ENTITY_WOLF_AMBIENT, 1.0F, 1.0F);
+		player.playSound(SoundEvents.ENTITY_WOLF_AMBIENT, 1.0F, 1.0F);
 		LightningBall test = new LightningBall();
 		test.cast(player);
 		return true;

@@ -25,6 +25,8 @@ public class ExampleMod implements ModInitializer {
 		// However, some things (like resources) may still be uninitialized.
 		// Proceed with mild caution.
 		Registry.register(Registry.ITEM, new Identifier("tutorial", "custom_item"), CUSTOM_ITEM);
-		LOGGER.info("Hello Fabric world!");
+
+		Registry.register(Registry.ITEM, new Identifier("wand", "custom_item"), Wand.getWand());
+		LOGGER.info("Wand launched");
 	}
 }

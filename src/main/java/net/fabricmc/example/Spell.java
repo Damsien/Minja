@@ -1,6 +1,7 @@
 package net.fabricmc.example;
 
 import net.fabricmc.example.mixin.PlayerEntityMixin;
+import net.minecraft.entity.LivingEntity;
 
 public abstract class Spell {
     private String name;
@@ -15,7 +16,7 @@ public abstract class Spell {
         this.type = type;
     }
 
-    abstract public void cast(PlayerEntityMixin player);
+    abstract public void cast(LivingEntity player);
 
     public String quickDescription() {
         return "(" + getType() + ") " + getName() + ": " + getManaCost() + " mana";

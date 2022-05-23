@@ -10,5 +10,5 @@ public class GroupItemsMinja {
 
 	public static final ItemGroup Minja = FabricItemGroupBuilder.build(
 			new Identifier("Minja", "general"),
-			() -> new ItemStack(Baguette.Baguette));
+			() -> new ItemStack(ExampleMod.WAND));
 }

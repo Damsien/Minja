@@ -16,7 +16,7 @@ public class ExampleMod implements ModInitializer {
 	// an instance of our new item
 	public static final Item CUSTOM_ITEM = new Item(new FabricItemSettings().group(ItemGroup.MISC));
 	//private static Item WAND = Wand.getWand();
-	private static Wand WAND = new Wand(new FabricItemSettings().group(GroupItemsMinja.Minja));
+	private static Wand WAND = new Wand(new FabricItemSettings().group(GroupItemsMinja.Minja).maxCount(1).maxDamage(0));
 
 
 	// This logger is used to write text to the console and the log file.

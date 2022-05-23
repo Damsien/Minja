@@ -9,6 +9,9 @@ import net.minecraft.util.registry.Registry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class ExampleMod implements ModInitializer {
 	// an instance of our new item
 	public static final Item CUSTOM_ITEM = new Item(new FabricItemSettings().group(ItemGroup.MISC));
@@ -18,6 +21,20 @@ public class ExampleMod implements ModInitializer {
 	// That way, it's clear which mod wrote info, warnings, and errors.
 	public static final Logger LOGGER = LoggerFactory.getLogger("modid");
 
+
+	public static Map<Map<String, String>, Spell> SPELLS_MAP = initializeAllSpells();
+
+	private static Map<Map<String, String>, Spell> initializeAllSpells() {
+		Map<Map<String, String>, Spell> map = new HashMap<Map<String, String>, Spell>();
+		Map<String, String> mapEntry = new HashMap<String, String>();
+
+		Spell lightningBall = new LightningBall();
+		mapEntry.put(lightningBall.getName(), lightningBall.getType());
+		map.put(mapEntry, lightningBall);
+		mapEntry.clear();
+
+		return map;
+	}
 
 	@Override
 	public void onInitialize() {

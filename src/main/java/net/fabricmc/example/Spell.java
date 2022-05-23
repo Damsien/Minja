@@ -8,6 +8,13 @@ public abstract class Spell {
     private String icon;
     private String type;
 
+    public Spell(String name, int manaCost, String icon, String type) {
+        this.name = name;
+        this.manaCost = manaCost;
+        this.icon = icon;
+        this.type = type;
+    }
+
     abstract public void cast(PlayerEntityMixin player);
 
     public String quickDescription() {

@@ -28,7 +28,7 @@ public class Wand extends Item  {
 	public Wand(Settings settings) {
 		super(settings);
 		settings.maxCount(1); //Sets the maximum stack count for the item
-		settings.rarity(Rarity.valueOf("Epic")); //Sets the rarity of the object (change the color of the name)
+		//settings.rarity(Rarity.valueOf("epic")); //Sets the rarity of the object (change the color of the name)
 		settings.maxDamage(0); //Sets the maximum damage the item can make
 		settings.maxDamageIfAbsent(0);
 		WAND = this;

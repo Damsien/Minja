@@ -12,6 +12,6 @@ public class GroupItemsMinja {
 	//private static Wand WAND = new Wand(new FabricItemSettings().group(GroupItemsMinja.Minja));
 	public static final ItemGroup Minja = FabricItemGroupBuilder.build(
 			new Identifier("minja", "general"),
-			() -> new ItemStack(Wand.getWand()),
-			() -> new ItemStack((ItemConvertible) SpellProjectile.getSpell("lightningball")));
+			() -> new ItemStack(Wand.getWand()));
+			//() -> new ItemStack((ItemConvertible) SpellProjectile.getSpell("lightningball")));
 }

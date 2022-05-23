@@ -44,7 +44,8 @@ public class ExampleMod implements ModInitializer {
 		Registry.register(Registry.ITEM, new Identifier("objects", "wand"), WAND);
 		LOGGER.info("Wand launched");
 
-		Registry.register(Registry.ITEM, new Identifier("spells", "lightningball"), SpellProjectile.getSpell("lightningball"));
+		//CAMILLE : NE PAS SUPPRIMER
+		//Registry.register(Registry.ITEM, new Identifier("spells", "lightningball"), SpellProjectile.getSpell("lightningball"));
 
 	}
 }

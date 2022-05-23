@@ -40,7 +40,7 @@ public class ExampleMod implements ModInitializer {
 		// Proceed with mild caution.
 		Registry.register(Registry.ITEM, new Identifier("tutorial", "custom_item"), CUSTOM_ITEM);
 
-		Registry.register(Registry.ITEM, new Identifier("wand", "custom_item"), Wand.getWand());
+		Registry.register(Registry.ITEM, new Identifier("objects", "wand"), Wand.getWand());
 		LOGGER.info("Wand launched");
 	}
 }

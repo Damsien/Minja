@@ -12,7 +12,6 @@ import org.slf4j.LoggerFactory;
 public class ExampleMod implements ModInitializer {
 	// an instance of our new item
 	public static final Item CUSTOM_ITEM = new Item(new FabricItemSettings().group(ItemGroup.MISC));
-	public static final Item WAND = Wand.getWand();
 
 	// This logger is used to write text to the console and the log file.
 	// It is considered best practice to use your mod id as the logger's name.
@@ -27,7 +26,7 @@ public class ExampleMod implements ModInitializer {
 		// Proceed with mild caution.
 		Registry.register(Registry.ITEM, new Identifier("tutorial", "custom_item"), CUSTOM_ITEM);
 
-		Registry.register(Registry.ITEM, new Identifier("Baguette", "custom_item"), WAND);
-		LOGGER.info("Baguette launched");
+		Registry.register(Registry.ITEM, new Identifier("wand", "custom_item"), Wand.getWand());
+		LOGGER.info("Wand launched");
 	}
 }

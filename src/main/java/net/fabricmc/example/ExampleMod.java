@@ -15,6 +15,9 @@ import java.util.Map;
 public class ExampleMod implements ModInitializer {
 	// an instance of our new item
 	public static final Item CUSTOM_ITEM = new Item(new FabricItemSettings().group(ItemGroup.MISC));
+	//private static Item WAND = Wand.getWand();
+	private static Wand WAND = new Wand(new FabricItemSettings().group(GroupItemsMinja.Minja));
+
 
 	// This logger is used to write text to the console and the log file.
 	// It is considered best practice to use your mod id as the logger's name.
@@ -40,7 +43,7 @@ public class ExampleMod implements ModInitializer {
 		// Proceed with mild caution.
 		Registry.register(Registry.ITEM, new Identifier("tutorial", "custom_item"), CUSTOM_ITEM);
 
-		Registry.register(Registry.ITEM, new Identifier("objects", "wand"), Wand.getWand());
+		Registry.register(Registry.ITEM, new Identifier("modid", "wand"), WAND);
 		LOGGER.info("Wand launched");
 	}
 }

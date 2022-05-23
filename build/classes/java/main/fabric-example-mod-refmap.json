@@ -4,6 +4,7 @@
       "init()V": "Lnet/minecraft/class_442;method_25426()V"
     },
     "net/fabricmc/example/mixin/PlayerEntityMixin": {
+      "readCustomDataFromNbt": "Lnet/minecraft/class_1657;method_5749(Lnet/minecraft/class_2487;)V",
       "writeCustomDataToNbt": "Lnet/minecraft/class_1657;method_5652(Lnet/minecraft/class_2487;)V"
     }
   },
@@ -13,6 +14,7 @@
         "init()V": "Lnet/minecraft/class_442;method_25426()V"
       },
       "net/fabricmc/example/mixin/PlayerEntityMixin": {
+        "readCustomDataFromNbt": "Lnet/minecraft/class_1657;method_5749(Lnet/minecraft/class_2487;)V",
         "writeCustomDataToNbt": "Lnet/minecraft/class_1657;method_5652(Lnet/minecraft/class_2487;)V"
       }
     }

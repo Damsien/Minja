@@ -16,7 +16,8 @@ public class ExampleMod implements ModInitializer {
 	// an instance of our new item
 	public static final Item CUSTOM_ITEM = new Item(new FabricItemSettings().group(ItemGroup.MISC));
 	//private static Item WAND = Wand.getWand();
-	private static Wand WAND = new Wand(new FabricItemSettings().group(GroupItemsMinja.Minja).maxCount(1).maxDamage(0));
+	//private static Wand WAND = new Wand(new FabricItemSettings().group(GroupItemsMinja.Minja).maxCount(1).maxDamage(0));
+	private static Wand WAND = new Wand(new FabricItemSettings().group(ItemGroup.MISC).maxCount(1).maxDamage(0));
 
 
 	// This logger is used to write text to the console and the log file.
@@ -43,7 +44,7 @@ public class ExampleMod implements ModInitializer {
 		// Proceed with mild caution.
 		Registry.register(Registry.ITEM, new Identifier("tutorial", "custom_item"), CUSTOM_ITEM);
 
-		Registry.register(Registry.ITEM, new Identifier("modid", "wand"), WAND);
+		Registry.register(Registry.ITEM, new Identifier("wand", "wand"), WAND);
 		LOGGER.info("Wand launched");
 	}
 }

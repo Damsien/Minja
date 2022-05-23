@@ -18,7 +18,7 @@ public interface PlayerMinja {
     // Active spells
     public void setActiveSpell(int activeSpell);
 
-    public void setActiveSplell(String name, String type) throws SpellNotFoundException;
+    public void setActiveSpell(String name, String type) throws SpellNotFoundException;
 
     // Mana
 

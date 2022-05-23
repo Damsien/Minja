@@ -1,5 +1,6 @@
 package net.fabricmc.example.mixin;
 
+import net.fabricmc.example.ExampleMod;
 import net.fabricmc.example.Exceptions.NotEnoughtManaException;
 import net.fabricmc.example.Exceptions.SpellNotFoundException;
 import net.fabricmc.example.PlayerMinja;
@@ -14,15 +15,16 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Mixin(PlayerEntity.class)
 public abstract class PlayerEntityMixin extends LivingEntity implements PlayerMinja {
 
     private static final int MAX_MANA = 100;
-    private int mana;
-    private List<Spell> spells;
-    private int activeSpell;
+    private int mana = 0;
+    private final List<Spell> spells = new ArrayList<Spell>();
+    private int activeSpell = 0;
 
     protected PlayerEntityMixin(EntityType<? extends LivingEntity> type, World world) {
         super(type, world);
@@ -65,7 +67,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements PlayerMi
     }
 
     @Override
-    public void setActiveSplell(String name, String type) throws SpellNotFoundException {
+    public void setActiveSpell(String name, String type) throws SpellNotFoundException {
         activeSpell = spells.indexOf(getSpell(name, type));
     }
 
@@ -101,6 +103,21 @@ public abstract class PlayerEntityMixin extends LivingEntity implements PlayerMi
     @Inject(method = "writeCustomDataToNbt", at = @At("RETURN"))
     public void writeCustomDataToNbt(NbtCompound nbt, CallbackInfo ci) {
         nbt.putInt("mana", mana);
+        for(int i = 0; i < 8; i++) {
+            nbt.putString("spell"+i, spells.get(i).getName() + "/" + spells.get(i).getType() + "/" + i);
+        }
+        nbt.putInt("activeSpell", activeSpell);
+    }
+
+    @Inject(method = "readCustomDataFromNbt", at = @At("RETURN"))
+    public void readCustomDataFromNbt(NbtCompound nbt, CallbackInfo ci) {
+        mana = nbt.getInt("mana");
+        for(int i = 0; i < 8; i++) {
+            spells.add(ExampleMod.SPELLS_MAP.get(
+                    nbt.getString("spell"+i)+"/"+nbt.getString("spell"+i))
+            );
+        }
+        activeSpell = nbt.getInt("activeSpell");
     }
 
 }

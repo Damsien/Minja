@@ -22,16 +22,13 @@ public class ExampleMod implements ModInitializer {
 	public static final Logger LOGGER = LoggerFactory.getLogger("modid");
 
 
-	public static Map<Map<String, String>, Spell> SPELLS_MAP = initializeAllSpells();
+	public static Map<String, Spell> SPELLS_MAP = initializeAllSpells();
 
-	private static Map<Map<String, String>, Spell> initializeAllSpells() {
-		Map<Map<String, String>, Spell> map = new HashMap<Map<String, String>, Spell>();
-		Map<String, String> mapEntry = new HashMap<String, String>();
+	private static Map<String, Spell> initializeAllSpells() {
+		Map<String, Spell> map = new HashMap<String, Spell>();
 
 		Spell lightningBall = new LightningBall();
-		mapEntry.put(lightningBall.getName(), lightningBall.getType());
-		map.put(mapEntry, lightningBall);
-		mapEntry.clear();
+		map.put(lightningBall.getName()+"/"+lightningBall.getType(), lightningBall);
 
 		return map;
 	}
@@ -43,7 +40,7 @@ public class ExampleMod implements ModInitializer {
 		// Proceed with mild caution.
 		Registry.register(Registry.ITEM, new Identifier("tutorial", "custom_item"), CUSTOM_ITEM);
 
-		Registry.register(Registry.ITEM, new Identifier("wand", "custom_item"), Wand.getWand());
+		Registry.register(Registry.ITEM, new Identifier("objects", "wand"), Wand.getWand());
 		LOGGER.info("Wand launched");
 	}
 }

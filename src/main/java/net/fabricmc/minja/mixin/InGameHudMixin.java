@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.Mixin;
 public class InGameHudMixin extends DrawableHelper {
 
     private final MinecraftClient client;
-    private static final Identifier MANA_ICON = new Identifier("");
+    private static final Identifier MANA_ICON = new Identifier();
 
     public InGameHudMixin(MinecraftClient client) {
         this.client = client;

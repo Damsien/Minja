@@ -20,6 +20,9 @@
   "entrypoints": {
     "main": [
       "net.fabricmc.minja.Minja"
+    ],
+    "client": [
+      "net.fabricmc.minja.MinjaClient"
     ]
   },
   "mixins": [

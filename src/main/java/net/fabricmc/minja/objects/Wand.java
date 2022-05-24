@@ -44,7 +44,7 @@ public class Wand extends Item  {
 		playerEntity.playSound(SoundEvents.ENTITY_COW_AMBIENT, 1.0F, 1.0F);
 		//Mettre ici l'ouverture de l'HUD
 
-		SpellHUD.setVisible(true);
+		//SpellHUD.setVisible(true);
 
 		//Ci dessous, tests pour arnaud, pas touche
 		LightningBall test = new LightningBall();

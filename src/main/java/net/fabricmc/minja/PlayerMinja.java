@@ -8,7 +8,9 @@ import java.util.List;
 
 public interface PlayerMinja {
 
-    public void setSpell(int pos, Spell spell);
+    public void addSpell(int pos, Spell spell);
+
+    public void addSpell(Spell spell);
 
     public Spell getSpell(int pos);
 

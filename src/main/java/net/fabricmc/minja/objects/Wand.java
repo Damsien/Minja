@@ -1,5 +1,8 @@
 package net.fabricmc.minja.objects;
 
+import net.fabricmc.minja.Exceptions.NotEnoughtManaException;
+import net.fabricmc.minja.PlayerMinja;
+import net.fabricmc.minja.hud.SpellHUD;
 import net.fabricmc.minja.spells.LightningBall;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -41,6 +44,7 @@ public class Wand extends Item  {
 		playerEntity.playSound(SoundEvents.ENTITY_COW_AMBIENT, 1.0F, 1.0F);
 		//Mettre ici l'ouverture de l'HUD
 
+		SpellHUD.setVisible(true);
 
 		//Ci dessous, tests pour arnaud, pas touche
 		LightningBall test = new LightningBall();
@@ -62,9 +66,17 @@ public class Wand extends Item  {
 	//Click gauche
 	public boolean onClicked(ItemStack stack, ItemStack otherStack, Slot slot, ClickType clickType, PlayerEntity player, StackReference cursorStackReference)
 	{
-		player.playSound(SoundEvents.ENTITY_WOLF_AMBIENT, 1.0F, 1.0F);
-		LightningBall test = new LightningBall();
-		test.cast(player);
-		return true;
+		if(clickType == ClickType.LEFT) {
+
+			((PlayerMinja) player).addMana(20);
+			try {
+				((PlayerMinja) player).removeMana(10);
+			} catch (NotEnoughtManaException e) {
+				System.out.println(e.getMessage());
+			}
+			return true;
+		} else {
+			return false;
+		}
 	}
 }

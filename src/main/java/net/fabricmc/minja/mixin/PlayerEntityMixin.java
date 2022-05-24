@@ -141,7 +141,7 @@ public abstract class PlayerEntityMixin implements PlayerMinja {
      */
     private void setMana(int amount) {
         if(amount < 0) mana = 0;
-        else mana = Math.min(amount, 100);
+        else mana = Math.min(mana+amount, MAX_MANA);
     }
 
     /**

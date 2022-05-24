@@ -7,8 +7,8 @@
   ],
   "client": [
     "PlayerEntityMixin",
-    "SpellHudMixin",
-    "InGameHudMixin"
+    "InGameHudMixin",
+    "SpellHudMixin"
   ],
   "injectors": {
     "defaultRequire": 1

@@ -44,6 +44,14 @@ public class Wand extends Item  {
 	//Click droit
 	public TypedActionResult<ItemStack> use(World world, PlayerEntity playerEntity, Hand hand) {
 
+		System.out.println("Mana : " + ((PlayerMinja) playerEntity).getMana());
+		((PlayerMinja) playerEntity).addMana(20);
+		try {
+			((PlayerMinja) playerEntity).removeMana(10);
+		} catch (NotEnoughtManaException e) {
+			throw new RuntimeException(e);
+		}
+
 		playerEntity.playSound(SoundEvents.ENTITY_COW_AMBIENT, 1.0F, 1.0F);
 		//Mettre ici l'ouverture de l'HUD
 

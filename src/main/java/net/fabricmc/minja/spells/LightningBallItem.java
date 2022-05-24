@@ -1,5 +1,6 @@
-package net.fabricmc.example;
+package net.fabricmc.minja.spells;
 
+import net.fabricmc.minja.objects.Wand;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -11,8 +12,16 @@ import net.minecraft.util.TypedActionResult;
 import net.minecraft.world.World;
 
 public class LightningBallItem extends Item{
+
+    private static LightningBallItem LIGHTNINGBALL;
     public LightningBallItem(Item.Settings settings) {
+
         super(settings);
+        LIGHTNINGBALL = this;
+    }
+
+    public static Item getLightningBall(){
+        return LIGHTNINGBALL;
     }
 
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {

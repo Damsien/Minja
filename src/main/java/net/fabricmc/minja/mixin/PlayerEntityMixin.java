@@ -1,10 +1,10 @@
-package net.fabricmc.example.mixin;
+package net.fabricmc.minja.mixin;
 
-import net.fabricmc.example.ExampleMod;
-import net.fabricmc.example.Exceptions.NotEnoughtManaException;
-import net.fabricmc.example.Exceptions.SpellNotFoundException;
-import net.fabricmc.example.PlayerMinja;
-import net.fabricmc.example.Spell;
+import net.fabricmc.minja.Minja;
+import net.fabricmc.minja.Exceptions.NotEnoughtManaException;
+import net.fabricmc.minja.Exceptions.SpellNotFoundException;
+import net.fabricmc.minja.PlayerMinja;
+import net.fabricmc.minja.spells.Spell;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -113,7 +113,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements PlayerMi
     public void readCustomDataFromNbt(NbtCompound nbt, CallbackInfo ci) {
         mana = nbt.getInt("mana");
         for(int i = 0; i < 8; i++) {
-            spells.add(ExampleMod.SPELLS_MAP.get(
+            spells.add(Minja.SPELLS_MAP.get(
                     nbt.getString("spell"+i)+"/"+nbt.getString("spell"+i))
             );
         }

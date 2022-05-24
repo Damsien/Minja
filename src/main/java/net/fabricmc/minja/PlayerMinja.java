@@ -1,7 +1,8 @@
-package net.fabricmc.example;
+package net.fabricmc.minja;
 
-import net.fabricmc.example.Exceptions.NotEnoughtManaException;
-import net.fabricmc.example.Exceptions.SpellNotFoundException;
+import net.fabricmc.minja.Exceptions.NotEnoughtManaException;
+import net.fabricmc.minja.Exceptions.SpellNotFoundException;
+import net.fabricmc.minja.spells.Spell;
 
 import java.util.List;
 

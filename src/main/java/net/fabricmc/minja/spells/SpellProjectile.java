@@ -1,10 +1,7 @@
-package net.fabricmc.example;
+package net.fabricmc.minja.spells;
 
-import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
+import net.fabricmc.minja.spells.Spell;
 import net.minecraft.entity.projectile.ProjectileEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemConvertible;
-import net.minecraft.item.ItemGroup;
 
 public abstract class SpellProjectile extends Spell {
 

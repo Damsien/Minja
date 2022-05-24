@@ -1,9 +1,10 @@
-package net.fabricmc.example;
+package net.fabricmc.minja;
 
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
+import net.fabricmc.minja.objects.Wand;
+import net.fabricmc.minja.spells.LightningBall;
+import net.fabricmc.minja.spells.Spell;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import org.slf4j.Logger;
@@ -12,10 +13,10 @@ import org.slf4j.LoggerFactory;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ExampleMod implements ModInitializer {
+public class Minja implements ModInitializer {
 	
 	//Every item created by Minja
-	private static Wand WAND = new Wand(new FabricItemSettings().group(GroupItemsMinja.Minja).maxCount(1).maxDamage(0));
+	private static Wand WAND = new Wand(new FabricItemSettings().group(Spell.GroupItemsMinja.Minja).maxCount(1).maxDamage(0));
 	//private static Wand WAND = new Wand(new FabricItemSettings().group(ItemGroup.MISC).maxCount(1).maxDamage(0));
 
 

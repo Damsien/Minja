@@ -1,4 +1,4 @@
-package net.fabricmc.example.Exceptions;
+package net.fabricmc.minja.Exceptions;
 
 public class NotEnoughtManaException extends Exception {
 

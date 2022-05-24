@@ -1,7 +1,11 @@
-package net.fabricmc.example;
+package net.fabricmc.minja.spells;
 
-import net.fabricmc.example.mixin.PlayerEntityMixin;
+import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
+import net.fabricmc.minja.objects.Wand;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.item.ItemGroup;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.Identifier;
 
 public abstract class Spell {
     private String name;
@@ -35,5 +39,13 @@ public abstract class Spell {
 
     public String getType() {
         return type;
+    }
+
+    public static class GroupItemsMinja {
+        //private static Wand WAND = new Wand(new FabricItemSettings().group(GroupItemsMinja.Minja));
+        public static final ItemGroup Minja = FabricItemGroupBuilder.build(
+                new Identifier("minja", "general"),
+                () -> new ItemStack(Wand.getWand()));
+                //() -> new ItemStack((ItemConvertible) SpellProjectile.getSpell("lightningball")));
     }
 }

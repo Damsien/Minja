@@ -113,7 +113,7 @@
 [16:07:36] [main/DEBUG] (FabricLoader/Entrypoint) Registering new-style initializer net.fabricmc.fabric.impl.event.lifecycle.LegacyEventInvokers for mod fabric-events-lifecycle-v0 (key main)
 [16:07:36] [main/DEBUG] (FabricLoader/Entrypoint) Registering new-style initializer net.fabricmc.fabric.impl.event.interaction.InteractionEventsRouterClient for mod fabric-events-interaction-v0 (key client)
 [16:07:36] [main/DEBUG] (FabricLoader/Entrypoint) Registering new-style initializer net.fabricmc.fabric.impl.event.interaction.InteractionEventsRouter for mod fabric-events-interaction-v0 (key main)
-[16:07:36] [main/DEBUG] (FabricLoader/Entrypoint) Registering new-style initializer net.fabricmc.example.ExampleMod for mod modid (key main)
+[16:07:36] [main/DEBUG] (FabricLoader/Entrypoint) Registering new-style initializer net.fabricmc.minja.Minja for mod modid (key main)
 [16:07:36] [main/DEBUG] (FabricLoader/Entrypoint) Registering new-style initializer net.fabricmc.fabric.impl.gametest.FabricGameTestModInitializer for mod fabric-gametest-api-v1 (key main)
 [16:07:36] [main/DEBUG] (FabricLoader/Entrypoint) Registering new-style initializer net.fabricmc.fabric.impl.client.rendering.RenderingCallbackInvoker for mod fabric-rendering-v0 (key client)
 [16:07:36] [main/DEBUG] (FabricLoader/Entrypoint) Registering new-style initializer net.fabricmc.fabric.impl.event.lifecycle.ClientLifecycleEventsImpl for mod fabric-lifecycle-events-v1 (key client)
@@ -1727,7 +1727,7 @@ net.minecraft.util.crash.CrashException: Saving entity NBT
 	at net.minecraft.server.MinecraftServer.runServer(MinecraftServer.java:683) ~[minecraft-project-@-merged-named.jar:?]
 	at net.minecraft.server.MinecraftServer.method_29739(MinecraftServer.java:293) ~[minecraft-project-@-merged-named.jar:?]
 	at java.lang.Thread.run(Thread.java:833) [?:?]
-Caused by: java.lang.NullPointerException: Cannot invoke "net.fabricmc.example.Spell.getName()" because the return value of "java.util.List.get(int)" is null
+Caused by: java.lang.NullPointerException: Cannot invoke "net.fabricmc.minja.spells.Spell.getName()" because the return value of "java.util.List.get(int)" is null
 	at net.minecraft.entity.player.PlayerEntity.handler$zdj000$writeCustomDataToNbt(PlayerEntity.java:2134) ~[minecraft-project-@-merged-named.jar:?]
 	at net.minecraft.entity.player.PlayerEntity.writeCustomDataToNbt(PlayerEntity.java:714) ~[minecraft-project-@-merged-named.jar:?]
 	at net.minecraft.server.network.ServerPlayerEntity.writeCustomDataToNbt(ServerPlayerEntity.java:332) ~[minecraft-project-@-merged-named.jar:?]

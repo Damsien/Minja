@@ -1,7 +1,5 @@
-package net.fabricmc.example;
+package net.fabricmc.minja.spells;
 
-import net.fabricmc.example.mixin.PlayerEntityMixin;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.projectile.SmallFireballEntity;

@@ -37,27 +37,28 @@ public class InGameHudMixin extends DrawableHelper {
             int manaMax = ((PlayerMinja) playerEntity).getManaMax();
             LivingEntity livingEntity = this.getRiddenEntity(); // test if player is riding an entity
 
-            int variable_one;
-            int variable_two;
             int height = this.scaledHeight - 49; // why theses values ???
             int width = this.scaledWidth / 2 + 91; // why theses values ???
+            //int temporaryMana = 0;
 
             if (this.getHeartCount(livingEntity) == 0) { // (TODO : Move) (currently) Hide the mana bar if the player is riding
-                for (variable_one = 0; variable_one < 10; ++variable_one) { // why ?????????
+                for (int i = 0; i < 10; i++) { // draw one mana droplet at a time
                     int uppderCoord = 9;
                     int beneathCoord = 0;
-                    variable_two = width - variable_one * 8 - 9;
+                    int variable_two = width - i * 8 - 9;
+
 
                     // get the texture of the mana
                     RenderSystem.setShaderTexture(0, MANA_ICON);
                     // draw the texture placeholder (black one)
                     this.drawTexture(matrices, variable_two, height, 0, 0, 9, 9);
 
-                    if (variable_one * 2 + 1 < currentMana) {
+                    if (i * 2 + 1 < currentMana*20/manaMax) { //temporaryMana * manaMax/10 < currentMana
                         // draw the big blue mana icon
+                        //temporaryMana = temporaryMana + manaMax/10;
                         this.drawTexture(matrices, variable_two, height, beneathCoord, uppderCoord, 9, 9);
                     }
-                    if (variable_one * 2 + 1 == currentMana) {
+                    if (i * 2 + 1 == currentMana*20/manaMax) { //temporaryMana * manaMax/10 == currentMana
                         // draw the little blue mana icon
                         this.drawTexture(matrices, variable_two, height, beneathCoord + 9, uppderCoord, 9, 9);
                     }
@@ -67,23 +68,6 @@ public class InGameHudMixin extends DrawableHelper {
         }
     }
 
-/**    private void showManaBar(int manaMax, int currentMana, MatrixStack matrices, int height) {
-        for (variable_one = 0; variable_one < 10; ++variable_one) {
-            int uppderCoord = 9;
-            int beneathCoord = 0;
-            variable_two = width - variable_one * 8 - 9;
-            RenderSystem.setShaderTexture(0, MANA_ICON);
-            this.drawTexture(matrices, variable_two, height, 0, 0, 9, 9);
-            if (variable_one * 2 + 1 < manaMax) {
-                this.drawTexture(matrices, variable_two, height, beneathCoord, uppderCoord, 9, 9); // Big icon
-            }
-            if (variable_one * 2 + 1 == manaMax) {
-                this.drawTexture(matrices, variable_two, height, beneathCoord + 9, uppderCoord, 9, 9); // Small icon
-            }
-        }
-        RenderSystem.setShaderTexture(0, GUI_ICONS_TEXTURE);
-    }
-*/
     @Shadow
     private PlayerEntity getCameraPlayer() {
         return null;

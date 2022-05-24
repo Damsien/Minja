@@ -32,14 +32,12 @@ public class Grimoire extends Item  {
 	}
 
 	@Override
-	//Se lance quand utilisé par un joueur
-	//Click droit
+	//Used when the player use right click with the Wand
 	public TypedActionResult<ItemStack> use(World world, PlayerEntity playerEntity, Hand hand) {
-		playerEntity.playSound(SoundEvents.ENTITY_COW_AMBIENT, 1.0F, 1.0F);
+
 		//Mettre ici l'ouverture de l'HUD
 		SpellHUD.toggleVisibility();
 
-		//Pas touche en dessous
 		return TypedActionResult.success(playerEntity.getStackInHand(hand));
 	}
 }

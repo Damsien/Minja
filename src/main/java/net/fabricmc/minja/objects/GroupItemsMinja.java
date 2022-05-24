@@ -10,16 +10,6 @@ import net.minecraft.util.Identifier;
 
 public class GroupItemsMinja {
 
-    /*public static final ItemGroup Minja = FabricItemGroupBuilder.create(
-                    new Identifier("minja", "general"))
-            .icon(() -> new ItemStack(Wand.getWand()))
-            .appendItems(stacks -> {
-                stacks.add(new ItemStack(Wand.getWand()));
-                stacks.add(new ItemStack(Grimoire.getGrimoire()));
-                //stacks.add(new ItemStack(Grimoire.getGrimoire())); FAIRE LIGHTNINGBALL
-            })
-            .build();*/
-
     public static final ItemGroup Minja = FabricItemGroupBuilder.create(
                     new Identifier("minja", "general"))
             .icon(() -> new ItemStack(Wand.getWand())).build();

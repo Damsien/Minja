@@ -4,6 +4,7 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 import net.fabricmc.minja.objects.Grimoire;
+import net.fabricmc.minja.objects.GroupItemsMinja;
 import net.fabricmc.minja.objects.Wand;
 import net.fabricmc.minja.spells.LightningBall;
 import net.fabricmc.minja.spells.LightningBallEntity;
@@ -24,9 +25,9 @@ import java.util.Map;
 public class Minja implements ModInitializer {
 	
 	//Every item created by Minja
-	private static Wand WAND = new Wand(new FabricItemSettings().group(Spell.GroupItemsMinja.Minja).maxCount(1).maxDamage(0));
-	private static Grimoire GRIMOIRE = new Grimoire(new FabricItemSettings().group(Spell.GroupItemsMinja.Minja).maxCount(1).maxDamage(0));
-	public static final Item LIGHTNINGBALL = new LightningBallItem(new Item.Settings().group(Spell.GroupItemsMinja.Minja).maxCount(16));
+	private static Wand WAND = new Wand(new FabricItemSettings().group(GroupItemsMinja.Minja).maxCount(1).maxDamage(0));
+	private static Grimoire GRIMOIRE = new Grimoire(new FabricItemSettings().group(GroupItemsMinja.Minja).maxCount(1).maxDamage(0));
+	public static final Item LIGHTNINGBALL = new LightningBallItem(new Item.Settings().group(GroupItemsMinja.Minja).maxCount(16));
 
 	public static final EntityType<LightningBallEntity> LightningBallEntityType = Registry.register(
 			Registry.ENTITY_TYPE,

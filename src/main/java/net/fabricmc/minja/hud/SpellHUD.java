@@ -59,15 +59,45 @@ public class SpellHUD {
 
         if(!visible) return;
 
+        PointPolaire M = new PointCartesien(minecraft.mouse.getX(),minecraft.mouse.getY()).CardToPolar();
+        double valeurCourante = M.theta % (2*Math.PI);
+        if (valeurCourante<0) valeurCourante += 2*Math.PI;
+
+
         double length = spells.size();
 
-        double H = (height * 0.8);
+        double H = (height * 0.7);
         double angle = 360 / length;
+        double rad = Math.toRadians(angle);
+
+        System.out.println("Angle (deg) : " + Math.toDegrees(M.theta));
+        System.out.println("Angle (rad) : " + M.theta);
 
         for(int i=0 ; i < length ; i++) {
 
-            Point p = new Point(H,  i * angle);
-            fontRenderer.draw(stack, ""+(i), (float)(width + Math.round(p.x)), (float)(height + Math.round(p.y)), Color.GREEN.getRGB());
+            PointPolaire pp = new PointPolaire(H,  i * rad);
+            System.out.println("Angle du point " + i + " : " + pp.theta);
+            PointCartesien p = pp.PolarToCard();
+
+            // Check mouse
+            double borneInf = (pp.theta - rad / 2) % (2*Math.PI);
+            if (borneInf<0) borneInf += 2*Math.PI;
+
+            double borneSup = (pp.theta + rad / 2) % (2*Math.PI);
+            if (borneSup<0) borneSup += 2*Math.PI;
+
+
+            System.out.println("Borne inférieure de  " + i + " : " + borneInf);
+            System.out.println("Borne supérieure de  " + i + " : " + borneSup);
+            System.out.println("Valeur courante de  " + "souris" + " : " + valeurCourante);
+
+            boolean isInInterval = i != 0   ? borneInf < valeurCourante && valeurCourante < borneSup
+                                            : borneInf < valeurCourante && valeurCourante < 2*Math.PI;
+
+            if(isInInterval)
+                fontRenderer.draw(stack, ""+(i), (float)(width + Math.round(p.x)), (float)(height + Math.round(p.y)), Color.BLUE.getRGB());
+            else
+                fontRenderer.draw(stack, ""+(i), (float)(width + Math.round(p.x)), (float)(height + Math.round(p.y)), Color.GREEN.getRGB());
 
         }
 
@@ -77,21 +107,50 @@ public class SpellHUD {
         this.visible = b;
     }
 
+    public static void toggleVisibility() {
+        visible = !visible;
+    }
+
     public void afterRenderStatusEffects(MatrixStack stack, float partialTicks) {
     }
 
 
-    class Point {
+    class PointPolaire {
 
-        private double x;
-        private double y;
+        private double r;
+        private double theta;
 
-        Point(double r, double angle) {
-            double theta = (angle / 180) * Math.PI;
-            this.x = r * Math.cos(theta);
-            this.y = r * Math.sin(theta);
+
+        PointPolaire(double r, double theta) {
+            this.r = r;
+            this.theta = theta;
         }
 
+        public PointCartesien PolarToCard() {
+            double x = r * Math.cos(theta);
+            double y = r * Math.sin(theta);
+            return new PointCartesien(x,y);
+        }
+
+    }
+
+    class PointCartesien {
+
+        double x;
+
+        double y;
+
+        public PointCartesien(double x, double y) {
+            this.x = x;
+            this.y = y;
+        }
+
+        public PointPolaire CardToPolar() {
+            double r     = Math.sqrt(x*x + y*y);
+            double theta = Math.atan2(y, x);
+
+            return new PointPolaire(r,theta);
+        }
     }
 
 

@@ -18,18 +18,10 @@ import net.minecraft.world.World;
 
 public class Wand extends Item  {
 
-	//public static ItemConvertible Baguette;
-	//private static Item WAND = new Item(new FabricItemSettings().group(GroupItemsMinja.Minja));
-	//private final Rarity;
-	//Item texture: /resources/assets/Items/Objects/Baguette.png
 	private static Wand WAND;
 
 	public Wand(Settings settings) {
 		super(settings);
-		//settings.maxCount(1); //Sets the maximum stack count for the item
-		//settings.rarity(Rarity.valueOf("epic")); //Sets the rarity of the object (change the color of the name)
-		//settings.maxDamage(0); //Sets the maximum damage the item can make
-		//settings.maxDamageIfAbsent(0);
 		WAND = this;
 	}
 
@@ -38,28 +30,17 @@ public class Wand extends Item  {
 	}
 
 	@Override
-	//Se lance quand utilisé par un joueur
-	//Click droit
+	//Used when the player use right click with the Wand
 	public TypedActionResult<ItemStack> use(World world, PlayerEntity playerEntity, Hand hand) {
-		playerEntity.playSound(SoundEvents.ENTITY_COW_AMBIENT, 1.0F, 1.0F);
-		//Mettre ici l'ouverture de l'HUD
 
-		SpellHUD.setVisible(true);
+		//Mettre ici l'ouverture de l'HUD
+		//SpellHUD.setVisible(true);
 
 		//Ci dessous, tests pour arnaud, pas touche
 		LightningBall test = new LightningBall();
 		test.cast(playerEntity);
 
-		//Pas touche en dessous
 		return TypedActionResult.success(playerEntity.getStackInHand(hand));
-	}
-
-
-	@Override
-	public void usageTick(World world, LivingEntity user, ItemStack stack, int remainingUseTicks){
-		user.playSound(SoundEvents.ENTITY_SILVERFISH_AMBIENT, 1.0F, 1.0F);
-		LightningBall test = new LightningBall();
-		test.cast(user);
 	}
 
 	@Override
@@ -67,11 +48,11 @@ public class Wand extends Item  {
 	public boolean onClicked(ItemStack stack, ItemStack otherStack, Slot slot, ClickType clickType, PlayerEntity player, StackReference cursorStackReference)
 	{
 		if(clickType == ClickType.LEFT) {
+			player.playSound(SoundEvents.ENTITY_COW_AMBIENT, 1.0F, 1.0F);
 
 			((PlayerMinja) player).addMana(20);
 			try {
 				((PlayerMinja) player).removeMana(10);
-				System.out.println("Mana : " + ((PlayerMinja) player).getMana());
 			} catch (NotEnoughtManaException e) {
 				System.out.println(e.getMessage());
 			}

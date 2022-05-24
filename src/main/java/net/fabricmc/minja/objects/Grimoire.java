@@ -1,5 +1,6 @@
 package net.fabricmc.minja.objects;
 
+import net.fabricmc.minja.hud.SpellHUD;
 import net.fabricmc.minja.spells.LightningBall;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -31,13 +32,12 @@ public class Grimoire extends Item  {
 	}
 
 	@Override
-	//Se lance quand utilisé par un joueur
-	//Click droit
+	//Used when the player use right click with the Wand
 	public TypedActionResult<ItemStack> use(World world, PlayerEntity playerEntity, Hand hand) {
-		playerEntity.playSound(SoundEvents.ENTITY_COW_AMBIENT, 1.0F, 1.0F);
-		//Mettre ici l'ouverture de l'HUD
 
-		//Pas touche en dessous
+		//Mettre ici l'ouverture de l'HUD
+		SpellHUD.toggleVisibility();
+
 		return TypedActionResult.success(playerEntity.getStackInHand(hand));
 	}
 }

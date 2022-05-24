@@ -1,5 +1,6 @@
 package net.fabricmc.minja.objects;
 
+import net.fabricmc.fabric.api.event.player.AttackBlockCallback;
 import net.fabricmc.minja.Exceptions.NotEnoughtManaException;
 import net.fabricmc.minja.PlayerMinja;
 import net.fabricmc.minja.hud.SpellHUD;
@@ -11,6 +12,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.util.ActionResult;
 import net.minecraft.util.ClickType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
@@ -41,6 +43,7 @@ public class Wand extends Item  {
 	//Se lance quand utilisé par un joueur
 	//Click droit
 	public TypedActionResult<ItemStack> use(World world, PlayerEntity playerEntity, Hand hand) {
+
 		playerEntity.playSound(SoundEvents.ENTITY_COW_AMBIENT, 1.0F, 1.0F);
 		//Mettre ici l'ouverture de l'HUD
 
@@ -54,30 +57,4 @@ public class Wand extends Item  {
 		return TypedActionResult.success(playerEntity.getStackInHand(hand));
 	}
 
-
-	@Override
-	public void usageTick(World world, LivingEntity user, ItemStack stack, int remainingUseTicks){
-		user.playSound(SoundEvents.ENTITY_SILVERFISH_AMBIENT, 1.0F, 1.0F);
-		LightningBall test = new LightningBall();
-		test.cast(user);
-	}
-
-	@Override
-	//Click gauche
-	public boolean onClicked(ItemStack stack, ItemStack otherStack, Slot slot, ClickType clickType, PlayerEntity player, StackReference cursorStackReference)
-	{
-		if(clickType == ClickType.LEFT) {
-
-			((PlayerMinja) player).addMana(20);
-			try {
-				((PlayerMinja) player).removeMana(10);
-				System.out.println("Mana : " + ((PlayerMinja) player).getMana());
-			} catch (NotEnoughtManaException e) {
-				System.out.println(e.getMessage());
-			}
-			return true;
-		} else {
-			return false;
-		}
-	}
 }

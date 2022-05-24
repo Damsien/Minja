@@ -19,4 +19,14 @@ public abstract class SpellHudMixin {
             gui = new SpellHUD();
         gui.afterRenderStatusEffects(stack, 0);
     }
+
+    @Inject(method = "render", at = @At("RETURN"))
+
+    private void beforeRenderDebugScreen(MatrixStack stack, float f, CallbackInfo ci) {
+        if (gui==null)
+            gui=new SpellHUD();
+        gui.onRenderGameOverlayPost(stack, 0);
+    }
+
+
 }

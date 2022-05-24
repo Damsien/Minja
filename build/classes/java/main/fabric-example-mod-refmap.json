@@ -10,7 +10,8 @@
       "writeCustomDataToNbt": "Lnet/minecraft/class_1657;method_5652(Lnet/minecraft/class_2487;)V"
     },
     "net/fabricmc/minja/mixin/SpellHudMixin": {
-      "renderStatusEffectOverlay": "Lnet/minecraft/class_329;method_1765(Lnet/minecraft/class_4587;)V"
+      "renderStatusEffectOverlay": "Lnet/minecraft/class_329;method_1765(Lnet/minecraft/class_4587;)V",
+      "render": "Lnet/minecraft/class_329;method_1753(Lnet/minecraft/class_4587;F)V"
     }
   },
   "data": {
@@ -25,7 +26,8 @@
         "writeCustomDataToNbt": "Lnet/minecraft/class_1657;method_5652(Lnet/minecraft/class_2487;)V"
       },
       "net/fabricmc/minja/mixin/SpellHudMixin": {
-        "renderStatusEffectOverlay": "Lnet/minecraft/class_329;method_1765(Lnet/minecraft/class_4587;)V"
+        "renderStatusEffectOverlay": "Lnet/minecraft/class_329;method_1765(Lnet/minecraft/class_4587;)V",
+        "render": "Lnet/minecraft/class_329;method_1753(Lnet/minecraft/class_4587;F)V"
       }
     }
   }

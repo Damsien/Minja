@@ -42,8 +42,8 @@ public class Wand extends Item  {
 	//Click droit
 	public TypedActionResult<ItemStack> use(World world, PlayerEntity playerEntity, Hand hand) {
 		playerEntity.playSound(SoundEvents.ENTITY_COW_AMBIENT, 1.0F, 1.0F);
-
 		//Mettre ici l'ouverture de l'HUD
+
 		SpellHUD.setVisible(true);
 
 		//Ci dessous, tests pour arnaud, pas touche

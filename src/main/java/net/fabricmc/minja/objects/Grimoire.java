@@ -1,5 +1,6 @@
 package net.fabricmc.minja.objects;
 
+import net.fabricmc.minja.hud.SpellHUD;
 import net.fabricmc.minja.spells.LightningBall;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -36,6 +37,7 @@ public class Grimoire extends Item  {
 	public TypedActionResult<ItemStack> use(World world, PlayerEntity playerEntity, Hand hand) {
 		playerEntity.playSound(SoundEvents.ENTITY_COW_AMBIENT, 1.0F, 1.0F);
 		//Mettre ici l'ouverture de l'HUD
+		SpellHUD.setVisible(true);
 
 		//Pas touche en dessous
 		return TypedActionResult.success(playerEntity.getStackInHand(hand));

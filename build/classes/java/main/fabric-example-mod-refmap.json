@@ -2,7 +2,6 @@
   "mappings": {
     "net/fabricmc/minja/mixin/InGameHudMixin": {
       "Lnet/minecraft/util/profiler/Profiler;swap(Ljava/lang/String;)V": "Lnet/minecraft/class_3695;method_15405(Ljava/lang/String;)V",
-      "getHeartRows": "Lnet/minecraft/class_329;method_1733(I)I",
       "renderStatusBars": "Lnet/minecraft/class_329;method_1760(Lnet/minecraft/class_4587;)V"
     },
     "net/fabricmc/minja/mixin/PlayerEntityMixin": {
@@ -18,7 +17,6 @@
     "named:intermediary": {
       "net/fabricmc/minja/mixin/InGameHudMixin": {
         "Lnet/minecraft/util/profiler/Profiler;swap(Ljava/lang/String;)V": "Lnet/minecraft/class_3695;method_15405(Ljava/lang/String;)V",
-        "getHeartRows": "Lnet/minecraft/class_329;method_1733(I)I",
         "renderStatusBars": "Lnet/minecraft/class_329;method_1760(Lnet/minecraft/class_4587;)V"
       },
       "net/fabricmc/minja/mixin/PlayerEntityMixin": {

@@ -107,6 +107,10 @@ public class SpellHUD {
         this.visible = b;
     }
 
+    public static void toggleVisibility() {
+        visible = !visible;
+    }
+
     public void afterRenderStatusEffects(MatrixStack stack, float partialTicks) {
     }
 

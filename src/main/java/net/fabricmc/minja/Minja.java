@@ -68,8 +68,6 @@ public class Minja implements ModInitializer {
 
 		Registry.register(Registry.ITEM, new Identifier("spells", "lightningball"), LIGHTNINGBALL);
 		LOGGER.info("Lightning Ball launched");
-		//CAMILLE : NE PAS SUPPRIMER
-		//Registry.register(Registry.ITEM, new Identifier("spells", "lightningball"), SpellProjectile.getSpell("lightningball"));
 
 	}
 }

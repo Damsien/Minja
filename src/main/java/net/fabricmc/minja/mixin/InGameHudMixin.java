@@ -2,6 +2,7 @@ package net.fabricmc.minja.mixin;
 
 import com.mojang.authlib.minecraft.client.MinecraftClient;
 import com.mojang.blaze3d.systems.RenderSystem;
+import net.fabricmc.minja.PlayerMinja;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.hud.InGameHud;
 import net.minecraft.client.util.math.MatrixStack;
@@ -22,7 +23,7 @@ public class InGameHudMixin extends DrawableHelper {
     @Shadow private int scaledWidth;
     @Shadow private int scaledHeight;
     private final MinecraftClient client;
-    private static final Identifier MANA_ICON = new Identifier("minja:hud/textures/manabar.png");
+    private static final Identifier MANA_ICON = new Identifier("hud:textures/manabar.png");
 
     public InGameHudMixin(MinecraftClient client) {
         this.client = client;
@@ -32,43 +33,29 @@ public class InGameHudMixin extends DrawableHelper {
     private void renderStatusBarsMixin(MatrixStack matrices, CallbackInfo info) {
         PlayerEntity playerEntity = this.getCameraPlayer();
         if (playerEntity != null) {
+            int manaMax = ((PlayerMinja) playerEntity).getManaMax();
             LivingEntity livingEntity = this.getRiddenEntity();
             int variable_one;
             int variable_two;
-            int variable_three;
             int height = this.scaledHeight - 49;
             int width = this.scaledWidth / 2 + 91;
             if (this.getHeartCount(livingEntity) == 0) {
                 for (variable_one = 0; variable_one < 10; ++variable_one) {
-                    variable_three = height;
-                    /**if (thirstManager.dehydration >= 4.0F && this.ticks % (thirst * 3 + 1) == 0) {
-                        variable_three = height + (client.world.random.nextInt(3) - 1); // bouncy
-                        thirstManager.dehydration -= 4.0F;
-                    } else if (this.ticks % (thirst * 8 + 3) == 0) {
-                        variable_three = height + (client.world.random.nextInt(3) - 1); // bouncy
-                    }*/
                     int uppderCoord = 9;
                     /**if (ConfigInit.CONFIG.other_droplet_texture) {
-                        uppderCoord = uppderCoord + 9;
-                    }*/
+                     uppderCoord = uppderCoord + 9;
+                     }*/
                     int beneathCoord = 0;
-                    // Check for freezing later too
-                    // if (playerEntity.hasStatusEffect(EffectInit.DEHYDRATION)) {
-                    // beneathCoord = 36;
-                    // }
-                    /*if (playerEntity.hasStatusEffect(EffectInit.THIRST)) {
-                        beneathCoord = 18;
-                    }*/
+
                     variable_two = width - variable_one * 8 - 9;
-                    variable_three = variable_three;
                     RenderSystem.setShaderTexture(0, MANA_ICON);
-                    this.drawTexture(matrices, variable_two, variable_three, 0, 0, 9, 9);
-                    /**if (variable_one * 2 + 1 < thirst) {
-                        this.drawTexture(matrices, variable_two, variable_three, beneathCoord, uppderCoord, 9, 9); // Big icon
+                    this.drawTexture(matrices, variable_two, height, 0, 0, 9, 9);
+                    if (variable_one * 2 + 1 < manaMax) {
+                        this.drawTexture(matrices, variable_two, height, beneathCoord, uppderCoord, 9, 9); // Big icon
                     }
-                    if (variable_one * 2 + 1 == thirst) {
-                        this.drawTexture(matrices, variable_two, variable_three, beneathCoord + 9, uppderCoord, 9, 9); // Small icon
-                    }*/
+                    if (variable_one * 2 + 1 == manaMax) {
+                        this.drawTexture(matrices, variable_two, height, beneathCoord + 9, uppderCoord, 9, 9); // Small icon
+                    }
                 }
                 RenderSystem.setShaderTexture(0, GUI_ICONS_TEXTURE);
             }

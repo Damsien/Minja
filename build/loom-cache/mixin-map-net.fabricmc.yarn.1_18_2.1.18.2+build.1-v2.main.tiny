@@ -1,1 +1,7 @@
 v1	named	intermediary
+FIELD	net/fabricmc/minja/mixin/InGameHudMixin	I	ticks	field_2042
+FIELD	net/fabricmc/minja/mixin/InGameHudMixin	I	scaledWidth	field_2011
+FIELD	net/fabricmc/minja/mixin/InGameHudMixin	I	scaledHeight	field_2029
+METHOD	net/fabricmc/minja/mixin/InGameHudMixin	()Lnet/minecraft/entity/player/PlayerEntity;	getCameraPlayer	method_1737
+METHOD	net/fabricmc/minja/mixin/InGameHudMixin	()Lnet/minecraft/entity/LivingEntity;	getRiddenEntity	method_1734
+METHOD	net/fabricmc/minja/mixin/InGameHudMixin	(Lnet/minecraft/entity/LivingEntity;)I	getHeartCount	method_1744

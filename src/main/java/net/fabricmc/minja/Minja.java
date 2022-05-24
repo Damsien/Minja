@@ -2,9 +2,11 @@ package net.fabricmc.minja;
 
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
+import net.fabricmc.minja.objects.Grimoire;
 import net.fabricmc.minja.objects.Wand;
 import net.fabricmc.minja.spells.LightningBall;
 import net.fabricmc.minja.spells.Spell;
+import net.minecraft.item.Item;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import org.slf4j.Logger;
@@ -17,8 +19,17 @@ public class Minja implements ModInitializer {
 	
 	//Every item created by Minja
 	private static Wand WAND = new Wand(new FabricItemSettings().group(Spell.GroupItemsMinja.Minja).maxCount(1).maxDamage(0));
-	//private static Wand WAND = new Wand(new FabricItemSettings().group(ItemGroup.MISC).maxCount(1).maxDamage(0));
+	private static Grimoire GRIMOIRE = new Grimoire(new FabricItemSettings().group(Spell.GroupItemsMinja.Minja).maxCount(1).maxDamage(0));
+	public static final Item LIGHTNINGBALL = new LightningBallItem(new Item.Settings().group(Spell.GroupItemsMinja.Minja).maxCount(16));
 
+	public static final EntityType<LightningBallEntity> LightningBallEntityType = Registry.register(
+			Registry.ENTITY_TYPE,
+			new Identifier("spells", "lightningball"),
+			FabricEntityTypeBuilder.<LightningBallEntity>create(SpawnGroup.MISC, LightningBallEntity::new)
+					.dimensions(EntityDimensions.fixed(0.25F, 0.25F)) // dimensions in Minecraft units of the projectile
+					.trackRangeBlocks(4).trackedUpdateRate(10) // necessary for all thrown projectiles (as it prevents it from breaking, lol)
+					.build() // VERY IMPORTANT DONT DELETE FOR THE LOVE OF GOD PSLSSSSSS
+	);
 
 	// This logger is used to write text to the console and the log file.
 	// It is considered best practice to use your mod id as the logger's name.
@@ -44,6 +55,11 @@ public class Minja implements ModInitializer {
 		// Proceed with mild caution.
 		Registry.register(Registry.ITEM, new Identifier("objects", "wand"), WAND);
 		LOGGER.info("Wand launched");
+
+		Registry.register(Registry.ITEM, new Identifier("objects", "grimoire"), GRIMOIRE);
+		LOGGER.info("Grimoire launched");
+
+		Registry.register(Registry.ITEM, new Identifier("spells", "lightningball"), LIGHTNINGBALL);
 
 		//CAMILLE : NE PAS SUPPRIMER
 		//Registry.register(Registry.ITEM, new Identifier("spells", "lightningball"), SpellProjectile.getSpell("lightningball"));

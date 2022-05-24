@@ -27,7 +27,7 @@ public abstract class SpellProjectile extends Spell {
         }
     }*/
 
-    public static ProjectileEntity getProjectile() {
+    public ProjectileEntity getProjectile() {
         return projectile;
     }
 }

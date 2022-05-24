@@ -2,20 +2,11 @@
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
     {
-      "item": "minecraft:book"
-    },
-    {
-      "item": "minecraft:book"
-    },
-    {
-      "item": "minecraft:book"
-    },
-    {
       "item": "objects:wand"
     }
   ],
   "result": {
-    "item": "objects.grimoire",
+    "item": "objects:grimoire",
     "count": 1
   },
   "group": "objects"

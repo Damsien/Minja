@@ -71,6 +71,7 @@ public class Wand extends Item  {
 			((PlayerMinja) player).addMana(20);
 			try {
 				((PlayerMinja) player).removeMana(10);
+				System.out.println("Mana : " + ((PlayerMinja) player).getMana());
 			} catch (NotEnoughtManaException e) {
 				System.out.println(e.getMessage());
 			}

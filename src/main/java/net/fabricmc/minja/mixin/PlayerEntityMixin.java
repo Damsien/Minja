@@ -141,7 +141,7 @@ public abstract class PlayerEntityMixin implements PlayerMinja {
      */
     private void setMana(int amount) {
         if(amount < 0) mana = 0;
-        else mana = Math.min(amount, 100);
+        else mana = Math.min(mana+amount, MAX_MANA);
     }
 
     /**
@@ -193,7 +193,7 @@ public abstract class PlayerEntityMixin implements PlayerMinja {
     @Inject(method = "writeCustomDataToNbt", at = @At("RETURN"))
     public void writeCustomDataToNbt(NbtCompound nbt, CallbackInfo ci) {
         nbt.putInt("mana", mana);
-        for(int i = 0; i < 8; i++) {
+        for(int i = 0; i < spells.size(); i++) {
             nbt.putString("spell"+i, spells.get(i).getName() + "/" + spells.get(i).getType() + "/" + i);
         }
         nbt.putInt("activeSpell", activeSpell);
@@ -208,10 +208,12 @@ public abstract class PlayerEntityMixin implements PlayerMinja {
     @Inject(method = "readCustomDataFromNbt", at = @At("RETURN"))
     public void readCustomDataFromNbt(NbtCompound nbt, CallbackInfo ci) {
         mana = nbt.getInt("mana");
-        for(int i = 0; i < 8; i++) {
-            spells.add(Minja.SPELLS_MAP.get(
-                    nbt.getString("spell"+i)+"/"+nbt.getString("spell"+i))
-            );
+        for(int i = 0; i < MAX_SPELLS; i++) {
+            if(nbt.contains("spell"+i)) {
+                spells.add(Minja.SPELLS_MAP.get(
+                        nbt.getString("spell"+i)+"/"+nbt.getString("spell"+i))
+                );
+            }
         }
         activeSpell = nbt.getInt("activeSpell");
     }

@@ -11,13 +11,14 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.world.World;
 
+import java.util.Date;
+
 public abstract class MinjaItems extends Item {
 
     private long lastEvent;
     private boolean firstTime = true;
 
-    private final int TIMER = 3;
-
+    private final int TIMER = 200;
 
     public MinjaItems(Settings settings) {
         super(settings);
@@ -25,12 +26,12 @@ public abstract class MinjaItems extends Item {
 
     @Override
     //Used when the player use right click with the Wand
-    public TypedActionResult<ItemStack> use(World world, PlayerEntity playerEntity, Hand hand) {
+    final public TypedActionResult<ItemStack> use(World world, PlayerEntity playerEntity, Hand hand) {
 
         TypedActionResult state = null;
 
         //Mettre ici l'ouverture de l'HUD
-        lastEvent = world.getTime();
+        lastEvent = new Date().getTime();
 
         if(firstTime) {
             firstTime = false;
@@ -39,7 +40,7 @@ public abstract class MinjaItems extends Item {
 
                 @Override
                 public void execute() {
-                    if(world.getTime() - lastEvent > TIMER) {
+                    if(new Date().getTime() - lastEvent > TIMER-10) {
                         onRightClickReleased(world, playerEntity, hand);
                         firstTime = true;
                     } else {

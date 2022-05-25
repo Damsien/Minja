@@ -22,10 +22,10 @@ public abstract class Clock implements Runnable {
         System.out.println("Delta : " + delta);
         System.out.println("Ending : " + end);
 
-        while(delta < end) {
-            delta = world.getTime();
-            System.out.println("Delta : " + delta);
-            System.out.println("Ending : " + end);
+        try {
+            Thread.sleep(timer);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         }
 
         System.out.println("Executing : " + end);

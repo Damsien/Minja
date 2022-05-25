@@ -33,6 +33,15 @@ public class Wand extends Item  {
 	//Used when the player use right click with the Wand
 	public TypedActionResult<ItemStack> use(World world, PlayerEntity playerEntity, Hand hand) {
 
+		System.out.println("Mana1 : " + ((PlayerMinja) playerEntity).getMana());
+		//((PlayerMinja) playerEntity).addMana(10);
+		try {
+			((PlayerMinja) playerEntity).removeMana(5);
+		} catch (NotEnoughtManaException e) {
+			//throw new RuntimeException(e);
+		}
+		System.out.println("Mana2 : " + ((PlayerMinja) playerEntity).getMana());
+
 		//Mettre ici l'ouverture de l'HUD
 		//SpellHUD.setVisible(true);
 

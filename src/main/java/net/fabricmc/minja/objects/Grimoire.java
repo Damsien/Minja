@@ -36,8 +36,17 @@ public class Grimoire extends Item  {
 	public TypedActionResult<ItemStack> use(World world, PlayerEntity playerEntity, Hand hand) {
 
 		//Mettre ici l'ouverture de l'HUD
-		SpellHUD.toggleVisibility();
+		SpellHUD.setVisible(true);
 
 		return TypedActionResult.success(playerEntity.getStackInHand(hand));
 	}
+
+	@Override
+	public ItemStack finishUsing(ItemStack stack, World world, LivingEntity user) {
+
+		SpellHUD.setVisible(false);
+
+		return stack;
+	}
+
 }

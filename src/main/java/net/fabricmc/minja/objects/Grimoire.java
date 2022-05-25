@@ -1,5 +1,6 @@
 package net.fabricmc.minja.objects;
 
+import net.fabricmc.minja.events.MinjaItems;
 import net.fabricmc.minja.hud.SpellHUD;
 import net.fabricmc.minja.spells.LightningBall;
 import net.minecraft.entity.LivingEntity;
@@ -14,7 +15,7 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.world.World;
 
-public class Grimoire extends Item  {
+public class Grimoire extends MinjaItems {
 
 	//public static ItemConvertible Baguette;
 	//private static Item WAND = new Item(new FabricItemSettings().group(GroupItemsMinja.Minja));
@@ -32,21 +33,27 @@ public class Grimoire extends Item  {
 	}
 
 	@Override
-	//Used when the player use right click with the Wand
-	public TypedActionResult<ItemStack> use(World world, PlayerEntity playerEntity, Hand hand) {
+	public TypedActionResult<ItemStack> onRightClickPressed(World world, PlayerEntity playerEntity, Hand hand) {
 
 		//Mettre ici l'ouverture de l'HUD
 		SpellHUD.setVisible(true);
 
 		return TypedActionResult.success(playerEntity.getStackInHand(hand));
+
 	}
 
 	@Override
-	public ItemStack finishUsing(ItemStack stack, World world, LivingEntity user) {
+	public TypedActionResult<ItemStack> onRightClickMaintained(World world, PlayerEntity playerEntity, Hand hand) {
+		return TypedActionResult.pass(playerEntity.getStackInHand(hand));
+	}
 
+	@Override
+	public TypedActionResult<ItemStack> onRightClickReleased(World world, PlayerEntity playerEntity, Hand hand) {
+		//Mettre ici l'ouverture de l'HUD
 		SpellHUD.setVisible(false);
 
-		return stack;
+		return null;
 	}
+
 
 }

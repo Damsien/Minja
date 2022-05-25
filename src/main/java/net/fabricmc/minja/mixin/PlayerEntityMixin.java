@@ -34,7 +34,7 @@ public abstract class PlayerEntityMixin implements PlayerMinja {
     /**
      * Mana is a fuel for using spells
      */
-    private int mana = 0;
+    private int mana = 20;
 
     /**
      * Spells are all the spells that the player can use. It's representing by a wheel
@@ -192,7 +192,7 @@ public abstract class PlayerEntityMixin implements PlayerMinja {
      */
     @Inject(method = "writeCustomDataToNbt", at = @At("RETURN"))
     public void writeCustomDataToNbt(NbtCompound nbt, CallbackInfo ci) {
-        nbt.putInt("mana", mana);
+        //nbt.putInt("mana", mana);
         for(int i = 0; i < spells.size(); i++) {
             nbt.putString("spell"+i, spells.get(i).getName() + "/" + spells.get(i).getType() + "/" + i);
         }
@@ -207,7 +207,7 @@ public abstract class PlayerEntityMixin implements PlayerMinja {
      */
     @Inject(method = "readCustomDataFromNbt", at = @At("RETURN"))
     public void readCustomDataFromNbt(NbtCompound nbt, CallbackInfo ci) {
-        mana = nbt.getInt("mana");
+        //mana = nbt.getInt("mana");
         for(int i = 0; i < MAX_SPELLS; i++) {
             if(nbt.contains("spell"+i)) {
                 spells.add(Minja.SPELLS_MAP.get(

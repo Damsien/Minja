@@ -37,9 +37,18 @@ public class Grimoire extends Item  {
 	public TypedActionResult<ItemStack> use(World world, PlayerEntity playerEntity, Hand hand) {
 		playerEntity.playSound(SoundEvents.ENTITY_COW_AMBIENT, 1.0F, 1.0F);
 		//Mettre ici l'ouverture de l'HUD
-		SpellHUD.toggleVisibility();
+		SpellHUD.setVisible(true);
 
 		//Pas touche en dessous
 		return TypedActionResult.success(playerEntity.getStackInHand(hand));
 	}
+
+	@Override
+	public ItemStack finishUsing(ItemStack stack, World world, LivingEntity user) {
+
+		SpellHUD.setVisible(false);
+
+		return stack;
+	}
+
 }

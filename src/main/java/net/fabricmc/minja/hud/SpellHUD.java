@@ -3,11 +3,13 @@ package net.fabricmc.minja.hud;
 
 import net.fabricmc.minja.Minja;
 import net.fabricmc.minja.spells.Spell;
+import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.render.WorldRenderer;
 import net.minecraft.client.util.Window;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.util.math.Vec3d;
 
 
 import java.awt.*;
@@ -27,8 +29,6 @@ public class SpellHUD {
     private int height;
     public SpellHUD() {
         spells = new ArrayList<>();
-        spells.add(null);
-        spells.add(null);
         spells.add(null);
         spells.add(null);
         spells.add(null);
@@ -92,7 +92,7 @@ public class SpellHUD {
             System.out.println("Valeur courante de  " + "souris" + " : " + valeurCourante);
 
             boolean isInInterval = i != 0   ? borneInf < valeurCourante && valeurCourante < borneSup
-                                            : borneInf < valeurCourante && valeurCourante < 2*Math.PI;
+                                            : (borneInf < valeurCourante && valeurCourante < 2*Math.PI) || 0 < valeurCourante && valeurCourante < borneSup;
 
             if(isInInterval)
                 fontRenderer.draw(stack, ""+(i), (float)(width + Math.round(p.x)), (float)(height + Math.round(p.y)), Color.BLUE.getRGB());
@@ -108,6 +108,7 @@ public class SpellHUD {
     }
 
     public static void toggleVisibility() {
+        System.out.println("Petit message de test");
         visible = !visible;
     }
 

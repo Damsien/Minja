@@ -44,6 +44,8 @@ public class Grimoire extends MinjaItems {
 
 	@Override
 	public TypedActionResult<ItemStack> onRightClickMaintained(World world, PlayerEntity playerEntity, Hand hand) {
+
+		// Cancel Event ==> Cancel hand animation
 		return TypedActionResult.pass(playerEntity.getStackInHand(hand));
 	}
 

@@ -5,6 +5,7 @@ import net.fabricmc.minja.Exceptions.NotEnoughtManaException;
 import net.fabricmc.minja.PlayerMinja;
 import net.fabricmc.minja.clocks.Clock;
 import net.fabricmc.minja.hud.SpellHUD;
+import net.fabricmc.minja.mixin.PlayerEntityMixin;
 import net.fabricmc.minja.spells.LightningBall;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.LivingEntity;
@@ -47,9 +48,12 @@ public class Wand extends Item {
 		}
 		System.out.println("Mana2 : " + ((PlayerMinja) playerEntity).getMana());
 
-		//Ci dessous, tests pour arnaud, pas touche
-		LightningBall test = new LightningBall();
-		test.cast(playerEntity);
+		// Cast the spell associated
+		PlayerMinja player = (PlayerMinja) playerEntity;
+		player.addSpell(new LightningBall());
+		player.getActiveSpell().cast(playerEntity);
+		//LightningBall test = new LightningBall();
+		//test.cast(playerEntity);
 		return TypedActionResult.success(playerEntity.getStackInHand(hand));
 	}
 

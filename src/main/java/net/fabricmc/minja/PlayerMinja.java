@@ -61,6 +61,10 @@ public interface PlayerMinja {
      */
     public void setActiveSpell(String name, String type) throws SpellNotFoundException;
 
+    public Spell getActiveSpell();
+
+    public int getActiveSpellIndex();
+
     // Mana
 
     /**

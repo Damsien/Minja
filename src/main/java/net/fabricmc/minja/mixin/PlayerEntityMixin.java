@@ -1,14 +1,17 @@
 package net.fabricmc.minja.mixin;
 
+import com.mojang.authlib.GameProfile;
 import net.fabricmc.minja.Minja;
 import net.fabricmc.minja.Exceptions.NotEnoughtManaException;
 import net.fabricmc.minja.Exceptions.SpellNotFoundException;
 import net.fabricmc.minja.PlayerMinja;
+import net.fabricmc.minja.spells.LightningBall;
 import net.fabricmc.minja.spells.Spell;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -133,6 +136,17 @@ public abstract class PlayerEntityMixin implements PlayerMinja {
         activeSpell = spells.indexOf(getSpell(name, type));
     }
 
+
+    public Spell getActiveSpell() {
+        return this.spells.get(this.activeSpell);
+    }
+
+
+    public int getActiveSpellIndex() {
+        return this.activeSpell;
+    }
+
+
     // Mana
 
     /**
@@ -204,7 +218,7 @@ public abstract class PlayerEntityMixin implements PlayerMinja {
      * Read the persistent data of the MinjaPlayer : mana, spells and activeSpell
      * @param nbt
      * @param ci
-     */
+     *
     @Inject(method = "readCustomDataFromNbt", at = @At("RETURN"))
     public void readCustomDataFromNbt(NbtCompound nbt, CallbackInfo ci) {
         //mana = nbt.getInt("mana");
@@ -216,6 +230,6 @@ public abstract class PlayerEntityMixin implements PlayerMinja {
             }
         }
         activeSpell = nbt.getInt("activeSpell");
-    }
+    }*/
 
 }

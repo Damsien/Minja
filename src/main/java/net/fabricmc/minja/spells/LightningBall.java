@@ -16,7 +16,7 @@ import net.minecraft.entity.LightningEntity;
 public class LightningBall extends SpellProjectile {
 
     public LightningBall() {
-        super("Lightning Ball", 10, "icon.png", "Basic", null);
+        super("Lightning Ball", 10, "Basic", null);
     }
 
     @Override

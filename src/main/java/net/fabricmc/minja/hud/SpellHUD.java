@@ -145,8 +145,8 @@ public class SpellHUD {
             if(!isInSafeRange) {
 
                 // Check if the current spell drawn is the active one
-                if(i == currentIndex)   draw(stack, i, width+p.x, height +p.y, Color.BLUE);
-                else                    draw(LightningBallItem.getLightningBall().asItem(),width+p.x,height +p.y);
+                if(i == currentIndex)   Renderer.draw(stack, i, width+p.x, height +p.y, Color.BLUE);
+                else                    Renderer.draw(stack, player.getActiveSpell(),width+p.x,height +p.y);
 
 
             // In case we are in the selection zone :
@@ -160,10 +160,10 @@ public class SpellHUD {
                         minecraft.player.playSound(SoundEvents.UI_BUTTON_CLICK,1.0F, 1.0F);
                     }
 
-                    draw(stack, i, width+p.x, height +p.y, Color.BLUE);
+                    Renderer.draw(stack, i, width+p.x, height +p.y, Color.BLUE);
                 }
                 else
-                    draw(LightningBallItem.getLightningBall().asItem(),width+p.x,height +p.y);
+                    Renderer.draw(stack, player.getActiveSpell(),width+p.x,height +p.y);
 
             }
         }
@@ -188,17 +188,6 @@ public class SpellHUD {
 
 
 
-    private void draw(MatrixStack stack, int text, double x, double y, Color color) {
-        draw(stack, ""+text, x, y, color);
-    }
-
-    private void draw(MatrixStack stack, String text, double x, double y, Color color) {
-        fontRenderer.draw(stack, text, (float)x, (float)y, color.getRGB());
-    }
-
-    private void draw(Item item, double x, double y) {
-        itemRenderer.renderGuiItemIcon(item.getDefaultStack(), (int)x, (int)y);
-    }
 
 
 

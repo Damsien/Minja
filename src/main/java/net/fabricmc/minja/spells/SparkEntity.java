@@ -50,7 +50,7 @@ public class SparkEntity extends ThrownItemEntity {// ThrownEntity {
     @Environment(EnvType.CLIENT)
     private ParticleEffect getParticleParameters() { // Not entirely sure, but probably has do to with the snowball's particles. (OPTIONAL)
         ItemStack itemStack = this.getItem();
-        return (ParticleEffect)(itemStack.isEmpty() ? ParticleTypes.FLASH : new ItemStackParticleEffect(ParticleTypes.ITEM, itemStack));
+        return (ParticleEffect)(itemStack.isEmpty() ? ParticleTypes.FLAME : new ItemStackParticleEffect(ParticleTypes.ITEM, itemStack));
     }
 
     @Environment(EnvType.CLIENT)

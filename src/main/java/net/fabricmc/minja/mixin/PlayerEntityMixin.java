@@ -37,7 +37,7 @@ public abstract class PlayerEntityMixin implements PlayerMinja {
     /**
      * Mana is a fuel for using spells
      */
-    private int mana = 20;
+    private int mana = 35;
 
     /**
      * Spells are all the spells that the player can use. It's representing by a wheel

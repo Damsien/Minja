@@ -19,54 +19,72 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(InGameHud.class)
 public class InGameHudMixin extends DrawableHelper {
 
-    @Shadow private int ticks;
+
+    /**
+     * Width
+     */
     @Shadow private int scaledWidth;
+
+    /**
+     * Height
+     */
     @Shadow private int scaledHeight;
-    private final MinecraftClient client;
+
+    /**
+     * Texture of a mana droplet
+     */
     private static final Identifier MANA_ICON = new Identifier("hud:textures/manabar.png");
 
-    public InGameHudMixin(MinecraftClient client) {
-        this.client = client;
-    }
-
+    /**
+     * Show current mana with a status bar
+     * @param MatrixStack matrices
+     * @param Callback info
+     */
     @Inject(method = "renderStatusBars", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/profiler/Profiler;swap(Ljava/lang/String;)V", ordinal = 1))
     private void renderStatusBarsMixin(MatrixStack matrices, CallbackInfo info) {
-        PlayerEntity playerEntity = this.getCameraPlayer(); // get the current player
+        // get the current player
+        PlayerEntity playerEntity = this.getCameraPlayer();
         if (playerEntity != null) {
-            int currentMana = ((PlayerMinja) playerEntity).getMana(); // get the mana of the player
+
+            // get the current mana and max mana of the player
+            int currentMana = ((PlayerMinja) playerEntity).getMana();
             int manaMax = ((PlayerMinja) playerEntity).getManaMax();
-            LivingEntity livingEntity = this.getRiddenEntity(); // test if player is riding an entity
 
-            int height = this.scaledHeight - 49; // why theses values ???
-            int width = this.scaledWidth / 2 + 91; // why theses values ???
-            //int temporaryMana = 0;
+            // test if player is riding an entity
+            LivingEntity livingEntity = this.getRiddenEntity();
 
-            if (this.getHeartCount(livingEntity) == 0) { // (TODO : Move) (currently) Hide the mana bar if the player is riding
-                for (int i = 0; i < 10; i++) { // draw one mana droplet at a time
-                    int uppderCoord = 9;
-                    int beneathCoord = 0;
-                    int variable_two = width - i * 8 - 9;
+            int height = this.scaledHeight - 49;
+            int width = this.scaledWidth / 2 + 91;
 
+            if (this.getHeartCount(livingEntity) == 0) { // TODO : Move (currently) Hide the mana bar if the player is riding
+                int uppderCoord = 9;
+                int beneathCoord = 0;
+
+                // draw one mana droplet at a time
+                for (int i = 0; i < 10; i++) {
+                    int j = width - i * 8 - 9;
 
                     // get the texture of the mana
                     RenderSystem.setShaderTexture(0, MANA_ICON);
-                    // draw the texture placeholder (black one)
-                    this.drawTexture(matrices, variable_two, height, 0, 0, 9, 9);
 
-                    if (i * 2 + 1 < currentMana*20/manaMax) { //temporaryMana * manaMax/10 < currentMana
-                        // draw the big blue mana icon
-                        //temporaryMana = temporaryMana + manaMax/10;
-                        this.drawTexture(matrices, variable_two, height, beneathCoord, uppderCoord, 9, 9);
+                    // draw the texture placeholder (black one)
+                    this.drawTexture(matrices, j, height, 0, 0, 9, 9);
+
+                    if (i * 2 + 1 < currentMana * 20 / manaMax) {
+                        // draw the big mana icon
+                        this.drawTexture(matrices, j, height, beneathCoord, uppderCoord, 9, 9);
                     }
-                    if (i * 2 + 1 == currentMana*20/manaMax) { //temporaryMana * manaMax/10 == currentMana
-                        // draw the little blue mana icon
-                        this.drawTexture(matrices, variable_two, height, beneathCoord + 9, uppderCoord, 9, 9);
+                    if (i * 2 + 1 == currentMana * 20 / manaMax) {
+                        // draw the little mana icon
+                        this.drawTexture(matrices, j, height, beneathCoord + 9, uppderCoord, 9, 9);
                     }
                 }
                 RenderSystem.setShaderTexture(0, GUI_ICONS_TEXTURE);
             }
         }
     }
+
+    // Methods needed but not modified so @Shadow
 
     @Shadow
     private PlayerEntity getCameraPlayer() {

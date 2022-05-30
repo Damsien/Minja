@@ -38,22 +38,26 @@ public class Wand extends Item {
 	//Used when the player use right click with the Wand
 	public TypedActionResult<ItemStack> use(World world, PlayerEntity playerEntity, Hand hand) {
 
-		System.out.println("Mana1 : " + ((PlayerMinja) playerEntity).getMana());
-		//((PlayerMinja) playerEntity).addMana(10);
-		try {
-			((PlayerMinja) playerEntity).removeMana(5);
-
-		} catch (NotEnoughtManaException e) {
-			//throw new RuntimeException(e);
-		}
-		System.out.println("Mana2 : " + ((PlayerMinja) playerEntity).getMana());
-
 		// Cast the spell associated
 		PlayerMinja player = (PlayerMinja) playerEntity;
 		player.addSpell(new LightningBall());
 		player.getActiveSpell().cast(playerEntity);
-		//LightningBall test = new LightningBall();
-		//test.cast(playerEntity);
+
+		// System.out.println("Mana1 : " + ((PlayerMinja) playerEntity).getMana());
+		try {
+			((PlayerMinja) playerEntity).removeMana(player.getActiveSpell().getManaCost());
+
+		} catch (NotEnoughtManaException e) {
+			// throw new RuntimeException(e);
+			// TODO : A UPGRADE
+
+		}
+		// System.out.println("Mana2 : " + ((PlayerMinja) playerEntity).getMana());
+
+		// TODO : A SUPPRIMER ??
+		// LightningBall test = new LightningBall();
+		// test.cast(playerEntity);
+
 		return TypedActionResult.success(playerEntity.getStackInHand(hand));
 	}
 

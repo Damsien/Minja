@@ -1,19 +1,11 @@
 package net.fabricmc.minja.mixin;
 
-import com.mojang.authlib.GameProfile;
-import net.fabricmc.minja.Minja;
-import net.fabricmc.minja.Exceptions.NotEnoughtManaException;
-import net.fabricmc.minja.Exceptions.SpellNotFoundException;
+import net.fabricmc.minja.exceptions.NotEnoughtManaException;
+import net.fabricmc.minja.exceptions.SpellNotFoundException;
 import net.fabricmc.minja.PlayerMinja;
-import net.fabricmc.minja.spells.LightningBall;
 import net.fabricmc.minja.spells.Spell;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.Difficulty;
-import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -232,4 +224,5 @@ public abstract class PlayerEntityMixin implements PlayerMinja {
         }
         activeSpell = nbt.getInt("activeSpell");
     }*/
+
 }

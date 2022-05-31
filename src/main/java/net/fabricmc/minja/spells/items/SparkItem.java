@@ -1,6 +1,6 @@
-package net.fabricmc.minja.spells;
+package net.fabricmc.minja.spells.items;
 
-import net.fabricmc.minja.objects.Wand;
+import net.fabricmc.minja.spells.entities.SparkEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -25,17 +25,18 @@ public class SparkItem extends Item {
     }
 
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
-        ItemStack itemStack = user.getStackInHand(hand); // creates a new ItemStack instance of the user's itemStack in-hand
-        world.playSound(null, user.getX(), user.getY(), user.getZ(), SoundEvents.ENTITY_BLAZE_SHOOT, SoundCategory.NEUTRAL, 0.5F, 1F); // plays a globalSoundEvent
+        // Spark sound effect
+        world.playSound(null, user.getX(), user.getY(), user.getZ(), SoundEvents.ENTITY_BLAZE_SHOOT, SoundCategory.NEUTRAL, 0.5F, 1F);
+        // SparkEntity parameters
         if (!world.isClient) {
             SparkEntity sparkEntity = new SparkEntity(user, world);
             sparkEntity.setVelocity(user, user.getPitch(), user.getYaw(), 0.0F, 2F, 0F);
             sparkEntity.setNoGravity(true);
-            world.spawnEntity(sparkEntity); // spawns entity
+            world.spawnEntity(sparkEntity);
         }
 
         user.incrementStat(Stats.USED.getOrCreateStat(this));
 
-        return TypedActionResult.success(itemStack, world.isClient());
+        return TypedActionResult.success(user.getStackInHand(hand), world.isClient());
     }
 }

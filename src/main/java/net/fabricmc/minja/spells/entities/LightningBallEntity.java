@@ -1,4 +1,4 @@
-package net.fabricmc.minja.spells;
+package net.fabricmc.minja.spells.entities;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -7,8 +7,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LightningEntity;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.projectile.ProjectileEntity;
-import net.minecraft.entity.projectile.thrown.ThrownEntity;
 import net.minecraft.entity.projectile.thrown.ThrownItemEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -20,7 +18,7 @@ import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
-public class LightningBallEntity extends ThrownItemEntity {// ThrownEntity {
+public class LightningBallEntity extends ThrownItemEntity {
 
         public LightningBallEntity(EntityType<LightningBallEntity> lightningBallEntityEntityType, World world) {
             super(lightningBallEntityEntityType, world);
@@ -41,13 +39,13 @@ public class LightningBallEntity extends ThrownItemEntity {// ThrownEntity {
         }
 
         @Environment(EnvType.CLIENT)
-        private ParticleEffect getParticleParameters() { // Not entirely sure, but probably has do to with the snowball's particles. (OPTIONAL)
+        private ParticleEffect getParticleParameters() {
             ItemStack itemStack = this.getItem();
             return (ParticleEffect)(itemStack.isEmpty() ? ParticleTypes.FLASH : new ItemStackParticleEffect(ParticleTypes.ITEM, itemStack));
         }
 
         @Environment(EnvType.CLIENT)
-        public void handleStatus(byte status) { // Also not entirely sure, but probably also has to do with the particles. This method (as well as the previous one) are optional, so if you don't understand, don't include this one.
+        public void handleStatus(byte status) {
             if (status == 3) {
                 ParticleEffect particleEffect = this.getParticleParameters();
 
@@ -58,33 +56,35 @@ public class LightningBallEntity extends ThrownItemEntity {// ThrownEntity {
 
         }
 
-    protected void onEntityHit(EntityHitResult entityHitResult) { // called on entity hit.
+    protected void onEntityHit(EntityHitResult entityHitResult) {
         super.onEntityHit(entityHitResult);
-        Entity entity = entityHitResult.getEntity(); // sets a new Entity instance as the EntityHitResult (victim)
+        Entity entity = entityHitResult.getEntity();
         effect(entity.getPos());
     }
 
-    protected void onCollision(HitResult hitResult) { // called on collision with a block
+    protected void onCollision(HitResult hitResult) {
         super.onCollision(hitResult);
         effect(hitResult.getPos());
-        if (!this.world.isClient) { // checks if the world is client
-            this.world.sendEntityStatus(this, (byte)3); // particle?
-            this.kill(); // kills the projectile
+        // Deleting entity
+        if (!this.world.isClient) {
+            this.world.sendEntityStatus(this, (byte)3);
+            this.kill();
         }
     }
 
-    protected void onSwimmingStart() { // called when entity is in water
+    protected void onSwimmingStart() {
         super.onSwimmingStart();
         effect(this.getPos());
-        if (!this.world.isClient) { // checks if the world is client
-            this.world.sendEntityStatus(this, (byte)3); // particle?
-            this.kill(); // kills the projectile
+        // Deleting entity
+        if (!this.world.isClient) {
+            this.world.sendEntityStatus(this, (byte)3);
+            this.kill();
         }
     }
 
     private void effect(Vec3d pos) {
-        LightningEntity lightning = new LightningEntity(EntityType.LIGHTNING_BOLT, world); // Create the lightning bolt
-        lightning.setPosition(pos); // Set its position
-        world.spawnEntity(lightning); // Spawn the lightning entity
+        LightningEntity lightning = new LightningEntity(EntityType.LIGHTNING_BOLT, world);
+        lightning.setPosition(pos);
+        world.spawnEntity(lightning);
     }
 }

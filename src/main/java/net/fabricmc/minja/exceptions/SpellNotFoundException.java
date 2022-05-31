@@ -1,4 +1,4 @@
-package net.fabricmc.minja.Exceptions;
+package net.fabricmc.minja.exceptions;
 
 public class SpellNotFoundException extends Exception {
 

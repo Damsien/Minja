@@ -1,6 +1,6 @@
 package net.fabricmc.minja;
 
-import net.fabricmc.minja.spells.EntitySpawnPacket;
+import net.fabricmc.minja.spells.entities.EntitySpawnPacket;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.network.ClientSidePacketRegistry;

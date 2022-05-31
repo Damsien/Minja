@@ -1,35 +1,15 @@
 package net.fabricmc.minja.hud;
 
 
-import net.fabricmc.minja.Minja;
 import net.fabricmc.minja.PlayerMinja;
-import net.fabricmc.minja.spells.LightningBallItem;
-import net.fabricmc.minja.spells.Spell;
-import net.fabricmc.minja.spells.SpellProjectile;
-import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gui.hud.InGameHud;
-import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.render.WorldRenderer;
 import net.minecraft.client.render.item.ItemRenderer;
-import net.minecraft.client.util.Window;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
-import net.minecraft.text.LiteralText;
-import net.minecraft.util.math.Vec3d;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
-
-
 import java.awt.*;
-import java.util.ArrayList;
 
-@Mixin(InGameHud.class)
 public class SpellHUD {
 
     private MinecraftClient minecraft;

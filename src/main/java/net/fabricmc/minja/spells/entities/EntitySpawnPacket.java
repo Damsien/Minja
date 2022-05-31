@@ -1,4 +1,4 @@
-package net.fabricmc.minja.spells;
+package net.fabricmc.minja.spells.entities;
 
 import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.network.ServerSidePacketRegistry;

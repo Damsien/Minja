@@ -1,20 +1,13 @@
-package net.fabricmc.minja.spells;
+package net.fabricmc.minja.spells.entities;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.minja.Minja;
-import net.minecraft.block.AbstractBlock;
-import net.minecraft.block.FireBlock;
-import net.minecraft.block.MapColor;
-import net.minecraft.block.Material;
-import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.block.*;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LightningEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.passive.AnimalEntity;
-import net.minecraft.entity.projectile.ProjectileEntity;
-import net.minecraft.entity.projectile.thrown.ThrownEntity;
 import net.minecraft.entity.projectile.thrown.ThrownItemEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -23,7 +16,6 @@ import net.minecraft.particle.ParticleEffect;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraft.util.math.BlockPos;
 
@@ -68,7 +60,7 @@ public class SparkEntity extends ThrownItemEntity {// ThrownEntity {
     protected void onEntityHit(EntityHitResult entityHitResult) { // called on entity hit.
         super.onEntityHit(entityHitResult);
         Entity entity = entityHitResult.getEntity(); // sets a new Entity instance as the EntityHitResult (victim)
-        effect(entity);
+        effectOnEntity(entity);
     }
 
     protected void onCollision(HitResult hitResult) { // called on collision with a block
@@ -87,9 +79,9 @@ public class SparkEntity extends ThrownItemEntity {// ThrownEntity {
         }
     }
 
-    private void effect(Entity entity) {
+    private void effectOnEntity(Entity entity) {
         entity.setOnFireFor(1);
-        if(entity instanceof AnimalEntity) {
+        if (entity instanceof AnimalEntity) {
             entity.kill();
         }
     }

@@ -1,6 +1,6 @@
-package net.fabricmc.minja.spells;
+package net.fabricmc.minja.spells.items;
 
-import net.fabricmc.minja.objects.Wand;
+import net.fabricmc.minja.spells.entities.LightningBallEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;

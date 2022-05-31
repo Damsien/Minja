@@ -2,15 +2,14 @@
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
     {
-      "item": "minecraft:book"
+      "item": "minecraft:stick"
     },
     {
-      "item": "objects:wand"
+      "item": "minecraft:stick"
     }
   ],
   "result": {
-    "item": "objects:grimoire",
+    "item": "objects:wand",
     "count": 1
-  },
-  "group": "minja"
+  }
 }

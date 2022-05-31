@@ -1,9 +1,11 @@
 package net.fabricmc.minja.mixin;
 
+import com.mojang.authlib.GameProfile;
 import net.fabricmc.minja.Minja;
 import net.fabricmc.minja.Exceptions.NotEnoughtManaException;
 import net.fabricmc.minja.Exceptions.SpellNotFoundException;
 import net.fabricmc.minja.PlayerMinja;
+import net.fabricmc.minja.spells.LightningBall;
 import net.fabricmc.minja.spells.Spell;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -35,7 +37,7 @@ public abstract class PlayerEntityMixin implements PlayerMinja {
     /**
      * Mana is a fuel for using spells
      */
-    private int mana;
+    private int mana = 35;
 
     /**
      * Spells are all the spells that the player can use. It's representing by a wheel
@@ -46,7 +48,6 @@ public abstract class PlayerEntityMixin implements PlayerMinja {
      * Active spell is the current selected spell by the player
      */
     private int activeSpell = 0;
-
 
     // Spells
 
@@ -135,6 +136,17 @@ public abstract class PlayerEntityMixin implements PlayerMinja {
         activeSpell = spells.indexOf(getSpell(name, type));
     }
 
+
+    public Spell getActiveSpell() {
+        return this.spells.get(this.activeSpell);
+    }
+
+
+    public int getActiveSpellIndex() {
+        return this.activeSpell;
+    }
+
+
     // Mana
 
     /**
@@ -142,7 +154,6 @@ public abstract class PlayerEntityMixin implements PlayerMinja {
      * @param amount between 0 and 100
      */
     private void setMana(int amount) {
-        System.out.println("Set mana : " + mana);
         if(amount < 0) mana = 0;
         else mana = Math.min(amount, MAX_MANA);
     }
@@ -195,9 +206,7 @@ public abstract class PlayerEntityMixin implements PlayerMinja {
      */
     @Inject(method = "writeCustomDataToNbt", at = @At("RETURN"))
     public void writeCustomDataToNbt(NbtCompound nbt, CallbackInfo ci) {
-        System.out.println("Writte");
-        nbt.putInt("mana", mana);
-        System.out.println(nbt.getInt("mana"));
+        //nbt.putInt("mana", mana);
         for(int i = 0; i < spells.size(); i++) {
             nbt.putString("spell"+i, spells.get(i).getName() + "/" + spells.get(i).getType() + "/" + i);
         }
@@ -209,17 +218,10 @@ public abstract class PlayerEntityMixin implements PlayerMinja {
      * Read the persistent data of the MinjaPlayer : mana, spells and activeSpell
      * @param nbt
      * @param ci
-     */
+     *
     @Inject(method = "readCustomDataFromNbt", at = @At("RETURN"))
     public void readCustomDataFromNbt(NbtCompound nbt, CallbackInfo ci) {
-        System.out.println("Raead");
-        System.out.println(nbt.contains("mana"));
-        if(nbt.contains("mana")) {
-            setMana(nbt.getInt("mana"));
-        } else {
-            // First connexion
-            setMana(MAX_MANA);
-        }
+        //mana = nbt.getInt("mana");
         for(int i = 0; i < MAX_SPELLS; i++) {
             if(nbt.contains("spell"+i)) {
                 spells.add(Minja.SPELLS_MAP.get(
@@ -228,6 +230,6 @@ public abstract class PlayerEntityMixin implements PlayerMinja {
             }
         }
         activeSpell = nbt.getInt("activeSpell");
-    }
+    }*/
 
 }

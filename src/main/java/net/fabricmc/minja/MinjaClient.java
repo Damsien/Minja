@@ -19,6 +19,7 @@ public class MinjaClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         EntityRendererRegistry.register(Minja.LightningBallEntityType, FlyingItemEntityRenderer::new);
+        EntityRendererRegistry.register(Minja.SparkEntityType, FlyingItemEntityRenderer::new);
         receiveEntityPacket();
     }
 

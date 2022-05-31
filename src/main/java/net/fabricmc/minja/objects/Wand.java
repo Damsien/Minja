@@ -1,9 +1,13 @@
 package net.fabricmc.minja.objects;
 
+import net.fabricmc.fabric.api.event.player.UseItemCallback;
 import net.fabricmc.minja.Exceptions.NotEnoughtManaException;
 import net.fabricmc.minja.PlayerMinja;
+import net.fabricmc.minja.clocks.Clock;
 import net.fabricmc.minja.hud.SpellHUD;
+import net.fabricmc.minja.mixin.PlayerEntityMixin;
 import net.fabricmc.minja.spells.LightningBall;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.StackReference;
@@ -11,13 +15,14 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.text.LiteralText;
 import net.minecraft.util.ClickType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
+import net.minecraft.util.Util;
 import net.minecraft.world.World;
 
-public class Wand extends Item  {
-
+public class Wand extends Item {
 	private static Wand WAND;
 
 	public Wand(Settings settings) {
@@ -33,30 +38,30 @@ public class Wand extends Item  {
 	//Used when the player use right click with the Wand
 	public TypedActionResult<ItemStack> use(World world, PlayerEntity playerEntity, Hand hand) {
 
-		System.out.println("Mana1 : " + ((PlayerMinja) playerEntity).getMana());
-		//((PlayerMinja) playerEntity).addMana(10);
+		// Get the current player
+		PlayerMinja player = (PlayerMinja) playerEntity;
+		// Adding a spell to player's list of spells so he can cast one
+		player.addSpell(new LightningBall());
+
 		try {
-			((PlayerMinja) playerEntity).removeMana(5);
+			// Remove the current spell's mana cost to the mana of the player
+			((PlayerMinja) playerEntity).removeMana(player.getActiveSpell().getManaCost());
+
+			// Cast the spell associated
+			player.getActiveSpell().cast(playerEntity);
+
 		} catch (NotEnoughtManaException e) {
-			//throw new RuntimeException(e);
+			// throw new RuntimeException(e);
+			// TODO : A UPGRADE
 		}
-		System.out.println("Mana2 : " + ((PlayerMinja) playerEntity).getMana());
-
-		//Mettre ici l'ouverture de l'HUD
-		//SpellHUD.setVisible(true);
-
-		//Ci dessous, tests pour arnaud, pas touche
-		LightningBall test = new LightningBall();
-		test.cast(playerEntity);
-
 		return TypedActionResult.success(playerEntity.getStackInHand(hand));
 	}
 
 	@Override
 	//Click gauche
-	public boolean onClicked(ItemStack stack, ItemStack otherStack, Slot slot, ClickType clickType, PlayerEntity player, StackReference cursorStackReference)
-	{
-		if(clickType == ClickType.LEFT) {
+	public boolean onClicked(ItemStack stack, ItemStack otherStack, Slot slot, ClickType clickType, PlayerEntity player, StackReference cursorStackReference) {
+
+		if (clickType == ClickType.LEFT) {
 			player.playSound(SoundEvents.ENTITY_COW_AMBIENT, 1.0F, 1.0F);
 
 			((PlayerMinja) player).addMana(20);

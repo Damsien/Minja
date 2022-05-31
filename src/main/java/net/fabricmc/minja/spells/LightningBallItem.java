@@ -29,7 +29,7 @@ public class LightningBallItem extends Item{
         world.playSound(null, user.getX(), user.getY(), user.getZ(), SoundEvents.ENTITY_FIREWORK_ROCKET_LAUNCH, SoundCategory.NEUTRAL, 0.5F, 1F); // plays a globalSoundEvent
         if (!world.isClient) {
             LightningBallEntity lightningBallEntity = new LightningBallEntity(user, world);
-            lightningBallEntity.setVelocity(user, user.getPitch(), user.getYaw(), 0.0F, 1.5F, 0F);
+            lightningBallEntity.setVelocity(user, user.getPitch(), user.getYaw(), 0.0F, 2F, 0F);
             lightningBallEntity.setNoGravity(true);
             world.spawnEntity(lightningBallEntity); // spawns entity
         }

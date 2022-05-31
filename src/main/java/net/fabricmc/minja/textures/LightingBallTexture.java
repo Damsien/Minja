@@ -6,6 +6,6 @@ public class LightingBallTexture extends Texture {
 
 
     public LightingBallTexture() {
-        super(new Identifier("hud:textures/manabar.png"), 16, 16);
+        super(new Identifier("hud:textures/spell.png"), 16, 16);
     }
 }

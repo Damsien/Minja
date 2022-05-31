@@ -2,6 +2,9 @@
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
     {
+      "item": "minecraft:book"
+    },
+    {
       "item": "objects:wand"
     }
   ],
@@ -9,5 +12,5 @@
     "item": "objects:grimoire",
     "count": 1
   },
-  "group": "objects"
+  "group": "minja"
 }

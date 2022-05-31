@@ -20,7 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Minja implements ModInitializer {
-	
+
 	//Every item created by Minja
 	private static Wand WAND = new Wand(new FabricItemSettings().group(GroupItemsMinja.Minja).maxCount(1).maxDamage(0));
 	private static Grimoire GRIMOIRE = new Grimoire(new FabricItemSettings().group(GroupItemsMinja.Minja).maxCount(1).maxDamage(0));

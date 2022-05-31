@@ -26,6 +26,7 @@ public abstract class Spell {
     public String quickDescription() {
         return "(" + getType() + ") " + getName() + ": " + getManaCost() + " mana";
     }
+
     public String getName() {
         return name;
     }
@@ -40,13 +41,5 @@ public abstract class Spell {
 
     public String getType() {
         return type;
-    }
-
-    public static class GroupItemsMinja {
-        //private static Wand WAND = new Wand(new FabricItemSettings().group(GroupItemsMinja.Minja));
-        public static final ItemGroup Minja = FabricItemGroupBuilder.build(
-                new Identifier("minja", "general"),
-                () -> new ItemStack(Wand.getWand()));
-                //() -> new ItemStack((ItemConvertible) SpellProjectile.getSpell("lightningball")));
     }
 }

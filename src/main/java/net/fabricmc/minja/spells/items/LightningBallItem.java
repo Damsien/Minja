@@ -15,7 +15,6 @@ public class LightningBallItem extends Item{
 
     private static LightningBallItem LIGHTNINGBALL;
     public LightningBallItem(Item.Settings settings) {
-
         super(settings);
         LIGHTNINGBALL = this;
     }
@@ -25,17 +24,18 @@ public class LightningBallItem extends Item{
     }
 
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
-        ItemStack itemStack = user.getStackInHand(hand); // creates a new ItemStack instance of the user's itemStack in-hand
-        world.playSound(null, user.getX(), user.getY(), user.getZ(), SoundEvents.ENTITY_FIREWORK_ROCKET_LAUNCH, SoundCategory.NEUTRAL, 0.5F, 1F); // plays a globalSoundEvent
+        // LightningBall sound effect
+        world.playSound(null, user.getX(), user.getY(), user.getZ(), SoundEvents.ENTITY_FIREWORK_ROCKET_LAUNCH, SoundCategory.NEUTRAL, 0.5F, 1F);
+        // LightningBallEntity parameters
         if (!world.isClient) {
             LightningBallEntity lightningBallEntity = new LightningBallEntity(user, world);
             lightningBallEntity.setVelocity(user, user.getPitch(), user.getYaw(), 0.0F, 2F, 0F);
             lightningBallEntity.setNoGravity(true);
-            world.spawnEntity(lightningBallEntity); // spawns entity
+            world.spawnEntity(lightningBallEntity);
         }
 
         user.incrementStat(Stats.USED.getOrCreateStat(this));
 
-        return TypedActionResult.success(itemStack, world.isClient());
+        return TypedActionResult.success(user.getStackInHand(hand), world.isClient());
     }
 }

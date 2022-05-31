@@ -2,13 +2,16 @@ package net.fabricmc.minja.hud;
 
 
 import net.fabricmc.minja.PlayerMinja;
+import net.fabricmc.minja.textures.SpellHUDTexture;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.render.WorldRenderer;
 import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.command.argument.EntityAnchorArgumentType;
 import net.minecraft.sound.SoundEvents;
-import java.awt.*;
+import net.minecraft.text.LiteralText;
+import net.minecraft.util.math.Vec3d;
 
 public class SpellHUD {
 
@@ -20,6 +23,7 @@ public class SpellHUD {
     private PlayerMinja player;
 
     private static PointCartesien centre;
+    private Vec3d cameraPosition;
 
     private int currentIndex;
 
@@ -28,6 +32,8 @@ public class SpellHUD {
 
     private int width;
     private int height;
+
+    private boolean focus;
 
 
     public SpellHUD() {
@@ -58,24 +64,27 @@ public class SpellHUD {
 
     public void onRenderGameOverlayPost(MatrixStack stack, float partialTicks) {
 
-        //updateScreenPosition(minecraft.player);
-
         final double LINE = (height * 0.7); // length between the center and each spells
         final double SAFE_RANGE = (height * 0.3); // length between the center and the crosshair in which no selection will be done
+
+        Vec3d vec = minecraft.cameraEntity.getRotationVecClient();
+        minecraft.player.sendMessage(new LiteralText(""+vec.x+" : "+vec.y+" : "+vec.z),true);
 
         // Do not display the HUD if it has not been set to visible
         if(!visible) {
             // If the center has previously been set, it means that the hud has just been closed. Reset data!
-            if(isCenterSet) { isCenterSet = false; player.setActiveSpell(currentIndex);}
+            if(isCenterSet) onClosed();
             return;
         }
 
         // Initialize the relative center
         if(!isCenterSet) {
-            currentIndex = player.getActiveSpellIndex();
-            this.updateCenter();
-            isCenterSet = true;
+            onOpened();
         }
+
+
+        minecraft.cameraEntity.lookAt(EntityAnchorArgumentType.EntityAnchor.FEET,cameraPosition);
+
 
         // Get the position of the mouse
         PointCartesien mousePos = new PointCartesien(minecraft.mouse.getX(), minecraft.mouse.getY());
@@ -91,13 +100,13 @@ public class SpellHUD {
         PointCartesien Mc = new PointCartesien(crosshair.x + delta.x, crosshair.y + delta.y);
 
         /** DRAWINGS FOR DEBUG ** /
-        fontRenderer.draw(stack, "C", (float) (centre.x), (float) (centre.y), Color.RED.getRGB());
-        fontRenderer.draw(stack, "M", (float) (mousePos.x), (float) (mousePos.y), Color.RED.getRGB());
+         fontRenderer.draw(stack, "C", (float) (centre.x), (float) (centre.y), Color.RED.getRGB());
+         fontRenderer.draw(stack, "M", (float) (mousePos.x), (float) (mousePos.y), Color.RED.getRGB());
 
-        fontRenderer.draw(stack, "C'", (float) (crosshair.x), (float) (crosshair.y), Color.ORANGE.getRGB());
-        fontRenderer.draw(stack, "M'", (float) (Mc.x), (float) (Mc.y), Color.ORANGE.getRGB());
+         fontRenderer.draw(stack, "C'", (float) (crosshair.x), (float) (crosshair.y), Color.ORANGE.getRGB());
+         fontRenderer.draw(stack, "M'", (float) (Mc.x), (float) (Mc.y), Color.ORANGE.getRGB());
 
-        minecraft.player.sendMessage(new LiteralText("Angle : " + M.theta),true);
+         minecraft.player.sendMessage(new LiteralText("Angle : " + M.theta),true);
          **/
 
         // Get polar info for our new points
@@ -117,6 +126,8 @@ public class SpellHUD {
         // Draw the wheel
         for(int i=0 ; i < length ; i++) {
 
+            minecraft.cameraEntity.lookAt(EntityAnchorArgumentType.EntityAnchor.FEET,cameraPosition);
+
             // Create a new point at the origin and get its info
             PointPolaire pp = new PointPolaire(LINE,  i * rad);
             PointCartesien p = pp.PolarToCard();
@@ -125,11 +136,11 @@ public class SpellHUD {
             if(!isInSafeRange) {
 
                 // Check if the current spell drawn is the active one
-                if(i == currentIndex)   Renderer.draw(stack, i, width+p.x, height +p.y, Color.BLUE);
-                else                    Renderer.draw(stack, player.getActiveSpell(),width+p.x,height +p.y);
+                if(i == currentIndex)   drawOK(stack, width+p.x, height +p.y);
+                else                    drawKO(stack, width+p.x, height +p.y);
 
 
-            // In case we are in the selection zone :
+                // In case we are in the selection zone :
             } else {
 
                 // If the mouse is in the range of the current point :
@@ -140,14 +151,63 @@ public class SpellHUD {
                         minecraft.player.playSound(SoundEvents.UI_BUTTON_CLICK,1.0F, 1.0F);
                     }
 
-                    Renderer.draw(stack, i, width+p.x, height +p.y, Color.BLUE);
+                    drawOK(stack, width+p.x, height +p.y);
                 }
                 else
-                    Renderer.draw(stack, player.getActiveSpell(),width+p.x,height +p.y);
+                    drawKO(stack, width+p.x, height +p.y);
 
             }
         }
 
+        minecraft.cameraEntity.lookAt(EntityAnchorArgumentType.EntityAnchor.EYES,cameraPosition);
+
+    }
+
+    private void sendMessage(String message) {
+        sendMessage(message,false);
+    }
+
+    private void sendMessage(String message, boolean actionBar) {
+        minecraft.player.sendMessage(new LiteralText(message),actionBar);
+    }
+
+    private void onClosed() {
+        isCenterSet = false;
+        player.setActiveSpell(currentIndex);
+    }
+
+    private void onOpened() {
+        currentIndex = player.getActiveSpellIndex();
+        this.updateCenter();
+        isCenterSet = true;
+
+        calculateCameraPosition();
+    }
+
+    private void calculateCameraPosition() {
+
+
+
+        Vec3d A =  minecraft.crosshairTarget.getPos();
+        Vec3d O = minecraft.player.getPos().add(0,1.620,0);
+
+        Vec3d v = A.subtract(O);
+
+        cameraPosition = A.add(v.multiply(1000));
+
+        sendMessage("A : ("+A.x+", "+A.y+", "+A.z+")");
+        sendMessage("O : ("+O.x+", "+O.y+", "+O.z+")");
+        sendMessage("B : ("+cameraPosition.x+", "+cameraPosition.y+", "+cameraPosition.z+")");
+
+    }
+
+    private void drawOK(MatrixStack stack, double x, double y) {
+        Renderer.draw(stack, SpellHUDTexture.VALIDATE_CIRCLE, x, y);
+        Renderer.draw(stack, player.getActiveSpell(), x, y);
+    }
+
+    private void drawKO(MatrixStack stack, double x, double y) {
+        Renderer.draw(stack, player.getActiveSpell(), x, y);
     }
 
     private double modulo(double r, double mod) {
@@ -163,7 +223,7 @@ public class SpellHUD {
 
         // Check if the mouse is in the range of the iterating spell
         return vertexIndex != 0     ? borneInf < angleDeLaSouris && angleDeLaSouris < borneSup                                                   // Classic case
-                                    : (borneInf < angleDeLaSouris && angleDeLaSouris < 2*Math.PI) || 0 < angleDeLaSouris && angleDeLaSouris < borneSup; //  Case 0 : borneSup < borneInf
+                : (borneInf < angleDeLaSouris && angleDeLaSouris < 2*Math.PI) || 0 < angleDeLaSouris && angleDeLaSouris < borneSup; //  Case 0 : borneSup < borneInf
     }
 
 

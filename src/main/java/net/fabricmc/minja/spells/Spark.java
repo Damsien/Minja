@@ -13,14 +13,14 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraft.entity.LightningEntity;
 
-public class LightningBall extends SpellProjectile {
+public class Spark extends SpellProjectile {
 
-    public LightningBall() {
-        super("Lightning Ball", 10, "Basic", null);
+    public Spark() {
+        super("Spark", 5, "Basic", null);
     }
 
     @Override
     public void cast(LivingEntity player) {
-        LightningBallItem.getLightningBall().use(player.world, (PlayerEntity) player, Hand.MAIN_HAND);
+        SparkItem.getSpark().use(player.world, (PlayerEntity) player, Hand.MAIN_HAND);
     }
 }

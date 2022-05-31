@@ -11,27 +11,27 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.world.World;
 
-public class LightningBallItem extends Item{
+public class SparkItem extends Item {
 
-    private static LightningBallItem LIGHTNINGBALL;
-    public LightningBallItem(Item.Settings settings) {
+    private static SparkItem SPARK;
+    public SparkItem(Item.Settings settings) {
 
         super(settings);
-        LIGHTNINGBALL = this;
+        SPARK = this;
     }
 
-    public static Item getLightningBall(){
-        return LIGHTNINGBALL;
+    public static Item getSpark(){
+        return SPARK;
     }
 
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         ItemStack itemStack = user.getStackInHand(hand); // creates a new ItemStack instance of the user's itemStack in-hand
-        world.playSound(null, user.getX(), user.getY(), user.getZ(), SoundEvents.ENTITY_FIREWORK_ROCKET_LAUNCH, SoundCategory.NEUTRAL, 0.5F, 1F); // plays a globalSoundEvent
+        world.playSound(null, user.getX(), user.getY(), user.getZ(), SoundEvents.ENTITY_BLAZE_SHOOT, SoundCategory.NEUTRAL, 0.5F, 1F); // plays a globalSoundEvent
         if (!world.isClient) {
-            LightningBallEntity lightningBallEntity = new LightningBallEntity(user, world);
-            lightningBallEntity.setVelocity(user, user.getPitch(), user.getYaw(), 0.0F, 2F, 0F);
-            lightningBallEntity.setNoGravity(true);
-            world.spawnEntity(lightningBallEntity); // spawns entity
+            SparkEntity sparkEntity = new SparkEntity(user, world);
+            sparkEntity.setVelocity(user, user.getPitch(), user.getYaw(), 0.0F, 2F, 0F);
+            sparkEntity.setNoGravity(true);
+            world.spawnEntity(sparkEntity); // spawns entity
         }
 
         user.incrementStat(Stats.USED.getOrCreateStat(this));

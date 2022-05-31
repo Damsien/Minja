@@ -17,6 +17,7 @@ import net.minecraft.particle.ParticleEffect;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 public class LightningBallEntity extends ThrownItemEntity {// ThrownEntity {
@@ -60,16 +61,12 @@ public class LightningBallEntity extends ThrownItemEntity {// ThrownEntity {
     protected void onEntityHit(EntityHitResult entityHitResult) { // called on entity hit.
         super.onEntityHit(entityHitResult);
         Entity entity = entityHitResult.getEntity(); // sets a new Entity instance as the EntityHitResult (victim)
-        LightningEntity lightning = new LightningEntity(EntityType.LIGHTNING_BOLT, world); // Create the lightning bolt
-        lightning.setPosition(entity.getPos()); // Set its position
-        world.spawnEntity(lightning); // Spawn the lightning entity
+        effect(entity.getPos());
     }
 
     protected void onCollision(HitResult hitResult) { // called on collision with a block
         super.onCollision(hitResult);
-        LightningEntity lightning = new LightningEntity(EntityType.LIGHTNING_BOLT, world); // Create the lightning bolt
-        lightning.setPosition(hitResult.getPos()); // Set its position
-        world.spawnEntity(lightning); // Spawn the lightning entity
+        effect(hitResult.getPos());
         if (!this.world.isClient) { // checks if the world is client
             this.world.sendEntityStatus(this, (byte)3); // particle?
             this.kill(); // kills the projectile
@@ -78,12 +75,16 @@ public class LightningBallEntity extends ThrownItemEntity {// ThrownEntity {
 
     protected void onSwimmingStart() { // called when entity is in water
         super.onSwimmingStart();
-        LightningEntity lightning = new LightningEntity(EntityType.LIGHTNING_BOLT, world); // Create the lightning bolt
-        lightning.setPosition(this.getPos()); // Set its position
-        world.spawnEntity(lightning); // Spawn the lightning entity
+        effect(this.getPos());
         if (!this.world.isClient) { // checks if the world is client
             this.world.sendEntityStatus(this, (byte)3); // particle?
             this.kill(); // kills the projectile
         }
+    }
+
+    private void effect(Vec3d pos) {
+        LightningEntity lightning = new LightningEntity(EntityType.LIGHTNING_BOLT, world); // Create the lightning bolt
+        lightning.setPosition(pos); // Set its position
+        world.spawnEntity(lightning); // Spawn the lightning entity
     }
 }

@@ -2,6 +2,7 @@ package net.fabricmc.minja.spells;
 
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.fabricmc.minja.objects.Wand;
+import net.fabricmc.minja.textures.Texture;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
@@ -10,10 +11,10 @@ import net.minecraft.util.Identifier;
 public abstract class Spell {
     private String name;
     private int manaCost;
-    private String icon;
+    private Texture icon;
     private String type;
 
-    public Spell(String name, int manaCost, String icon, String type) {
+    public Spell(String name, int manaCost, Texture icon, String type) {
         this.name = name;
         this.manaCost = manaCost;
         this.icon = icon;
@@ -33,7 +34,7 @@ public abstract class Spell {
         return manaCost;
     }
 
-    public String getIcon() {
+    public Texture getIcon() {
         return icon;
     }
 

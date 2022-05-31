@@ -49,7 +49,7 @@ public class Wand extends Item {
 		return TypedActionResult.success(playerEntity.getStackInHand(hand));
 	}
 
-	@Override
+	/*@Override
 	//Click gauche
 	public boolean onClicked(ItemStack stack, ItemStack otherStack, Slot slot, ClickType clickType, PlayerEntity player, StackReference cursorStackReference) {
 
@@ -66,5 +66,5 @@ public class Wand extends Item {
 		} else {
 			return false;
 		}
-	}
+	}*/
 }

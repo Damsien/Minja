@@ -25,6 +25,11 @@ import java.util.Map;
 
 public class Minja implements ModInitializer {
 
+	public static final String MOD_ID = "minja";
+	// This logger is used to write text to the console and the log file.
+	// It is considered best practice to use your mod id as the logger's name.
+	// That way, it's clear which mod wrote info, warnings, and errors.
+	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 	//Every item created by Minja
 	private static Wand WAND = new Wand(new FabricItemSettings().group(GroupItemsMinja.Minja).maxCount(1).maxDamage(0));
 	private static Grimoire GRIMOIRE = new Grimoire(new FabricItemSettings().group(GroupItemsMinja.Minja).maxCount(1).maxDamage(0));
@@ -48,11 +53,6 @@ public class Minja implements ModInitializer {
 					.trackRangeBlocks(4).trackedUpdateRate(10)
 					.build()
 	);
-
-	// This logger is used to write text to the console and the log file.
-	// It is considered best practice to use your mod id as the logger's name.
-	// That way, it's clear which mod wrote info, warnings, and errors.
-	public static final Logger LOGGER = LoggerFactory.getLogger("LOGS");
 
 
 	public static Map<String, Spell> SPELLS_MAP = initializeAllSpells();

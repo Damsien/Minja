@@ -1,9 +1,6 @@
 package net.fabricmc.minja.events;
 
-import net.fabricmc.minja.Exceptions.NotEnoughtManaException;
-import net.fabricmc.minja.PlayerMinja;
 import net.fabricmc.minja.clocks.Clock;
-import net.fabricmc.minja.hud.SpellHUD;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;

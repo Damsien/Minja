@@ -36,9 +36,15 @@ public class Renderer extends DrawableHelper {
         new Renderer().drawTexture(stack, (int)x, (int)y, 0, 0, width, height);
     }
 
+    public static void draw(MatrixStack stack, Texture texture, double x, double y) {
+        RenderSystem.setShaderTexture(0, texture.getIdentifier());
+        int w = texture.getWidth();
+        int h = texture.getHeight();
+        new Renderer().drawTexture(stack, (int)(x-w/2), (int)(y-h/2), 0, 0, w, h);
+    }
+
     public static void draw(MatrixStack stack, Spell spell, double x, double y) {
-        Texture icon = spell.getIcon();
-        draw(stack, icon.getIdentifier(),x,y,icon.getWidth(),icon.getHeight());
+        draw(stack, spell.getIcon(),x,y);
     }
 
 }

@@ -8,7 +8,7 @@ import net.minecraft.util.Hand;
 public class Spark extends SpellProjectile {
 
     public Spark() {
-        super("Spark", 5, "Basic", null);
+        super("Spark", 5, "Basic");
     }
 
     @Override

@@ -8,7 +8,7 @@ import net.minecraft.util.Hand;
 public class LightningBall extends SpellProjectile {
 
     public LightningBall() {
-        super("Lightning Ball", 10, "Basic", null);
+        super("Lightning Ball", 10, "Basic");
     }
 
     @Override

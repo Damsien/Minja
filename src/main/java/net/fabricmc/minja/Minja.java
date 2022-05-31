@@ -24,29 +24,29 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Minja implements ModInitializer {
-	
+
 	//Every item created by Minja
 	private static Wand WAND = new Wand(new FabricItemSettings().group(GroupItemsMinja.Minja).maxCount(1).maxDamage(0));
 	private static Grimoire GRIMOIRE = new Grimoire(new FabricItemSettings().group(GroupItemsMinja.Minja).maxCount(1).maxDamage(0));
-	public static final Item LIGHTNINGBALL = new LightningBallItem(new Item.Settings().group(GroupItemsMinja.Minja).maxCount(16));
-	public static final Item SPARK = new SparkItem(new Item.Settings().group(GroupItemsMinja.Minja).maxCount(16));
+	public static final Item LIGHTNINGBALL = new LightningBallItem(new Item.Settings().group(GroupItemsMinja.Minja).maxCount(1));
+	public static final Item SPARK = new SparkItem(new Item.Settings().group(GroupItemsMinja.Minja).maxCount(1));
 
 	public static final EntityType<LightningBallEntity> LightningBallEntityType = Registry.register(
 			Registry.ENTITY_TYPE,
 			new Identifier("spells", "lightningball"),
 			FabricEntityTypeBuilder.<LightningBallEntity>create(SpawnGroup.MISC, LightningBallEntity::new)
-					.dimensions(EntityDimensions.fixed(0.25F, 0.25F)) // dimensions in Minecraft units of the projectile
-					.trackRangeBlocks(4).trackedUpdateRate(10) // necessary for all thrown projectiles (as it prevents it from breaking, lol)
-					.build() // VERY IMPORTANT DONT DELETE FOR THE LOVE OF GOD PSLSSSSSS
+					.dimensions(EntityDimensions.fixed(0.25F, 0.25F))
+					.trackRangeBlocks(4).trackedUpdateRate(10)
+					.build()
 	);
 
 	public static final EntityType<SparkEntity> SparkEntityType = Registry.register(
 			Registry.ENTITY_TYPE,
 			new Identifier("spells", "spark"),
 			FabricEntityTypeBuilder.<SparkEntity>create(SpawnGroup.MISC, SparkEntity::new)
-					.dimensions(EntityDimensions.fixed(0.25F, 0.25F)) // dimensions in Minecraft units of the projectile
-					.trackRangeBlocks(4).trackedUpdateRate(10) // necessary for all thrown projectiles (as it prevents it from breaking, lol)
-					.build() // VERY IMPORTANT DONT DELETE FOR THE LOVE OF GOD PSLSSSSSS
+					.dimensions(EntityDimensions.fixed(0.25F, 0.25F))
+					.trackRangeBlocks(4).trackedUpdateRate(10)
+					.build()
 	);
 
 	// This logger is used to write text to the console and the log file.

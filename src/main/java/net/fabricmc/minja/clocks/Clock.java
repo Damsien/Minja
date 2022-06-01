@@ -4,23 +4,17 @@ import net.minecraft.world.World;
 
 public abstract class Clock implements Runnable {
 
-    World world;
-    long timer;
+    private long timer;
+    private Thread thread;
 
-    public Clock(long timer, World world) {
+
+    public Clock(long timer) {
         this.timer = timer;
-        this.world = world;
     }
+
 
     @Override
     final public void run() {
-
-        long start = world.getTime();
-        long end = start + timer;
-        long delta = start;
-
-        System.out.println("Delta : " + delta);
-        System.out.println("Ending : " + end);
 
         try {
             Thread.sleep(timer);
@@ -28,14 +22,15 @@ public abstract class Clock implements Runnable {
             throw new RuntimeException(e);
         }
 
-        System.out.println("Executing : " + end);
         execute();
     }
 
     final public void start() {
-        System.out.println("Starting the clock ! ");
-        Thread thread = new Thread(this);
-        thread.start();
+        if(thread == null || thread.isAlive()) {
+            this.thread = new Thread(this);
+            this.thread.start();
+        }
+        else this.run();
     }
 
     public abstract void execute();

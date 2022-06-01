@@ -33,7 +33,7 @@ public abstract class MinjaItems extends Item {
         if(firstTime) {
             firstTime = false;
             state = onRightClickPressed(world, playerEntity, hand);
-            Clock clock = new Clock(TIMER, world) {
+            Clock clock = new Clock(TIMER) {
 
                 @Override
                 public void execute() {
@@ -41,8 +41,7 @@ public abstract class MinjaItems extends Item {
                         onRightClickReleased(world, playerEntity, hand);
                         firstTime = true;
                     } else {
-                        Thread thread = new Thread(this);
-                        thread.start();
+                        this.run();
                     }
                 }
             };

@@ -1,7 +1,10 @@
 package net.fabricmc.minja.textures;
 
+import net.minecraft.client.gui.hud.InGameHud;
 import net.minecraft.util.Identifier;
+import org.spongepowered.asm.mixin.Mixin;
 
+@Mixin(InGameHud.class)
 public class Texture {
 
     private Identifier id;

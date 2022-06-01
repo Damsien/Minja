@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "minecraft:cobblestone"
+    },
+    {
+      "item": "objects:wand"
+    }
+  ],
+  "result": {
+    "item": "objects:rhune",
+    "count": 1
+  },
+  "group": "minja"
+}

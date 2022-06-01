@@ -67,9 +67,6 @@ public class SpellHUD {
         final double LINE = (height * 0.7); // length between the center and each spells
         final double SAFE_RANGE = (height * 0.3); // length between the center and the crosshair in which no selection will be done
 
-        Vec3d vec = minecraft.cameraEntity.getRotationVecClient();
-        minecraft.player.sendMessage(new LiteralText(""+vec.x+" : "+vec.y+" : "+vec.z),true);
-
         // Do not display the HUD if it has not been set to visible
         if(!visible) {
             // If the center has previously been set, it means that the hud has just been closed. Reset data!
@@ -125,8 +122,6 @@ public class SpellHUD {
 
         // Draw the wheel
         for(int i=0 ; i < length ; i++) {
-
-            minecraft.cameraEntity.lookAt(EntityAnchorArgumentType.EntityAnchor.FEET,cameraPosition);
 
             // Create a new point at the origin and get its info
             PointPolaire pp = new PointPolaire(LINE,  i * rad);
@@ -194,10 +189,6 @@ public class SpellHUD {
         Vec3d v = A.subtract(O);
 
         cameraPosition = A.add(v.multiply(1000));
-
-        sendMessage("A : ("+A.x+", "+A.y+", "+A.z+")");
-        sendMessage("O : ("+O.x+", "+O.y+", "+O.z+")");
-        sendMessage("B : ("+cameraPosition.x+", "+cameraPosition.y+", "+cameraPosition.z+")");
 
     }
 

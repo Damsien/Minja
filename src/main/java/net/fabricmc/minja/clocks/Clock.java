@@ -10,7 +10,6 @@ public abstract class Clock implements Runnable {
 
     public Clock(long timer) {
         this.timer = timer;
-        this.thread = new Thread(this);
     }
 
 

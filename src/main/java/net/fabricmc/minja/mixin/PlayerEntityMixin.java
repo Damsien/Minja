@@ -3,7 +3,10 @@ package net.fabricmc.minja.mixin;
 import net.fabricmc.minja.exceptions.NotEnoughtManaException;
 import net.fabricmc.minja.exceptions.SpellNotFoundException;
 import net.fabricmc.minja.PlayerMinja;
+import net.fabricmc.minja.spells.LightningBall;
+import net.fabricmc.minja.spells.Spark;
 import net.fabricmc.minja.spells.Spell;
+import net.fabricmc.minja.spells.SpellProjectile;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
@@ -14,6 +17,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Mixin(PlayerEntity.class)

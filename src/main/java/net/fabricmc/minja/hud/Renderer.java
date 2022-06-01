@@ -31,16 +31,18 @@ public class Renderer extends DrawableHelper {
         itemRenderer.renderGuiItemIcon(item.getDefaultStack(), (int)x, (int)y);
     }
 
-    public static void draw(MatrixStack stack, Identifier texture, double x, double y, int width, int height) {
+    public static void draw(MatrixStack stack, Identifier texture, double x, double y, int width, int height, int u, int v) {
         RenderSystem.setShaderTexture(0, texture);
-        new Renderer().drawTexture(stack, (int)x, (int)y, 0, 0, width, height);
+        new Renderer().drawTexture(stack, (int)x, (int)y, u, v, width, height);
     }
 
     public static void draw(MatrixStack stack, Texture texture, double x, double y) {
         RenderSystem.setShaderTexture(0, texture.getIdentifier());
         int w = texture.getWidth();
         int h = texture.getHeight();
-        new Renderer().drawTexture(stack, (int)(x-w/2), (int)(y-h/2), 0, 0, w, h);
+        int u = texture.getU();
+        int v = texture.getV();
+        new Renderer().drawTexture(stack, (int)(x-w/2), (int)(y-h/2), u, v, w, h);
     }
 
     public static void draw(MatrixStack stack, Spell spell, double x, double y) {

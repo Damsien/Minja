@@ -1,5 +1,7 @@
 package net.fabricmc.minja;
 
+import net.fabricmc.minja.spells.LightningBall;
+import net.fabricmc.minja.spells.Spark;
 import net.fabricmc.minja.spells.entities.EntitySpawnPacket;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
@@ -8,6 +10,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.entity.*;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
+import net.minecraft.text.LiteralText;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.registry.Registry;
@@ -21,6 +24,7 @@ public class MinjaClient implements ClientModInitializer {
         EntityRendererRegistry.register(Minja.LightningBallEntityType, FlyingItemEntityRenderer::new);
         EntityRendererRegistry.register(Minja.SparkEntityType, FlyingItemEntityRenderer::new);
         receiveEntityPacket();
+
     }
 
     public void receiveEntityPacket() {

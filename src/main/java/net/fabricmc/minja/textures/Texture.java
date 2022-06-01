@@ -11,10 +11,19 @@ public class Texture {
     private int width;
     private int height;
 
+    private int u;
+    private int v;
+
     public Texture(Identifier id, int width, int height) {
         this.id = id;
         this.width = width;
         this.height = height;
+    }
+
+    public Texture(Identifier id, int width, int height, int u, int v) {
+        this(id,width,height);
+        this.u = u;
+        this.v = v;
     }
 
     public Identifier getIdentifier() {
@@ -28,4 +37,8 @@ public class Texture {
     public int getHeight() {
         return height;
     }
+
+    public int getU() { return u; }
+
+    public int getV() { return v; }
 }

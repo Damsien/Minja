@@ -131,8 +131,8 @@ public class SpellHUD {
             if(!isInSafeRange) {
 
                 // Check if the current spell drawn is the active one
-                if(i == currentIndex)   drawOK(stack, width+p.x, height +p.y);
-                else                    drawKO(stack, width+p.x, height +p.y);
+                if(i == currentIndex)   drawOK(stack, width+p.x, height +p.y, i);
+                else                    drawKO(stack, width+p.x, height +p.y, i);
 
 
                 // In case we are in the selection zone :
@@ -146,10 +146,10 @@ public class SpellHUD {
                         minecraft.player.playSound(SoundEvents.UI_BUTTON_CLICK,1.0F, 1.0F);
                     }
 
-                    drawOK(stack, width+p.x, height +p.y);
+                    drawOK(stack, width+p.x, height +p.y, i);
                 }
                 else
-                    drawKO(stack, width+p.x, height +p.y);
+                    drawKO(stack, width+p.x, height +p.y, i);
 
             }
         }
@@ -192,13 +192,13 @@ public class SpellHUD {
 
     }
 
-    private void drawOK(MatrixStack stack, double x, double y) {
+    private void drawOK(MatrixStack stack, double x, double y, int i) {
         Renderer.draw(stack, SpellHUDTexture.VALIDATE_CIRCLE, x, y);
-        Renderer.draw(stack, player.getActiveSpell(), x, y);
+        Renderer.draw(stack, player.getSpell(i), x, y);
     }
 
-    private void drawKO(MatrixStack stack, double x, double y) {
-        Renderer.draw(stack, player.getActiveSpell(), x, y);
+    private void drawKO(MatrixStack stack, double x, double y, int i) {
+        Renderer.draw(stack, player.getSpell(i), x, y);
     }
 
     private double modulo(double r, double mod) {

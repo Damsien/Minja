@@ -1,6 +1,7 @@
 package net.fabricmc.minja.spells;
 
 import net.fabricmc.minja.spells.items.LightningBallItem;
+import net.fabricmc.minja.textures.LightingBallTexture;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Hand;
@@ -8,7 +9,7 @@ import net.minecraft.util.Hand;
 public class LightningBall extends SpellProjectile {
 
     public LightningBall() {
-        super("Lightning Ball", 10, "Basic");
+        super("Lightning Ball", 10, new LightingBallTexture(), "Basic");
     }
 
     @Override

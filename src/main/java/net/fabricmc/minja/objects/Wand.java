@@ -22,7 +22,7 @@ import net.minecraft.world.World;
  * Wand is the class that creates a Wand object and defines its interactions to the minecraft world.
  * The Wand will be used to throw spells (left-click) and to choose a current spell (right-click)
  */
-public class Wand extends Item {
+public class Wand extends MinjaItem {
 
 	/*********************************************************************
 	 * 						GENERAL (Constructor + getter)

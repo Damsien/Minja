@@ -17,7 +17,7 @@ import net.minecraft.world.World;
  * The Grimoire will be used to show the different Minja informations of the player :
  * 	- name, mana, available spells, magic level, etc.
  */
-public class Grimoire extends Item {
+public class Grimoire extends MinjaItem {
 
 	/*********************************************************************
 	 * 						GENERAL (Constructor + getter)

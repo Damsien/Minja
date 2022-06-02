@@ -17,6 +17,12 @@ public class Grimoire extends Item {
 
 	private static Grimoire GRIMOIRE;
 
+	private MinecraftClient mc = null;
+
+	private MinecraftClientClock clock = new MinecraftClientClock(10);
+
+	private boolean clockStarted = false;
+
 	public Grimoire(Settings settings) {
 		super(settings);
 		GRIMOIRE = this;

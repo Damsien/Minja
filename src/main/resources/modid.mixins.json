@@ -9,7 +9,8 @@
     "InGameHudMixin",
     "SpellHudMixin",
     "PlayerEntityMixin",
-    "LivingEntityMixin"
+    "LivingEntityMixin",
+    "ItemMixin"
   ],
   "injectors": {
     "defaultRequire": 1

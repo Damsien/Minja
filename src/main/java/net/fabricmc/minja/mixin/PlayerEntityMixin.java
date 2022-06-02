@@ -1,6 +1,8 @@
 package net.fabricmc.minja.mixin;
 
 import net.fabricmc.minja.Minja;
+import net.fabricmc.minja.events.MouseEvent;
+import net.fabricmc.minja.events.PlayerEvent;
 import net.fabricmc.minja.exceptions.NotEnoughtManaException;
 import net.fabricmc.minja.exceptions.SpellNotFoundException;
 import net.fabricmc.minja.PlayerMinja;
@@ -28,7 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Mixin(PlayerEntity.class)
-public abstract class PlayerEntityMixin implements PlayerMinja {
+public abstract class PlayerEntityMixin implements PlayerMinja, PlayerEvent {
 
     /**
      * MAX_MANA is the maximum mana that the player can use in one time
@@ -204,6 +206,14 @@ public abstract class PlayerEntityMixin implements PlayerMinja {
     @Override
     public int getManaMax() {
         return MAX_MANA;
+    }
+
+    @Override
+    public void onSwingItem(Hand hand, boolean fromServerPlayer, CallbackInfo cir) {
+        PlayerEntity player = (PlayerEntity) (Object) (this);
+        ((MouseEvent)player.getStackInHand(hand).getItem()).onLeftClickPressed();
+        //player.sendMessage(new LiteralText("Je récupère bien le Mixin"), false);
+
     }
 
     /**

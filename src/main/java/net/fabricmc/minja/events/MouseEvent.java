@@ -8,6 +8,8 @@ import net.minecraft.world.World;
 
 public interface MouseEvent {
 
+    public void onLeftClickPressed();
+
     public TypedActionResult<ItemStack> onRightClickPressed(World world, PlayerEntity playerEntity, Hand hand);
 
     public TypedActionResult<ItemStack> onRightClickMaintained(World world, PlayerEntity playerEntity, Hand hand);

@@ -30,35 +30,6 @@ public abstract class MinjaItems extends Item {
     }
 
     @Override
-    public boolean onStackClicked(ItemStack stack, Slot slot,
-                                  ClickType clickType,
-                                  PlayerEntity player) {
-        player.sendMessage(new LiteralText("OnStackClicked !!!"),false);
-        return true;
-    }
-
-    @Override
-    public boolean onClicked(ItemStack stack,
-                             ItemStack otherStack,
-                             Slot slot,
-                             ClickType clickType,
-                             PlayerEntity player,
-                             StackReference cursorStackReference) {
-        player.sendMessage(new LiteralText("onClicked !!!"),false);
-        return true;
-    }
-
-    @Override
-    public boolean postMine(ItemStack stack,
-                            World world,
-                            BlockState state,
-                            BlockPos pos,
-                            LivingEntity miner) {
-        MinecraftClient.getInstance().player.sendMessage(new LiteralText("postMine !!!"),false);
-        return true;
-    }
-
-    @Override
     //Used when the player use right click with the Wand
     final public TypedActionResult<ItemStack> use(World world, PlayerEntity playerEntity, Hand hand) {
 

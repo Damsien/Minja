@@ -39,7 +39,6 @@ public class Grimoire extends MinjaItems {
 		SpellHUD.setVisible(true);
 
 		return TypedActionResult.success(playerEntity.getStackInHand(hand));
-
 	}
 
 	@Override

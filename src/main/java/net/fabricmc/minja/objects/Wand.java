@@ -1,9 +1,11 @@
 package net.fabricmc.minja.objects;
 
+import net.fabricmc.minja.events.PlayerEvent;
 import net.fabricmc.minja.exceptions.NotEnoughtManaException;
 import net.fabricmc.minja.PlayerMinja;
 import net.fabricmc.minja.spells.LightningBall;
 import net.fabricmc.minja.spells.Spell;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.StackReference;
 import net.minecraft.item.Item;
@@ -48,6 +50,12 @@ public class Wand extends Item {
 			// TODO : A UPGRADE
 		}
 		return TypedActionResult.success(playerEntity.getStackInHand(hand));
+	}
+
+	@Override
+	public ItemStack finishUsing(ItemStack stack, World world, LivingEntity user) {
+		((PlayerEntity)user).sendMessage(new LiteralText("Event de fin !!"), false);
+		return stack;
 	}
 
 	/*@Override

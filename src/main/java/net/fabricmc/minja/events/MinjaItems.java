@@ -1,6 +1,7 @@
 package net.fabricmc.minja.events;
 
 import net.fabricmc.minja.clocks.Clock;
+import net.fabricmc.minja.mixin.ItemMixin;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.LivingEntity;
@@ -15,60 +16,51 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import org.spongepowered.asm.mixin.Shadow;
 
 import java.util.Date;
 
-public abstract class MinjaItems extends Item {
-
-    private long lastEvent;
-    private boolean firstTime = true;
-
-    private final int TIMER = 200;
+/**
+ * Classe abstraite permettant l'usage du @Override sur les méthodes injectées dans ItemMixin (dont le compilateur
+ * n'a pas connaissance) sans pour autant avoir à redéfinir chacune de ces méthodes. (équivalent d'un MouseAdapter en Swing)
+ *
+ */
+public abstract class MinjaItems extends Item implements MouseEvent, ItemEvent {
 
     public MinjaItems(Settings settings) {
         super(settings);
     }
 
     @Override
-    //Used when the player use right click with the Wand
-    final public TypedActionResult<ItemStack> use(World world, PlayerEntity playerEntity, Hand hand) {
+    public TypedActionResult<ItemStack> onRightClickPressed(World world, PlayerEntity playerEntity, Hand hand) {return null;};
 
-        TypedActionResult state = null;
+    @Override
+    public TypedActionResult<ItemStack> onRightClickReleased(World world, PlayerEntity playerEntity, Hand hand) {return null;};
 
-        //Mettre ici l'ouverture de l'HUD
-        lastEvent = new Date().getTime();
+    @Override
+    public TypedActionResult<ItemStack> onRightClickMaintained(World world, PlayerEntity playerEntity, Hand hand) {return null;};
 
-        if(firstTime) {
-            firstTime = false;
-            state = onRightClickPressed(world, playerEntity, hand);
-            Clock clock = new Clock(TIMER) {
-
-                @Override
-                public void execute() {
-                    if(new Date().getTime() - lastEvent > TIMER-10) {
-                        onRightClickReleased(world, playerEntity, hand);
-                        firstTime = true;
-                    } else {
-                        this.run();
-                    }
-                }
-            };
-            clock.start();
-        }
-
-        else {
-            state = onRightClickMaintained(world, playerEntity, hand);
-        }
-
-        if(state == null) state = TypedActionResult.success(playerEntity.getStackInHand(hand));
-
-        return state;
+    @Override
+    public MinjaEvent onInteract(Hand hand, boolean fromServerPlayer) {
+        return MinjaEvent.UNDEFINED;
     }
 
-    public abstract TypedActionResult<ItemStack> onRightClickPressed(World world, PlayerEntity playerEntity, Hand hand);
+    @Override
+    public TypedActionResult<ItemStack> onUse(World world, PlayerEntity user, Hand hand) {return TypedActionResult.success(user.getStackInHand(hand));}
 
-    public abstract TypedActionResult<ItemStack> onRightClickReleased(World world, PlayerEntity playerEntity, Hand hand);
+    @Override
+    public MinjaEvent onLeftClickMaintained(Hand hand, boolean playerFromServer) {
+        return MinjaEvent.UNDEFINED;
+    }
 
-    public abstract TypedActionResult<ItemStack> onRightClickMaintained(World world, PlayerEntity playerEntity, Hand hand);
+    @Override
+    public MinjaEvent onLeftClickPressed(Hand hand, boolean playerFromServer) {
+        return MinjaEvent.UNDEFINED;
+    }
+
+    @Override
+    public MinjaEvent onLeftClickReleased(Hand hand, boolean playerFromServer) {
+        return MinjaEvent.UNDEFINED;
+    }
 
 }

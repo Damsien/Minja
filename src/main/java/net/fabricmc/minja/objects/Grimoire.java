@@ -1,6 +1,7 @@
 package net.fabricmc.minja.objects;
 
 import net.fabricmc.minja.clocks.Clock;
+import net.fabricmc.minja.events.MinjaItems;
 import net.fabricmc.minja.gui.GrimoireGui;
 import net.fabricmc.minja.gui.GrimoireScreen;
 import net.minecraft.client.MinecraftClient;
@@ -12,7 +13,7 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.world.World;
 
-public class Grimoire extends Item {
+public class Grimoire extends MinjaItems {
 
 	private static Grimoire GRIMOIRE;
 
@@ -32,7 +33,7 @@ public class Grimoire extends Item {
 	}
 
 	@Override
-	public TypedActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand) {
+	public TypedActionResult<ItemStack> onUse(World world, PlayerEntity player, Hand hand) {
 		if(mc != null) {
 			GrimoireScreen grimoireScreen = new GrimoireScreen(new GrimoireGui());
 			((Screen) grimoireScreen).init(mc, 145, 179);
@@ -43,7 +44,7 @@ public class Grimoire extends Item {
 				clock.start();
 			}
 		}
-		return super.use(world, player, hand);
+		return super.onUse(world, player, hand);
 	}
 
 	private class MinecraftClientClock extends Clock {

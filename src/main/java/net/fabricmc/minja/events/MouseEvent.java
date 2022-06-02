@@ -8,7 +8,11 @@ import net.minecraft.world.World;
 
 public interface MouseEvent {
 
-    public void onLeftClickPressed();
+    public MinjaEvent onLeftClickPressed(Hand hand, boolean playerFromServer);
+
+    public MinjaEvent onLeftClickMaintained(Hand hand, boolean playerFromServer);
+
+    public MinjaEvent onLeftClickReleased(Hand hand, boolean playerFromServer);
 
     public TypedActionResult<ItemStack> onRightClickPressed(World world, PlayerEntity playerEntity, Hand hand);
 

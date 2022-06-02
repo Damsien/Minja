@@ -1,6 +1,8 @@
 package net.fabricmc.minja.mixin;
 
 import net.fabricmc.minja.Minja;
+import net.fabricmc.minja.events.ItemEvent;
+import net.fabricmc.minja.events.MixinItemEvent;
 import net.fabricmc.minja.events.MouseEvent;
 import net.fabricmc.minja.events.PlayerEvent;
 import net.fabricmc.minja.exceptions.NotEnoughtManaException;
@@ -209,9 +211,9 @@ public abstract class PlayerEntityMixin implements PlayerMinja, PlayerEvent {
     }
 
     @Override
-    public void onSwingItem(Hand hand, boolean fromServerPlayer, CallbackInfo cir) {
+    public boolean onSwingItem(Hand hand, boolean fromServerPlayer) {
         PlayerEntity player = (PlayerEntity) (Object) (this);
-        ((MouseEvent)player.getStackInHand(hand).getItem()).onLeftClickPressed();
+        return ((MixinItemEvent)player.getStackInHand(hand).getItem()).interact(hand, fromServerPlayer);
         //player.sendMessage(new LiteralText("Je récupère bien le Mixin"), false);
 
     }

@@ -1,10 +1,15 @@
 package net.fabricmc.minja.objects;
 
+import net.fabricmc.minja.events.MinjaEvent;
+import net.fabricmc.minja.events.MinjaItems;
 import net.fabricmc.minja.events.PlayerEvent;
 import net.fabricmc.minja.exceptions.NotEnoughtManaException;
 import net.fabricmc.minja.PlayerMinja;
+import net.fabricmc.minja.hud.SpellHUD;
 import net.fabricmc.minja.spells.LightningBall;
+import net.fabricmc.minja.spells.Spark;
 import net.fabricmc.minja.spells.Spell;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.StackReference;
@@ -18,7 +23,7 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.world.World;
 
-public class Wand extends Item {
+public class Wand extends MinjaItems {
 	private static Wand WAND;
 
 	public Wand(Settings settings) {
@@ -31,49 +36,64 @@ public class Wand extends Item {
 	}
 
 	@Override
-	//Used when the player use right click with the Wand
-	public TypedActionResult<ItemStack> use(World world, PlayerEntity playerEntity, Hand hand) {
+	public ItemStack finishUsing(ItemStack stack, World world, LivingEntity user) {
+		return stack;
+	}
 
-		// Get the current player
-		PlayerMinja player = (PlayerMinja) playerEntity;
+	@Override
+	public TypedActionResult<ItemStack> onRightClickPressed(World world, PlayerEntity playerEntity, Hand hand) {
+
+
+		PlayerMinja player = (PlayerMinja)playerEntity;
+		if(player.getSpells().size() == 0) { player.addSpell(new LightningBall()); player.addSpell(new Spark());}
+		SpellHUD.setVisible(true);
+
+		return TypedActionResult.success(playerEntity.getStackInHand(hand));
+
+	}
+
+	@Override
+	public TypedActionResult<ItemStack> onRightClickMaintained(World world, PlayerEntity playerEntity, Hand hand) {
+
+		// Cancel Event ==> Cancel hand animation
+		return TypedActionResult.pass(playerEntity.getStackInHand(hand));
+	}
+
+	@Override
+	public TypedActionResult<ItemStack> onRightClickReleased(World world, PlayerEntity playerEntity, Hand hand) {
+		//Mettre ici l'ouverture de l'HUD
+		SpellHUD.setVisible(false);
+
+		return null;
+	}
+
+	@Override
+	public MinjaEvent onLeftClickPressed(Hand hand, boolean playerFromServer) {
+
+		PlayerEntity playerEntity = MinecraftClient.getInstance().player;
+		PlayerMinja player = (PlayerMinja)playerEntity;
+
 
 		try {
-			// Remove the current spell's mana cost to the mana of the player
-			((PlayerMinja) playerEntity).removeMana(player.getActiveSpell().getManaCost());
 
 			// Cast the spell associated
 			Spell spell = player.getActiveSpell();
+
 			spell.cast(playerEntity);
+
+			// Remove the current spell's mana cost to the mana of the player
+			player.removeMana(spell.getManaCost());
+
+
 
 		} catch (NotEnoughtManaException e) {
 			// throw new RuntimeException(e);
 			// TODO : A UPGRADE
 		}
-		return TypedActionResult.success(playerEntity.getStackInHand(hand));
+
+
+
+		return MinjaEvent.SUCCEED;
 	}
 
-	@Override
-	public ItemStack finishUsing(ItemStack stack, World world, LivingEntity user) {
-		((PlayerEntity)user).sendMessage(new LiteralText("Event de fin !!"), false);
-		return stack;
-	}
-
-	/*@Override
-	//Click gauche
-	public boolean onClicked(ItemStack stack, ItemStack otherStack, Slot slot, ClickType clickType, PlayerEntity player, StackReference cursorStackReference) {
-
-		if (clickType == ClickType.LEFT) {
-			player.playSound(SoundEvents.ENTITY_COW_AMBIENT, 1.0F, 1.0F);
-
-			((PlayerMinja) player).addMana(20);
-			try {
-				((PlayerMinja) player).removeMana(10);
-			} catch (NotEnoughtManaException e) {
-				System.out.println(e.getMessage());
-			}
-			return true;
-		} else {
-			return false;
-		}
-	}*/
 }

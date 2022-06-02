@@ -17,18 +17,14 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(LivingEntity.class)
 public class LivingEntityMixin {
 
-    @Inject(method = "swingHand(Lnet/minecraft/util/Hand;Z)V", at = @At("HEAD"))
+    @Inject(method = "swingHand(Lnet/minecraft/util/Hand;Z)V", at = @At("HEAD"), cancellable = true)
     public void swingHand(Hand hand, boolean fromServerPlayer, CallbackInfo cir) {
 
         if((Object) (this) instanceof PlayerEntity) {
             PlayerEntity player = (PlayerEntity) (Object) (this);
-            ((PlayerEvent)player).onSwingItem(hand, fromServerPlayer, cir);
+            boolean succeed = ((PlayerEvent)player).onSwingItem(hand, fromServerPlayer);
+            if(!succeed) cir.cancel();
         }
-
-    }
-
-    @Inject(method =    "onEquipStack(Lnet/minecraft/item/ItemStack;)V", at = @At("RETURN"))
-    protected void onEquipStack(ItemStack stack, CallbackInfo cir) {
 
     }
 

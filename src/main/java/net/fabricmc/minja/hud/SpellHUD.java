@@ -2,6 +2,7 @@ package net.fabricmc.minja.hud;
 
 
 import net.fabricmc.minja.PlayerMinja;
+import net.fabricmc.minja.mixin.PlayerEntityMixin;
 import net.fabricmc.minja.textures.SpellHUDTexture;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;

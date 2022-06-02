@@ -6,9 +6,10 @@
   "mixins": [
   ],
   "client": [
-    "PlayerEntityMixin",
     "InGameHudMixin",
-    "SpellHudMixin"
+    "SpellHudMixin",
+    "PlayerEntityMixin",
+    "LivingEntityMixin"
   ],
   "injectors": {
     "defaultRequire": 1

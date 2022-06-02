@@ -1,33 +1,23 @@
-package net.fabricmc.minja.events;
+package net.fabricmc.minja.objects;
 
-import net.fabricmc.minja.clocks.Clock;
-import net.fabricmc.minja.mixin.ItemMixin;
-import net.minecraft.block.BlockState;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.entity.LivingEntity;
+import net.fabricmc.minja.events.ItemEvent;
+import net.fabricmc.minja.events.MinjaEvent;
+import net.fabricmc.minja.events.MouseEvent;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.StackReference;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.screen.slot.Slot;
-import net.minecraft.text.LiteralText;
-import net.minecraft.util.ClickType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import org.spongepowered.asm.mixin.Shadow;
-
-import java.util.Date;
 
 /**
  * Classe abstraite permettant l'usage du @Override sur les méthodes injectées dans ItemMixin (dont le compilateur
  * n'a pas connaissance) sans pour autant avoir à redéfinir chacune de ces méthodes. (équivalent d'un MouseAdapter en Swing)
  *
  */
-public abstract class MinjaItems extends Item implements MouseEvent, ItemEvent {
+public abstract class MinjaItem extends Item implements MouseEvent, ItemEvent {
 
-    public MinjaItems(Settings settings) {
+    public MinjaItem(Settings settings) {
         super(settings);
     }
 

@@ -12,7 +12,7 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.world.World;
 
-public class Grimoire extends Item {
+public class Grimoire extends MinjaItem {
 
 	/*********************************************************************
 	 * 						GENERAL (Constructor + getter)
@@ -82,7 +82,7 @@ public class Grimoire extends Item {
 	 * This method is used when the player use right click with the Wand
 	 */
 	@Override
-	public TypedActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand) {
+	public TypedActionResult<ItemStack> onUse(World world, PlayerEntity player, Hand hand) {
 		if(mc != null) {
 			GrimoireScreen grimoireScreen = new GrimoireScreen(new GrimoireGui());
 			((Screen) grimoireScreen).init(mc, 145, 179);
@@ -93,6 +93,6 @@ public class Grimoire extends Item {
 				clock.start();
 			}
 		}
-		return super.use(world, player, hand);
+		return super.onUse(world, player, hand);
 	}
 }

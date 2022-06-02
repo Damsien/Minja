@@ -1,5 +1,6 @@
 package net.fabricmc.minja.mixin;
 
+import com.mojang.authlib.GameProfile;
 import net.fabricmc.minja.Minja;
 import net.fabricmc.minja.events.ItemEvent;
 import net.fabricmc.minja.events.MixinItemEvent;
@@ -8,6 +9,8 @@ import net.fabricmc.minja.events.PlayerEvent;
 import net.fabricmc.minja.exceptions.NotEnoughtManaException;
 import net.fabricmc.minja.exceptions.SpellNotFoundException;
 import net.fabricmc.minja.PlayerMinja;
+import net.fabricmc.minja.spells.LightningBall;
+import net.fabricmc.minja.spells.Spark;
 import net.fabricmc.minja.spells.Spell;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
@@ -21,6 +24,8 @@ import net.minecraft.stat.StatHandler;
 import net.minecraft.text.LiteralText;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -58,6 +63,14 @@ public abstract class PlayerEntityMixin implements PlayerMinja, PlayerEvent {
      * Active spell is the current selected spell by the player
      */
     private int activeSpell = 0;
+
+    // Constructor
+
+    @Inject(at = @At("TAIL"), method = "<init>")
+    private void init(World world, BlockPos pos, float yaw, GameProfile profile, CallbackInfo info) {
+        this.addSpell(new LightningBall());
+        this.addSpell(new Spark());
+    }
 
     // Spells
 

@@ -19,19 +19,40 @@ import net.minecraft.util.TypedActionResult;
 import net.minecraft.world.World;
 
 public class Wand extends Item {
+
+	/*********************************************************************
+	 * 						GENERAL (Constructor + getter)
+	 ********************************************************************* */
+
+	/*
+	 * The class Wand creates an object Wand itself.
+	 * We should have only one Wand object : no other class creates a Wand object.
+	 */
 	private static Wand WAND;
 
+	/*
+	 * Constructor of Wand, using the constructor of Item.
+	 */
 	public Wand(Settings settings) {
 		super(settings);
 		WAND = this;
 	}
 
+	/*
+	 * A getter to access the Wand object
+	 */
 	public static Item getWand(){
 		return WAND;
 	}
 
+	/*********************************************************************
+	 * 						WORLD INTERACTIONS
+	 ********************************************************************* */
+
+	/*
+	 * This method is used when the player use right click with the Wand
+	 */
 	@Override
-	//Used when the player use right click with the Wand
 	public TypedActionResult<ItemStack> use(World world, PlayerEntity playerEntity, Hand hand) {
 
 		// Get the current player
@@ -52,28 +73,13 @@ public class Wand extends Item {
 		return TypedActionResult.success(playerEntity.getStackInHand(hand));
 	}
 
+	/*
+	 * A EXPLIQUER !!! QUELQU'UN ????
+	 * TODO : A EXPLIQUER
+	 */
 	@Override
 	public ItemStack finishUsing(ItemStack stack, World world, LivingEntity user) {
 		((PlayerEntity)user).sendMessage(new LiteralText("Event de fin !!"), false);
 		return stack;
 	}
-
-	/*@Override
-	//Click gauche
-	public boolean onClicked(ItemStack stack, ItemStack otherStack, Slot slot, ClickType clickType, PlayerEntity player, StackReference cursorStackReference) {
-
-		if (clickType == ClickType.LEFT) {
-			player.playSound(SoundEvents.ENTITY_COW_AMBIENT, 1.0F, 1.0F);
-
-			((PlayerMinja) player).addMana(20);
-			try {
-				((PlayerMinja) player).removeMana(10);
-			} catch (NotEnoughtManaException e) {
-				System.out.println(e.getMessage());
-			}
-			return true;
-		} else {
-			return false;
-		}
-	}*/
 }

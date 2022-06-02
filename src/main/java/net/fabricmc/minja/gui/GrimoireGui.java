@@ -5,6 +5,10 @@ import io.github.cottonmc.cotton.gui.client.LightweightGuiDescription;
 import io.github.cottonmc.cotton.gui.widget.*;
 import io.github.cottonmc.cotton.gui.widget.data.Insets;
 import io.github.cottonmc.cotton.gui.widget.icon.TextureIcon;
+import net.fabricmc.minja.PlayerMinja;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
@@ -15,24 +19,30 @@ public class GrimoireGui extends LightweightGuiDescription {
             new Identifier("gui:textures/leftpagegrimoireopen.png")
     );
 
-    public GrimoireGui() {
+    public GrimoireGui(PlayerEntity player) {
+        MatrixStack matrixStack = new MatrixStack();
         WGridPanel root = new WGridPanel();
         setRootPanel(root);
         root.setSize(145, 179);
         // root.setLocation(145,179);
         root.setInsets(Insets.ROOT_PANEL);
+        BACKGROUND.paintBackground(matrixStack, 0,0, root);
 
-        WSprite icon = new WSprite(new Identifier("minecraft:textures/item/redstone.png"));
-        root.add(icon, 0, 2, 1, 1);
+        //WSprite icon = new WSprite(new Identifier("minecraft:textures/item/redstone.png"));
+        //root.add(icon, 10, 10, 18, 18);
 
-        WButton button = new WButton(Text.of("Button"));
-        button.setIcon(new TextureIcon(new Identifier("gui:textures/rightarrow.png")));
-        root.add(button, 0, 3, 4, 1);
+        WButton button = new WButton(new TextureIcon(new Identifier("gui:textures/rightarrow.png")), Text.of("Button"));
+        root.add(button, 0, 3, 3, 1);
         button = button.setOnClick(new Test());
 
-        WLabel label = new WLabel(new LiteralText("Test"), 0xFFFFFF);
-        root.add(label, 0, 5, 2, 1);
+        WLabel mana = new WLabel(new LiteralText("Current mana : " + ((PlayerMinja) player).getMana() + "/" + ((PlayerMinja) player).getManaMax()), 0x000000);
+        root.add(mana, 0, 5, 2, 1);
+
+        WLabel spells = new WLabel(new LiteralText(((PlayerMinja) player).getSpells().toString()));
+        root.add(spells, 0, 7, 2, 1);
+
         root.validate(this);
+
     }
 
     @Override

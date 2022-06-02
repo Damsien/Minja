@@ -14,6 +14,7 @@ public class Spark extends SpellProjectile {
 
     @Override
     public void cast(LivingEntity player) {
+
         SparkItem.getSpark().use(player.world, (PlayerEntity) player, Hand.MAIN_HAND);
     }
 }

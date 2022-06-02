@@ -1,6 +1,7 @@
 package net.fabricmc.minja;
 
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 import net.fabricmc.minja.objects.Grimoire;
@@ -17,6 +18,8 @@ import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnGroup;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemGroup;
+import net.minecraft.item.ItemStack;
 import net.minecraft.text.LiteralText;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
@@ -26,7 +29,15 @@ import org.slf4j.LoggerFactory;
 import java.util.HashMap;
 import java.util.Map;
 
+/*
+ * Minja is the class that if first used when the MOD is launching.
+ * It is used for initialisation of minja items, spells, etc
+ */
 public class Minja implements ModInitializer {
+
+	/********************************************************************
+	 * 						GENERAL
+	 ********************************************************************* */
 
 	/*
 	 * That String defines how we will refer to the entire project.
@@ -38,6 +49,19 @@ public class Minja implements ModInitializer {
 	 * This logger is used to write text to the console and the log file.
 	 */
 	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
+
+
+	/********************************************************************
+	* 						ITEMS
+	********************************************************************* */
+
+	/*
+	 * The ItemGroup Minja is creating an inventory group of all the minja objects.
+	 * Any Minja object will be find in the inventory (creative gamemode) under the Minja Group
+	 */
+	public static final ItemGroup Minja = FabricItemGroupBuilder.create(
+					new Identifier("minja", "general"))
+			.icon(() -> new ItemStack(Wand.getWand())).build();
 
 	/*
 	 * Every item created by Minja has to be instancied one here
@@ -76,6 +100,10 @@ public class Minja implements ModInitializer {
 	);
 	/* ****************************************************************** */
 
+	/********************************************************************
+	 * 						SPELLS INITIALISATION
+	 ********************************************************************* */
+
 	/*
 	 * CETTE LIGNE DOIT ETRE EXPLIQUEE : ARNAUD ???
 	 * En plus spells_map n'est jamais utilisé, normal ?
@@ -93,6 +121,10 @@ public class Minja implements ModInitializer {
 
 		return map;
 	}
+
+	/********************************************************************
+	 * 						ITEMS INITIALISATION
+	 ********************************************************************* */
 
 	/*
 	 * This code runs as soon as Minecraft is in a mod-load-ready state.

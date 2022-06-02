@@ -1,6 +1,5 @@
 package net.fabricmc.minja.objects;
 
-import io.github.cottonmc.cotton.gui.client.CottonClientScreen;
 import net.fabricmc.minja.clocks.Clock;
 import net.fabricmc.minja.gui.GrimoireGui;
 import net.fabricmc.minja.gui.GrimoireScreen;

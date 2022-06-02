@@ -28,11 +28,15 @@ import java.util.Map;
 
 public class Minja implements ModInitializer {
 
+	/*
+	 * That String defines how we will refer to the entire project.
+	 * Whenever we need to find something that our MOD add to the game, it will be under that name
+	 */
 	public static final String MOD_ID = "minja";
 
-	// This logger is used to write text to the console and the log file.
-	// It is considered best practice to use your mod id as the logger's name.
-	// That way, it's clear which mod wrote info, warnings, and errors.
+	/*
+	 * This logger is used to write text to the console and the log file.
+	 */
 	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 
 	/*

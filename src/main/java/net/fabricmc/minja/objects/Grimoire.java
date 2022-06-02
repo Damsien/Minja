@@ -1,27 +1,27 @@
 package net.fabricmc.minja.objects;
 
-import net.fabricmc.minja.events.MinjaItems;
-import net.fabricmc.minja.hud.SpellHUD;
-import net.fabricmc.minja.spells.LightningBall;
-import net.minecraft.entity.LivingEntity;
+import io.github.cottonmc.cotton.gui.client.CottonClientScreen;
+import net.fabricmc.minja.clocks.Clock;
+import net.fabricmc.minja.gui.GrimoireGui;
+import net.fabricmc.minja.gui.GrimoireScreen;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.StackReference;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.screen.slot.Slot;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.ClickType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.world.World;
 
-public class Grimoire extends MinjaItems {
+public class Grimoire extends Item {
 
-	//public static ItemConvertible Baguette;
-	//private static Item WAND = new Item(new FabricItemSettings().group(GroupItemsMinja.Minja));
-	//private final Rarity;
-	//Item texture: /resources/assets/Items/Objects/Baguette.png
 	private static Grimoire GRIMOIRE;
+
+	private MinecraftClient mc = null;
+
+	private MinecraftClientClock clock = new MinecraftClientClock(10);
+
+	private boolean clockStarted = false;
 
 	public Grimoire(Settings settings) {
 		super(settings);
@@ -33,29 +33,42 @@ public class Grimoire extends MinjaItems {
 	}
 
 	@Override
-	public TypedActionResult<ItemStack> onRightClickPressed(World world, PlayerEntity playerEntity, Hand hand) {
-
-		//Mettre ici l'ouverture de l'HUD
-		SpellHUD.setVisible(true);
-
-		return TypedActionResult.success(playerEntity.getStackInHand(hand));
-
+	public TypedActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand) {
+		if(mc != null) {
+			GrimoireScreen grimoireScreen = new GrimoireScreen(new GrimoireGui());
+			((Screen) grimoireScreen).init(mc, 145, 179);
+			mc.setScreen(grimoireScreen);
+		} else {
+			if(!clockStarted) {
+				clockStarted = true;
+				clock.start();
+			}
+		}
+		return super.use(world, player, hand);
 	}
 
-	@Override
-	public TypedActionResult<ItemStack> onRightClickMaintained(World world, PlayerEntity playerEntity, Hand hand) {
+	private class MinecraftClientClock extends Clock {
 
-		// Cancel Event ==> Cancel hand animation
-		return TypedActionResult.pass(playerEntity.getStackInHand(hand));
+		public MinecraftClientClock(long timer) {
+			super(timer);
+		}
+		private World world;
+		private PlayerEntity player;
+		private Hand hand;
+		public void initialise(World world, PlayerEntity player, Hand hand) {
+			this.world = world;
+			this.player = player;
+			this.hand = hand;
+		}
+		@Override
+		public void execute() {
+			MinecraftClient currentMc = MinecraftClient.getInstance();
+			if(currentMc == null) {
+				this.start();
+			} else {
+				mc = currentMc;
+				use(world, player, hand);
+			}
+		}
 	}
-
-	@Override
-	public TypedActionResult<ItemStack> onRightClickReleased(World world, PlayerEntity playerEntity, Hand hand) {
-		//Mettre ici l'ouverture de l'HUD
-		SpellHUD.setVisible(false);
-
-		return null;
-	}
-
-
 }

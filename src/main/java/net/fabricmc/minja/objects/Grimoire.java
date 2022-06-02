@@ -12,6 +12,11 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.world.World;
 
+/*
+ * Grimoire creates a Grimoire object and defines its interactions to the minecraft world.
+ * The Grimoire will be used to show the different Minja informations of the player :
+ * 	- name, mana, available spells, magic level, etc.
+ */
 public class Grimoire extends Item {
 
 	/*********************************************************************

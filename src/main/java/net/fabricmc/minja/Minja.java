@@ -57,7 +57,7 @@ public class Minja implements ModInitializer {
 	 * Any Minja object will be find in the inventory (creative gamemode) under the Minja Group
 	 */
 	public static final ItemGroup MinjaItemGroup = FabricItemGroupBuilder.create(
-					new Identifier("minja", "general"))
+					new Identifier("minja"))
 			.icon(() -> new ItemStack(Wand.getWand())).build();
 
 	/*

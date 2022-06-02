@@ -29,18 +29,31 @@ import java.util.Map;
 public class Minja implements ModInitializer {
 
 	public static final String MOD_ID = "minja";
+
 	// This logger is used to write text to the console and the log file.
 	// It is considered best practice to use your mod id as the logger's name.
 	// That way, it's clear which mod wrote info, warnings, and errors.
 	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
-	//Every item created by Minja
+
+	/*
+	 * Every item created by Minja has to be instancied one here
+	 */
 	private static Wand WAND = new Wand(new FabricItemSettings().group(GroupItemsMinja.Minja).maxCount(1).maxDamage(0));
 	private static Grimoire GRIMOIRE = new Grimoire(new FabricItemSettings().group(GroupItemsMinja.Minja).maxCount(1).maxDamage(0));
-
 	private static Rhune RHUNE = new Rhune(new FabricItemSettings().group(GroupItemsMinja.Minja).maxCount(1).maxDamage(0));
+	/* ****************************************************************** */
+
+	/*
+	 * Every Spell that is linked to an iten has is item instancied here
+	 */
 	public static final Item LIGHTNINGBALL = new LightningBallItem(new Item.Settings().group(GroupItemsMinja.Minja).maxCount(1));
 	public static final Item SPARK = new SparkItem(new Item.Settings().group(GroupItemsMinja.Minja).maxCount(1));
+	/* ****************************************************************** */
 
+	/*
+	 * Regardless of if a spell is linked to an item, every spell has to be an 'Entity' in the game.
+	 * Every spell Entity is registered here
+	 */
 	public static final EntityType<LightningBallEntity> LightningBallEntityType = Registry.register(
 			Registry.ENTITY_TYPE,
 			new Identifier("spells", "lightningball"),
@@ -49,7 +62,6 @@ public class Minja implements ModInitializer {
 					.trackRangeBlocks(4).trackedUpdateRate(10)
 					.build()
 	);
-
 	public static final EntityType<SparkEntity> SparkEntityType = Registry.register(
 			Registry.ENTITY_TYPE,
 			new Identifier("spells", "spark"),
@@ -58,10 +70,17 @@ public class Minja implements ModInitializer {
 					.trackRangeBlocks(4).trackedUpdateRate(10)
 					.build()
 	);
+	/* ****************************************************************** */
 
-
+	/*
+	 * CETTE LIGNE DOIT ETRE EXPLIQUEE : ARNAUD ???
+	 * En plus spells_map n'est jamais utilisé, normal ?
+	 */
 	public static Map<String, Spell> SPELLS_MAP = initializeAllSpells();
 
+	/*
+	 * CETTE FINCTION DOIT ETRE EXPLIQUEE : DAMIEN
+	 */
 	private static Map<String, Spell> initializeAllSpells() {
 		Map<String, Spell> map = new HashMap<String, Spell>();
 
@@ -71,11 +90,13 @@ public class Minja implements ModInitializer {
 		return map;
 	}
 
+	/*
+	 * This code runs as soon as Minecraft is in a mod-load-ready state.
+	 * It is used to initialize (register) every item we created so it can be in the game.
+	 * Warning : some things (like resources) may still be uninitialized.
+	 */
 	@Override
 	public void onInitialize() {
-		// This code runs as soon as Minecraft is in a mod-load-ready state.
-		// However, some things (like resources) may still be uninitialized.
-		// Proceed with mild caution.
 		Registry.register(Registry.ITEM, new Identifier("objects", "wand"), WAND);
 		LOGGER.info("Wand launched");
 
@@ -90,7 +111,5 @@ public class Minja implements ModInitializer {
 
 		Registry.register(Registry.ITEM, new Identifier("spells", "spark"), SPARK);
 		LOGGER.info("Spark launched");
-
-
 	}
 }

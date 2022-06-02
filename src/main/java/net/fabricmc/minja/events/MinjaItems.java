@@ -1,11 +1,19 @@
 package net.fabricmc.minja.events;
 
 import net.fabricmc.minja.clocks.Clock;
+import net.minecraft.block.BlockState;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.StackReference;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.screen.slot.Slot;
+import net.minecraft.text.LiteralText;
+import net.minecraft.util.ClickType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import java.util.Date;
@@ -22,6 +30,35 @@ public abstract class MinjaItems extends Item {
     }
 
     @Override
+    public boolean onStackClicked(ItemStack stack, Slot slot,
+                                  ClickType clickType,
+                                  PlayerEntity player) {
+        player.sendMessage(new LiteralText("OnStackClicked !!!"),false);
+        return true;
+    }
+
+    @Override
+    public boolean onClicked(ItemStack stack,
+                             ItemStack otherStack,
+                             Slot slot,
+                             ClickType clickType,
+                             PlayerEntity player,
+                             StackReference cursorStackReference) {
+        player.sendMessage(new LiteralText("onClicked !!!"),false);
+        return true;
+    }
+
+    @Override
+    public boolean postMine(ItemStack stack,
+                            World world,
+                            BlockState state,
+                            BlockPos pos,
+                            LivingEntity miner) {
+        MinecraftClient.getInstance().player.sendMessage(new LiteralText("postMine !!!"),false);
+        return true;
+    }
+
+    @Override
     //Used when the player use right click with the Wand
     final public TypedActionResult<ItemStack> use(World world, PlayerEntity playerEntity, Hand hand) {
 
@@ -33,7 +70,7 @@ public abstract class MinjaItems extends Item {
         if(firstTime) {
             firstTime = false;
             state = onRightClickPressed(world, playerEntity, hand);
-            Clock clock = new Clock(TIMER, world) {
+            Clock clock = new Clock(TIMER) {
 
                 @Override
                 public void execute() {
@@ -41,8 +78,7 @@ public abstract class MinjaItems extends Item {
                         onRightClickReleased(world, playerEntity, hand);
                         firstTime = true;
                     } else {
-                        Thread thread = new Thread(this);
-                        thread.start();
+                        this.run();
                     }
                 }
             };

@@ -1,15 +1,28 @@
 package net.fabricmc.minja.mixin;
 
+import net.fabricmc.minja.Minja;
 import net.fabricmc.minja.exceptions.NotEnoughtManaException;
 import net.fabricmc.minja.exceptions.SpellNotFoundException;
 import net.fabricmc.minja.PlayerMinja;
 import net.fabricmc.minja.spells.Spell;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.network.ClientPlayNetworkHandler;
+import net.minecraft.client.network.ClientPlayerEntity;
+import net.minecraft.client.world.ClientWorld;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.NbtCompound;
+import net.minecraft.item.ItemStack;
+import net.minecraft.stat.StatHandler;
+import net.minecraft.text.LiteralText;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.Hand;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -186,6 +199,8 @@ public abstract class PlayerEntityMixin implements PlayerMinja {
      * Get the maximum amount of mana the player can have
      * @return max_mana
      */
+
+
     @Override
     public int getManaMax() {
         return MAX_MANA;
@@ -197,6 +212,7 @@ public abstract class PlayerEntityMixin implements PlayerMinja {
      * @param nbt
      * @param ci
      */
+    /*
     @Inject(method = "writeCustomDataToNbt", at = @At("RETURN"))
     public void writeCustomDataToNbt(NbtCompound nbt, CallbackInfo ci) {
         //nbt.putInt("mana", mana);
@@ -204,7 +220,7 @@ public abstract class PlayerEntityMixin implements PlayerMinja {
             nbt.putString("spell"+i, spells.get(i).getName() + "/" + spells.get(i).getType() + "/" + i);
         }
         nbt.putInt("activeSpell", activeSpell);
-    }
+    }*/
 
     /**
      * DO NOT USE

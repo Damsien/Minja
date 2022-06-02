@@ -2,6 +2,7 @@ package net.fabricmc.minja.hud;
 
 
 import net.fabricmc.minja.PlayerMinja;
+import net.fabricmc.minja.mixin.PlayerEntityMixin;
 import net.fabricmc.minja.textures.SpellHUDTexture;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
@@ -67,9 +68,6 @@ public class SpellHUD {
         final double LINE = (height * 0.7); // length between the center and each spells
         final double SAFE_RANGE = (height * 0.3); // length between the center and the crosshair in which no selection will be done
 
-        Vec3d vec = minecraft.cameraEntity.getRotationVecClient();
-        minecraft.player.sendMessage(new LiteralText(""+vec.x+" : "+vec.y+" : "+vec.z),true);
-
         // Do not display the HUD if it has not been set to visible
         if(!visible) {
             // If the center has previously been set, it means that the hud has just been closed. Reset data!
@@ -126,8 +124,6 @@ public class SpellHUD {
         // Draw the wheel
         for(int i=0 ; i < length ; i++) {
 
-            minecraft.cameraEntity.lookAt(EntityAnchorArgumentType.EntityAnchor.FEET,cameraPosition);
-
             // Create a new point at the origin and get its info
             PointPolaire pp = new PointPolaire(LINE,  i * rad);
             PointCartesien p = pp.PolarToCard();
@@ -136,8 +132,8 @@ public class SpellHUD {
             if(!isInSafeRange) {
 
                 // Check if the current spell drawn is the active one
-                if(i == currentIndex)   drawOK(stack, width+p.x, height +p.y);
-                else                    drawKO(stack, width+p.x, height +p.y);
+                if(i == currentIndex)   drawOK(stack, width+p.x, height +p.y, i);
+                else                    drawKO(stack, width+p.x, height +p.y, i);
 
 
                 // In case we are in the selection zone :
@@ -151,10 +147,10 @@ public class SpellHUD {
                         minecraft.player.playSound(SoundEvents.UI_BUTTON_CLICK,1.0F, 1.0F);
                     }
 
-                    drawOK(stack, width+p.x, height +p.y);
+                    drawOK(stack, width+p.x, height +p.y, i);
                 }
                 else
-                    drawKO(stack, width+p.x, height +p.y);
+                    drawKO(stack, width+p.x, height +p.y, i);
 
             }
         }
@@ -195,19 +191,15 @@ public class SpellHUD {
 
         cameraPosition = A.add(v.multiply(1000));
 
-        sendMessage("A : ("+A.x+", "+A.y+", "+A.z+")");
-        sendMessage("O : ("+O.x+", "+O.y+", "+O.z+")");
-        sendMessage("B : ("+cameraPosition.x+", "+cameraPosition.y+", "+cameraPosition.z+")");
-
     }
 
-    private void drawOK(MatrixStack stack, double x, double y) {
+    private void drawOK(MatrixStack stack, double x, double y, int i) {
         Renderer.draw(stack, SpellHUDTexture.VALIDATE_CIRCLE, x, y);
-        Renderer.draw(stack, player.getActiveSpell(), x, y);
+        Renderer.draw(stack, player.getSpell(i), x, y);
     }
 
-    private void drawKO(MatrixStack stack, double x, double y) {
-        Renderer.draw(stack, player.getActiveSpell(), x, y);
+    private void drawKO(MatrixStack stack, double x, double y, int i) {
+        Renderer.draw(stack, player.getSpell(i), x, y);
     }
 
     private double modulo(double r, double mod) {

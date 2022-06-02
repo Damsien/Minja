@@ -5,16 +5,19 @@ import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 import net.fabricmc.minja.objects.Grimoire;
 import net.fabricmc.minja.objects.GroupItemsMinja;
+import net.fabricmc.minja.objects.Rhune;
 import net.fabricmc.minja.objects.Wand;
 import net.fabricmc.minja.spells.*;
 import net.fabricmc.minja.spells.entities.LightningBallEntity;
 import net.fabricmc.minja.spells.entities.SparkEntity;
 import net.fabricmc.minja.spells.items.LightningBallItem;
 import net.fabricmc.minja.spells.items.SparkItem;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnGroup;
 import net.minecraft.item.Item;
+import net.minecraft.text.LiteralText;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import org.slf4j.Logger;
@@ -33,6 +36,8 @@ public class Minja implements ModInitializer {
 	//Every item created by Minja
 	private static Wand WAND = new Wand(new FabricItemSettings().group(GroupItemsMinja.Minja).maxCount(1).maxDamage(0));
 	private static Grimoire GRIMOIRE = new Grimoire(new FabricItemSettings().group(GroupItemsMinja.Minja).maxCount(1).maxDamage(0));
+
+	private static Rhune RHUNE = new Rhune(new FabricItemSettings().group(GroupItemsMinja.Minja).maxCount(1).maxDamage(0));
 	public static final Item LIGHTNINGBALL = new LightningBallItem(new Item.Settings().group(GroupItemsMinja.Minja).maxCount(1));
 	public static final Item SPARK = new SparkItem(new Item.Settings().group(GroupItemsMinja.Minja).maxCount(1));
 
@@ -77,10 +82,15 @@ public class Minja implements ModInitializer {
 		Registry.register(Registry.ITEM, new Identifier("objects", "grimoire"), GRIMOIRE);
 		LOGGER.info("Grimoire launched");
 
+		Registry.register(Registry.ITEM, new Identifier("objects", "rhune"), RHUNE);
+		LOGGER.info("Rhune launched");
+
 		Registry.register(Registry.ITEM, new Identifier("spells", "lightningball"), LIGHTNINGBALL);
 		LOGGER.info("Lightning Ball launched");
 
 		Registry.register(Registry.ITEM, new Identifier("spells", "spark"), SPARK);
 		LOGGER.info("Spark launched");
+
+
 	}
 }

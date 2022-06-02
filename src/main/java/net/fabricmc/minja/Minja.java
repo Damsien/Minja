@@ -5,7 +5,6 @@ import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 import net.fabricmc.minja.objects.Grimoire;
-import net.fabricmc.minja.objects.GroupItemsMinja;
 import net.fabricmc.minja.objects.Rhune;
 import net.fabricmc.minja.objects.Wand;
 import net.fabricmc.minja.spells.*;
@@ -13,14 +12,12 @@ import net.fabricmc.minja.spells.entities.LightningBallEntity;
 import net.fabricmc.minja.spells.entities.SparkEntity;
 import net.fabricmc.minja.spells.items.LightningBallItem;
 import net.fabricmc.minja.spells.items.SparkItem;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnGroup;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
-import net.minecraft.text.LiteralText;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import org.slf4j.Logger;
@@ -35,7 +32,7 @@ import java.util.Map;
  */
 public class Minja implements ModInitializer {
 
-	/********************************************************************
+	/*********************************************************************
 	 * 						GENERAL
 	 ********************************************************************* */
 
@@ -59,23 +56,23 @@ public class Minja implements ModInitializer {
 	 * The ItemGroup Minja is creating an inventory group of all the minja objects.
 	 * Any Minja object will be find in the inventory (creative gamemode) under the Minja Group
 	 */
-	public static final ItemGroup Minja = FabricItemGroupBuilder.create(
-					new Identifier("minja", "general"))
+	public static final ItemGroup MinjaItemGroup = FabricItemGroupBuilder.create(
+					new Identifier("minja"))
 			.icon(() -> new ItemStack(Wand.getWand())).build();
 
 	/*
 	 * Every item created by Minja has to be instancied one here
 	 */
-	private static Wand WAND = new Wand(new FabricItemSettings().group(GroupItemsMinja.Minja).maxCount(1).maxDamage(0));
-	private static Grimoire GRIMOIRE = new Grimoire(new FabricItemSettings().group(GroupItemsMinja.Minja).maxCount(1).maxDamage(0));
-	private static Rhune RHUNE = new Rhune(new FabricItemSettings().group(GroupItemsMinja.Minja).maxCount(1).maxDamage(0));
+	private static Wand WAND = new Wand(new FabricItemSettings().group(MinjaItemGroup).maxCount(1).maxDamage(0));
+	private static Grimoire GRIMOIRE = new Grimoire(new FabricItemSettings().group(MinjaItemGroup).maxCount(1).maxDamage(0));
+	private static Rhune RHUNE = new Rhune(new FabricItemSettings().group(MinjaItemGroup).maxCount(1).maxDamage(0));
 	/* ****************************************************************** */
 
 	/*
 	 * Every Spell that is linked to an iten has is item instancied here
 	 */
-	public static final Item LIGHTNINGBALL = new LightningBallItem(new Item.Settings().group(GroupItemsMinja.Minja).maxCount(1));
-	public static final Item SPARK = new SparkItem(new Item.Settings().group(GroupItemsMinja.Minja).maxCount(1));
+	public static final Item LIGHTNINGBALL = new LightningBallItem(new Item.Settings().group(MinjaItemGroup).maxCount(1));
+	public static final Item SPARK = new SparkItem(new Item.Settings().group(MinjaItemGroup).maxCount(1));
 	/* ****************************************************************** */
 
 	/*
@@ -100,18 +97,20 @@ public class Minja implements ModInitializer {
 	);
 	/* ****************************************************************** */
 
-	/********************************************************************
+	/*********************************************************************
 	 * 						SPELLS INITIALISATION
 	 ********************************************************************* */
 
 	/*
 	 * CETTE LIGNE DOIT ETRE EXPLIQUEE : ARNAUD ???
 	 * En plus spells_map n'est jamais utilisé, normal ?
+	 * TODO : A EXPLIQUER
 	 */
 	public static Map<String, Spell> SPELLS_MAP = initializeAllSpells();
 
 	/*
 	 * CETTE FINCTION DOIT ETRE EXPLIQUEE : DAMIEN
+	 * TODO : A EXPLIQUER
 	 */
 	private static Map<String, Spell> initializeAllSpells() {
 		Map<String, Spell> map = new HashMap<String, Spell>();
@@ -122,7 +121,7 @@ public class Minja implements ModInitializer {
 		return map;
 	}
 
-	/********************************************************************
+	/*********************************************************************
 	 * 						ITEMS INITIALISATION
 	 ********************************************************************* */
 

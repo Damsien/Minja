@@ -5,7 +5,6 @@ import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 import net.fabricmc.minja.objects.Grimoire;
-import net.fabricmc.minja.objects.Rhune;
 import net.fabricmc.minja.objects.Wand;
 import net.fabricmc.minja.spells.*;
 import net.fabricmc.minja.spells.entities.LightningBallEntity;
@@ -65,7 +64,6 @@ public class Minja implements ModInitializer {
 	 */
 	private static Wand WAND = new Wand(new FabricItemSettings().group(MinjaItemGroup).maxCount(1).maxDamage(0));
 	private static Grimoire GRIMOIRE = new Grimoire(new FabricItemSettings().group(MinjaItemGroup).maxCount(1).maxDamage(0));
-	private static Rhune RHUNE = new Rhune(new FabricItemSettings().group(MinjaItemGroup).maxCount(1).maxDamage(0));
 	/* ****************************************************************** */
 
 	/*
@@ -137,9 +135,6 @@ public class Minja implements ModInitializer {
 
 		Registry.register(Registry.ITEM, new Identifier("objects", "grimoire"), GRIMOIRE);
 		LOGGER.info("Grimoire launched");
-
-		Registry.register(Registry.ITEM, new Identifier("objects", "rhune"), RHUNE);
-		LOGGER.info("Rhune launched");
 
 		Registry.register(Registry.ITEM, new Identifier("spells", "lightningball"), LIGHTNINGBALL);
 		LOGGER.info("Lightning Ball launched");

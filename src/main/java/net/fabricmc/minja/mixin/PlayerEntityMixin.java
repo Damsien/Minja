@@ -226,7 +226,7 @@ public abstract class PlayerEntityMixin implements PlayerMinja, PlayerEvent {
     @Override
     public boolean onSwingItem(Hand hand, boolean fromServerPlayer) {
         PlayerEntity player = (PlayerEntity) (Object) (this);
-        return ((MixinItemEvent)player.getStackInHand(hand).getItem()).interact(hand, fromServerPlayer);
+        return ((MixinItemEvent)player.getStackInHand(hand).getItem()).interact(player.getWorld(), player, hand, fromServerPlayer);
         //player.sendMessage(new LiteralText("Je récupère bien le Mixin"), false);
 
     }

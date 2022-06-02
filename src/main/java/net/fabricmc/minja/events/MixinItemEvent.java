@@ -1,6 +1,8 @@
 package net.fabricmc.minja.events;
 
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Hand;
+import net.minecraft.world.World;
 
 public interface MixinItemEvent {
 
@@ -12,5 +14,5 @@ public interface MixinItemEvent {
      *
      * @return succeed : Indicate if the event must be canceled or not
      */
-    public boolean interact(Hand hand, boolean fromServerPlayer);
+    public boolean interact(World world, PlayerEntity player, Hand hand, boolean fromServerPlayer);
 }

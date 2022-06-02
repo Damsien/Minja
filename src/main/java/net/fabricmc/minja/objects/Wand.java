@@ -1,6 +1,8 @@
 package net.fabricmc.minja.objects;
 
+import net.fabricmc.minja.events.MinjaEvent;
 import net.fabricmc.minja.events.PlayerEvent;
+import net.fabricmc.minja.events.Side;
 import net.fabricmc.minja.exceptions.NotEnoughtManaException;
 import net.fabricmc.minja.PlayerMinja;
 import net.fabricmc.minja.spells.LightningBall;
@@ -45,7 +47,7 @@ public class Wand extends MinjaItem {
 	/*
 	 * A getter to access the Wand object
 	 */
-	public static Item getWand(){
+	public static Item getWand() {
 		return WAND;
 	}
 
@@ -56,7 +58,7 @@ public class Wand extends MinjaItem {
 	/*
 	 * This method is used when the player use right click with the Wand
 	 */
-	@Override
+	/*@Override
 	public TypedActionResult<ItemStack> use(World world, PlayerEntity playerEntity, Hand hand) {
 
 		// Get the current player
@@ -75,7 +77,47 @@ public class Wand extends MinjaItem {
 			// TODO : A UPGRADE
 		}
 		return TypedActionResult.success(playerEntity.getStackInHand(hand));
+	}*/
+
+	@Override
+	public TypedActionResult<ItemStack> onRightClickPressed(World world, PlayerEntity playerEntity, Hand hand, Side side) {
+
+		playerEntity.sendMessage(new LiteralText("Event right : " + (side == Side.CLIENT ? "CLIENT" : "SERVER")), false);
+
+		return TypedActionResult.success(playerEntity.getStackInHand(hand));
 	}
+
+
+	@Override
+	public MinjaEvent onLeftClickPressed(PlayerEntity playerEntity, Hand hand, boolean playerFromServer, Side side) {
+
+		PlayerMinja player = (PlayerMinja) playerEntity;
+
+		playerEntity.sendMessage(new LiteralText("Event left : "+ (side == Side.CLIENT ? "CLIENT" : "SERVER")), false);
+
+		if(Side.CLIENT == side) {
+
+
+			try {
+				player.removeMana(player.getActiveSpell().getManaCost());
+			} catch (NotEnoughtManaException e) {
+				// throw new RuntimeException(e);
+				// TODO : A UPGRADE
+			}
+
+		}
+
+		if(Side.SERVER == side) {
+			if(player.getMana() < player.getActiveSpell().getManaCost())
+			player.getActiveSpell().cast(playerEntity);
+		}
+
+
+
+		return MinjaEvent.SUCCEED;
+	}
+
+
 
 	/*
 	 * A EXPLIQUER !!! QUELQU'UN ????

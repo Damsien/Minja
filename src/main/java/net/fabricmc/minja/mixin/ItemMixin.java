@@ -1,10 +1,7 @@
 package net.fabricmc.minja.mixin;
 
 import net.fabricmc.minja.clocks.Clock;
-import net.fabricmc.minja.events.ItemEvent;
-import net.fabricmc.minja.events.MinjaEvent;
-import net.fabricmc.minja.events.MixinItemEvent;
-import net.fabricmc.minja.events.MouseEvent;
+import net.fabricmc.minja.events.*;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
@@ -25,14 +22,16 @@ import java.util.Date;
 
 @Mixin(Item.class)
 public class ItemMixin implements MouseEvent, ItemEvent, MixinItemEvent {
-
     private long lastRightClickEvent;
-    private boolean rightClickFirstTime = true;
+    private boolean rightClickFirstTimeServer = true;
+
+    private boolean rightClickFirstTimeClient = true;
     private boolean rightClickPressed;
 
 
     private long lastLeftClickEvent;
-    private boolean leftClickFirstTime = true;
+    private boolean leftClickFirstTimeServer = true;
+    private boolean leftClickFirstTimeClient = true;
 
     private boolean leftClickPressed;
 
@@ -41,23 +40,27 @@ public class ItemMixin implements MouseEvent, ItemEvent, MixinItemEvent {
     @Inject(method = "use(Lnet/minecraft/world/World;Lnet/minecraft/entity/player/PlayerEntity;Lnet/minecraft/util/Hand;)Lnet/minecraft/util/TypedActionResult;", at = @At("HEAD"), cancellable = true)
     public void use(World world, PlayerEntity user, Hand hand, CallbackInfoReturnable<TypedActionResult<ItemStack>> cir){
 
+        Side side = world.isClient ? Side.CLIENT : Side.SERVER;
+
         TypedActionResult<ItemStack> state, state2;
 
-        state = onUse(world, user, hand);
-        state2 = rightClickCallFlow(world, user, hand);
+        state = onUse(world, user, hand, side);
+        state2 = rightClickCallFlow(world, user, hand, side);
 
         cir.setReturnValue(state2 != null ? state2 : state);
 
     }
 
     @Override
-    final public boolean interact(Hand hand, boolean fromServerPlayer) {
+    final public boolean interact(World world, PlayerEntity playerEntity, Hand hand, boolean fromServerPlayer) {
 
         MinjaEvent succeed1, succeed2;
 
+        Side side = world.isClient ? Side.CLIENT : Side.SERVER;
+
         if(rightClickPressed) return true;
-        succeed1 =  onInteract(hand, fromServerPlayer);
-        succeed2 = leftClickCallFlow(hand, fromServerPlayer);
+        succeed1 =  onInteract(playerEntity, hand, fromServerPlayer, side);
+        succeed2 = leftClickCallFlow(playerEntity, hand, fromServerPlayer, side);
 
         return succeed1 != MinjaEvent.UNDEFINED ? succeed1 != MinjaEvent.CANCELED : succeed2 != MinjaEvent.CANCELED;
 
@@ -66,7 +69,7 @@ public class ItemMixin implements MouseEvent, ItemEvent, MixinItemEvent {
 
 
 
-    private TypedActionResult<ItemStack> rightClickCallFlow(World world, PlayerEntity user, Hand hand) {
+    private TypedActionResult<ItemStack> rightClickCallFlow(World world, PlayerEntity user, Hand hand, Side side) {
 
         TypedActionResult state = null;
 
@@ -75,17 +78,17 @@ public class ItemMixin implements MouseEvent, ItemEvent, MixinItemEvent {
         //Mettre ici l'ouverture de l'HUD
         lastRightClickEvent = new Date().getTime();
 
-        if(rightClickFirstTime) {
-            rightClickFirstTime = false;
-            state = onRightClickPressed(world, user, hand);
+        if(rightClickFirstTimeServer && side == Side.SERVER) {
+            rightClickFirstTimeServer = false;
+            state = onRightClickPressed(world, user, hand, side);
             Clock clock = new Clock(TIMER) {
 
                 @Override
                 public void execute() {
                     if(new Date().getTime() - lastRightClickEvent > TIMER-10) {
-                        onRightClickReleased(world, user, hand);
+                        onRightClickReleased(world, user, hand, side);
                         rightClickPressed = false;
-                        rightClickFirstTime = true;
+                        rightClickFirstTimeServer = true;
                     } else {
                         this.run();
                     }
@@ -93,9 +96,27 @@ public class ItemMixin implements MouseEvent, ItemEvent, MixinItemEvent {
             };
             clock.start();
         }
+        else if(rightClickFirstTimeClient && side == Side.CLIENT){
+            rightClickFirstTimeClient = false;
+            state = onRightClickPressed(world, user, hand, side);
+            Clock clock = new Clock(TIMER) {
 
+                @Override
+                public void execute() {
+                    if(new Date().getTime() - lastRightClickEvent > TIMER-10) {
+                        onRightClickReleased(world, user, hand, side);
+                        rightClickPressed = false;
+                        rightClickFirstTimeClient = true;
+                    } else {
+                        this.run();
+                    }
+                }
+            };
+            clock.start();
+
+        }
         else {
-            state = onRightClickMaintained(world, user, hand);
+            state = onRightClickMaintained(world, user, hand, side);
         }
 
         if(state == null) state = TypedActionResult.success(user.getStackInHand(hand));
@@ -104,26 +125,26 @@ public class ItemMixin implements MouseEvent, ItemEvent, MixinItemEvent {
 
     }
 
-    private MinjaEvent leftClickCallFlow(Hand hand, boolean fromServerPlayer) {
+    private MinjaEvent leftClickCallFlow(PlayerEntity playerEntity, Hand hand, boolean fromServerPlayer, Side side) {
 
         MinjaEvent state;
 
-        rightClickPressed = true;
+        leftClickPressed = true;
 
         //Mettre ici l'ouverture de l'HUD
         lastLeftClickEvent = new Date().getTime();
 
-        if(leftClickFirstTime) {
-            leftClickFirstTime = false;
-            state = onLeftClickPressed(hand, fromServerPlayer);
+        if(leftClickFirstTimeServer && side == Side.SERVER) {
+            leftClickFirstTimeServer = false;
+            state = onLeftClickPressed(playerEntity, hand, fromServerPlayer, side);
             Clock clock = new Clock(TIMER) {
 
                 @Override
                 public void execute() {
                     if(new Date().getTime() - lastLeftClickEvent > TIMER-10) {
-                        onLeftClickReleased(hand, fromServerPlayer);
-                        rightClickPressed = false;
-                        leftClickFirstTime = true;
+                        onLeftClickReleased(playerEntity, hand, fromServerPlayer,side);
+                        leftClickPressed = false;
+                        leftClickFirstTimeServer = true;
                     } else {
                         this.run();
                     }
@@ -131,50 +152,69 @@ public class ItemMixin implements MouseEvent, ItemEvent, MixinItemEvent {
             };
             clock.start();
         }
+        else if(leftClickFirstTimeClient && side == Side.CLIENT) {
+            leftClickFirstTimeClient = false;
+            state = onLeftClickPressed(playerEntity, hand, fromServerPlayer, side);
+            Clock clock = new Clock(TIMER) {
 
-        else  state = onLeftClickMaintained(hand, fromServerPlayer);
+                @Override
+                public void execute() {
+                    if(new Date().getTime() - lastLeftClickEvent > TIMER-10) {
+                        onLeftClickReleased(playerEntity, hand, fromServerPlayer,side);
+                        leftClickPressed = false;
+                        leftClickFirstTimeClient = true;
+                    } else {
+                        this.run();
+                    }
+                }
+            };
+            clock.start();
+
+        }
+
+        else  state = onLeftClickMaintained(playerEntity, hand, fromServerPlayer, side);
 
         return state;
 
     }
 
     @Override
-    public TypedActionResult<ItemStack> onUse(World world, PlayerEntity user, Hand hand) {
+    public TypedActionResult<ItemStack> onUse(World world, PlayerEntity user, Hand hand, Side side) {
         return TypedActionResult.success(user.getStackInHand(hand));
     }
 
-    public MinjaEvent onInteract(Hand hand, boolean fromServerPlayer) {
+    public MinjaEvent onInteract(PlayerEntity playerEntity, Hand hand, boolean fromServerPlayer, Side side) {
         return MinjaEvent.UNDEFINED;
     }
 
 
     @Override
-    public MinjaEvent onLeftClickPressed(Hand hand, boolean fromServerPlayer) {
+    public MinjaEvent onLeftClickPressed(PlayerEntity playerEntity, Hand hand, boolean fromServerPlayer, Side side) {
         return MinjaEvent.UNDEFINED;
     }
 
     @Override
-    public MinjaEvent onLeftClickMaintained(Hand hand, boolean playerFromServer) {
+    public MinjaEvent onLeftClickMaintained(PlayerEntity playerEntity, Hand hand, boolean playerFromServer, Side side) {
         return MinjaEvent.UNDEFINED;
     }
 
     @Override
-    public MinjaEvent onLeftClickReleased(Hand hand, boolean playerFromServer) {
+    public MinjaEvent onLeftClickReleased(PlayerEntity playerEntity, Hand hand, boolean playerFromServer, Side side) {
         return MinjaEvent.UNDEFINED;
     }
 
     @Override
-    public TypedActionResult<ItemStack> onRightClickPressed(World world, PlayerEntity playerEntity, Hand hand) {
+    public TypedActionResult<ItemStack> onRightClickPressed(World world, PlayerEntity playerEntity, Hand hand, Side side) {
         return null;
     }
 
     @Override
-    public TypedActionResult<ItemStack> onRightClickMaintained(World world, PlayerEntity playerEntity, Hand hand) {
+    public TypedActionResult<ItemStack> onRightClickMaintained(World world, PlayerEntity playerEntity, Hand hand, Side side) {
         return null;
     }
 
     @Override
-    public TypedActionResult<ItemStack> onRightClickReleased(World world, PlayerEntity playerEntity, Hand hand) {
+    public TypedActionResult<ItemStack> onRightClickReleased(World world, PlayerEntity playerEntity, Hand hand, Side side) {
         return null;
     }
 

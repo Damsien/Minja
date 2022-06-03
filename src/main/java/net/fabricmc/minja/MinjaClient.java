@@ -1,5 +1,6 @@
 package net.fabricmc.minja;
 
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.minja.spells.LightningBall;
 import net.fabricmc.minja.spells.Spark;
 import net.fabricmc.minja.spells.entities.EntitySpawnPacket;
@@ -21,6 +22,9 @@ public class MinjaClient implements ClientModInitializer {
     public static final Identifier PacketID = new Identifier("spells", "spawn_packet");
     @Override
     public void onInitializeClient() {
+        //ClientPlayNetworking.registerGlobalReceiver(TutorialNetworkingConstants.HIGHLIGHT_PACKET_ID, (client, handler, buf, responseSender) -> {
+    //...
+        //});
         EntityRendererRegistry.register(Minja.LightningBallEntityType, FlyingItemEntityRenderer::new);
         EntityRendererRegistry.register(Minja.SparkEntityType, FlyingItemEntityRenderer::new);
         receiveEntityPacket();

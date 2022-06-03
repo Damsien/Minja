@@ -2,6 +2,7 @@ package net.fabricmc.minja.mixin;
 
 import com.mojang.authlib.GameProfile;
 import net.fabricmc.minja.Minja;
+import net.fabricmc.minja.clocks.ManaClock;
 import net.fabricmc.minja.events.ItemEvent;
 import net.fabricmc.minja.events.MixinItemEvent;
 import net.fabricmc.minja.events.MouseEvent;
@@ -9,6 +10,7 @@ import net.fabricmc.minja.events.PlayerEvent;
 import net.fabricmc.minja.exceptions.NotEnoughtManaException;
 import net.fabricmc.minja.exceptions.SpellNotFoundException;
 import net.fabricmc.minja.PlayerMinja;
+import net.fabricmc.minja.objects.MinjaItem;
 import net.fabricmc.minja.spells.LightningBall;
 import net.fabricmc.minja.spells.Spark;
 import net.fabricmc.minja.spells.Spell;
@@ -19,7 +21,9 @@ import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.stat.StatHandler;
 import net.minecraft.text.LiteralText;
 import net.minecraft.util.ActionResult;
@@ -52,7 +56,7 @@ public abstract class PlayerEntityMixin implements PlayerMinja, PlayerEvent {
     /**
      * Mana is a fuel for using spells
      */
-    private int mana = 35;
+    private int mana;
 
     /**
      * Spells are all the spells that the player can use. It's representing by a wheel
@@ -64,12 +68,28 @@ public abstract class PlayerEntityMixin implements PlayerMinja, PlayerEvent {
      */
     private int activeSpell = 0;
 
+    private ManaClock manaClock;
+
     // Constructor
 
     @Inject(at = @At("TAIL"), method = "<init>")
     private void init(World world, BlockPos pos, float yaw, GameProfile profile, CallbackInfo info) {
         this.addSpell(new LightningBall());
         this.addSpell(new Spark());
+        System.out.println("=============");
+        if(world.isClient) {
+            System.out.println(MinecraftClient.getInstance().getSession().getUsername());
+            setMana(
+                    ((PlayerMinja)MinecraftClient.getInstance().getServer().getPlayerManager().getPlayer(
+                            MinecraftClient.getInstance().getSession().getUsername())).getMana()
+            );
+        } else {
+            setMana(0);
+        }
+        manaClock = new ManaClock(1500, this);
+        runManaRegeneration();
+        System.out.println("init " + this.getClass());
+        System.out.println("=============");
     }
 
     // Spells
@@ -177,6 +197,8 @@ public abstract class PlayerEntityMixin implements PlayerMinja, PlayerEvent {
      * @param amount between 0 and 100
      */
     private void setMana(int amount) {
+        System.out.println("Instance : " + this.getClass());
+        System.out.println("Set mana : " + mana);
         if(amount < 0) mana = 0;
         else mana = Math.min(amount, MAX_MANA);
     }
@@ -216,8 +238,6 @@ public abstract class PlayerEntityMixin implements PlayerMinja, PlayerEvent {
      * Get the maximum amount of mana the player can have
      * @return max_mana
      */
-
-
     @Override
     public int getManaMax() {
         return MAX_MANA;
@@ -226,9 +246,20 @@ public abstract class PlayerEntityMixin implements PlayerMinja, PlayerEvent {
     @Override
     public boolean onSwingItem(Hand hand, boolean fromServerPlayer) {
         PlayerEntity player = (PlayerEntity) (Object) (this);
-        return ((MixinItemEvent)player.getStackInHand(hand).getItem()).interact(player.getWorld(), player, hand, fromServerPlayer);
-        //player.sendMessage(new LiteralText("Je récupère bien le Mixin"), false);
+        Item item = player.getStackInHand(hand).getItem();
+        if(item instanceof MinjaItem) {
+            return ((MinjaItem)player.getStackInHand(hand).getItem()).interact(player.getWorld(), player, hand, fromServerPlayer);
+        }
+        return true;
 
+    }
+
+    private void runManaRegeneration() {
+        manaClock.start();
+    }
+
+    private void stopManaRegeneration() {
+        manaClock.stop();
     }
 
     /**
@@ -237,25 +268,32 @@ public abstract class PlayerEntityMixin implements PlayerMinja, PlayerEvent {
      * @param nbt
      * @param ci
      */
-    /*
     @Inject(method = "writeCustomDataToNbt", at = @At("RETURN"))
     public void writeCustomDataToNbt(NbtCompound nbt, CallbackInfo ci) {
-        //nbt.putInt("mana", mana);
-        for(int i = 0; i < spells.size(); i++) {
-            nbt.putString("spell"+i, spells.get(i).getName() + "/" + spells.get(i).getType() + "/" + i);
+        nbt.putInt("mana", mana);
+        System.out.println("Instance : " + this.getClass());
+        System.out.println("Write mana : " + mana);
+        int i = 0;
+        for(Spell spell : spells) {
+            if(spell != null) {
+                nbt.putString("spell"+i, spell + "/" + spell.getType() + "/" + i);
+                i++;
+            }
         }
         nbt.putInt("activeSpell", activeSpell);
-    }*/
+    }
 
     /**
      * DO NOT USE
      * Read the persistent data of the MinjaPlayer : mana, spells and activeSpell
      * @param nbt
      * @param ci
-     *
+     */
     @Inject(method = "readCustomDataFromNbt", at = @At("RETURN"))
     public void readCustomDataFromNbt(NbtCompound nbt, CallbackInfo ci) {
-        //mana = nbt.getInt("mana");
+        setMana(nbt.getInt("mana"));
+        System.out.println("Instance : " + this.getClass());
+        System.out.println("Read mana " + mana);
         for(int i = 0; i < MAX_SPELLS; i++) {
             if(nbt.contains("spell"+i)) {
                 spells.add(Minja.SPELLS_MAP.get(
@@ -263,7 +301,9 @@ public abstract class PlayerEntityMixin implements PlayerMinja, PlayerEvent {
                 );
             }
         }
-        activeSpell = nbt.getInt("activeSpell");
-    }*/
+        if(nbt.contains("activeSpell")) {
+            activeSpell = nbt.getInt("activeSpell");
+        }
+    }
 
 }

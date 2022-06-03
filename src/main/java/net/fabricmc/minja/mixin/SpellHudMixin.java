@@ -24,7 +24,6 @@ public abstract class SpellHudMixin {
     }
 
     @Inject(method = "render", at = @At("RETURN"))
-
     private void beforeRenderDebugScreen(MatrixStack stack, float f, CallbackInfo ci) {
         if (gui==null)  gui=new SpellHUD();
         gui.updateScreenDimension(scaledWidth, scaledHeight);

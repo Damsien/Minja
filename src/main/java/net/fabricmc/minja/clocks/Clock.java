@@ -7,6 +7,8 @@ public abstract class Clock implements Runnable {
     private long timer;
     private Thread thread;
 
+    private boolean isStopped = false;
+
 
     public Clock(long timer) {
         this.timer = timer;
@@ -22,7 +24,12 @@ public abstract class Clock implements Runnable {
             throw new RuntimeException(e);
         }
 
-        execute();
+        if(!isStopped)
+            execute();
+    }
+
+    final public void stop() {
+        isStopped = true;
     }
 
     final public void start() {

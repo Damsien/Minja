@@ -10,7 +10,6 @@
     "SpellHudMixin",
     "PlayerEntityMixin",
     "LivingEntityMixin",
-    "ItemMixin",
     "StructureFeatureAccessor"
   ],
   "injectors": {

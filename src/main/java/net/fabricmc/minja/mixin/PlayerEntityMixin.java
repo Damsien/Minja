@@ -2,6 +2,7 @@ package net.fabricmc.minja.mixin;
 
 import com.mojang.authlib.GameProfile;
 import net.fabricmc.minja.Minja;
+import net.fabricmc.minja.clocks.ManaClock;
 import net.fabricmc.minja.events.ItemEvent;
 import net.fabricmc.minja.events.MixinItemEvent;
 import net.fabricmc.minja.events.MouseEvent;
@@ -53,7 +54,7 @@ public abstract class PlayerEntityMixin implements PlayerMinja, PlayerEvent {
     /**
      * Mana is a fuel for using spells
      */
-    private int mana = 35;
+    private int mana;
 
     /**
      * Spells are all the spells that the player can use. It's representing by a wheel
@@ -65,13 +66,28 @@ public abstract class PlayerEntityMixin implements PlayerMinja, PlayerEvent {
      */
     private int activeSpell = 0;
 
+    private ManaClock manaClock;
+
     // Constructor
 
     @Inject(at = @At("TAIL"), method = "<init>")
     private void init(World world, BlockPos pos, float yaw, GameProfile profile, CallbackInfo info) {
         this.addSpell(new LightningBall());
         this.addSpell(new Spark());
+        System.out.println("=============");
+        if(world.isClient) {
+            System.out.println(MinecraftClient.getInstance().getSession().getUsername());
+            setMana(
+                    ((PlayerMinja)MinecraftClient.getInstance().getServer().getPlayerManager().getPlayer(
+                            MinecraftClient.getInstance().getSession().getUsername())).getMana()
+            );
+        } else {
+            setMana(0);
+        }
+        manaClock = new ManaClock(1500, this);
+        runManaRegeneration();
         System.out.println("init " + this.getClass());
+        System.out.println("=============");
     }
 
     // Spells
@@ -234,7 +250,11 @@ public abstract class PlayerEntityMixin implements PlayerMinja, PlayerEvent {
     }
 
     private void runManaRegeneration() {
+        manaClock.start();
+    }
 
+    private void stopManaRegeneration() {
+        manaClock.stop();
     }
 
     /**
@@ -248,8 +268,12 @@ public abstract class PlayerEntityMixin implements PlayerMinja, PlayerEvent {
         nbt.putInt("mana", mana);
         System.out.println("Instance : " + this.getClass());
         System.out.println("Write mana : " + mana);
-        for(int i = 0; i < spells.size(); i++) {
-            nbt.putString("spell"+i, spells.get(i).getName() + "/" + spells.get(i).getType() + "/" + i);
+        int i = 0;
+        for(Spell spell : spells) {
+            if(spell != null) {
+                nbt.putString("spell"+i, spell + "/" + spell.getType() + "/" + i);
+                i++;
+            }
         }
         nbt.putInt("activeSpell", activeSpell);
     }

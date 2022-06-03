@@ -11,12 +11,14 @@ import net.fabricmc.minja.spells.entities.LightningBallEntity;
 import net.fabricmc.minja.spells.entities.SparkEntity;
 import net.fabricmc.minja.spells.items.LightningBallItem;
 import net.fabricmc.minja.spells.items.SparkItem;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnGroup;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import org.slf4j.Logger;
@@ -141,5 +143,7 @@ public class Minja implements ModInitializer {
 
 		Registry.register(Registry.ITEM, new Identifier("spells", "spark"), SPARK);
 		LOGGER.info("Spark launched");
+
+		//MinecraftClient.getInstance().getServer().getPlayerManager().getPlayer(UUID uuid).onDisconnect();
 	}
 }

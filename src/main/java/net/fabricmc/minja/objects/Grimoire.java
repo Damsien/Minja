@@ -89,7 +89,7 @@ public class Grimoire extends MinjaItem {
 	@Override
 	public TypedActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand) {
 		if(mc != null) {
-			GrimoireScreen grimoireScreen = new GrimoireScreen(new GrimoireGui());
+			GrimoireScreen grimoireScreen = new GrimoireScreen(new GrimoireGui(player));
 			((Screen) grimoireScreen).init(mc, 145, 179);
 			mc.setScreen(grimoireScreen);
 		} else {

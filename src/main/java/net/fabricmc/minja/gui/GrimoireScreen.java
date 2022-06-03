@@ -9,5 +9,6 @@ public class GrimoireScreen extends CottonClientScreen {
 
     public GrimoireScreen(GuiDescription description) {
         super(description);
+
     }
 }

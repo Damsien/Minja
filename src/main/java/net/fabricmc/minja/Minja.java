@@ -11,6 +11,7 @@ import net.fabricmc.minja.spells.entities.LightningBallEntity;
 import net.fabricmc.minja.spells.entities.SparkEntity;
 import net.fabricmc.minja.spells.items.LightningBallItem;
 import net.fabricmc.minja.spells.items.SparkItem;
+import net.fabricmc.minja.world.structure.ModStructures;
 import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnGroup;
@@ -39,7 +40,7 @@ public class Minja implements ModInitializer {
 	 * That String defines how we will refer to the entire project.
 	 * Whenever we need to find something that our MOD add to the game, it will be under that name
 	 */
-	public static final String MOD_ID = "minja";
+	private static final String MOD_ID = "minja";
 
 	/*
 	 * This logger is used to write text to the console and the log file.
@@ -141,5 +142,8 @@ public class Minja implements ModInitializer {
 
 		Registry.register(Registry.ITEM, new Identifier("spells", "spark"), SPARK);
 		LOGGER.info("Spark launched");
+
+		//Register every Minja structure
+		ModStructures.RegisterStructureFeatures();
 	}
 }

@@ -30,24 +30,7 @@ public class Wand extends MinjaItem {
 	public MinjaEvent onLeftClickPressed(PlayerEntity playerEntity, Hand hand, boolean playerFromServer, Side side) {
 
 		PlayerMinja player = (PlayerMinja) playerEntity;
-
-		if(Side.CLIENT == side) {
-			playerEntity.sendMessage(new LiteralText(player.getActiveSpell().getName()),true);
-			try {
-				player.removeMana(player.getActiveSpell().getManaCost());
-			} catch (NotEnoughtManaException e) {
-				// throw new RuntimeException(e);
-				// TODO : A UPGRADE
-			}
-
-		}
-
-		if(Side.SERVER == side) {
-			playerEntity.sendMessage(new LiteralText(player.getActiveSpell().getName()),false);
-			player.getActiveSpell().cast(playerEntity);
-		}
-
-
+		player.getActiveSpell().cast(playerEntity);
 
 		return MinjaEvent.SUCCEED;
 	}

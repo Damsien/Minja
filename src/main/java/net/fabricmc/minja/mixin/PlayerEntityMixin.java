@@ -9,6 +9,7 @@ import net.fabricmc.minja.events.PlayerEvent;
 import net.fabricmc.minja.exceptions.NotEnoughtManaException;
 import net.fabricmc.minja.exceptions.SpellNotFoundException;
 import net.fabricmc.minja.PlayerMinja;
+import net.fabricmc.minja.objects.MinjaItem;
 import net.fabricmc.minja.spells.LightningBall;
 import net.fabricmc.minja.spells.Spark;
 import net.fabricmc.minja.spells.Spell;
@@ -19,6 +20,7 @@ import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.stat.StatHandler;
 import net.minecraft.text.LiteralText;
@@ -226,8 +228,11 @@ public abstract class PlayerEntityMixin implements PlayerMinja, PlayerEvent {
     @Override
     public boolean onSwingItem(Hand hand, boolean fromServerPlayer) {
         PlayerEntity player = (PlayerEntity) (Object) (this);
-        return ((MixinItemEvent)player.getStackInHand(hand).getItem()).interact(player.getWorld(), player, hand, fromServerPlayer);
-        //player.sendMessage(new LiteralText("Je récupère bien le Mixin"), false);
+        Item item = player.getStackInHand(hand).getItem();
+        if(item instanceof MinjaItem) {
+            return ((MinjaItem)player.getStackInHand(hand).getItem()).interact(player.getWorld(), player, hand, fromServerPlayer);
+        }
+        return true;
 
     }
 

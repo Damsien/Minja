@@ -1,6 +1,5 @@
 package net.fabricmc.minja.spells;
 
-import net.fabricmc.minja.textures.LightingBallTexture;
 import net.fabricmc.minja.textures.Texture;
 
 public abstract class SpellProjectile extends Spell {

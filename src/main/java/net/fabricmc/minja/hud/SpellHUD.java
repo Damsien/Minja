@@ -182,8 +182,6 @@ public class SpellHUD {
 
     private void calculateCameraPosition() {
 
-
-
         Vec3d A =  minecraft.crosshairTarget.getPos();
         Vec3d O = minecraft.player.getPos().add(0,1.620,0);
 

@@ -8,11 +8,17 @@ import net.minecraft.world.World;
 
 public interface MouseEvent {
 
-    public TypedActionResult<ItemStack> onRightClickPressed(World world, PlayerEntity playerEntity, Hand hand);
+    public MinjaEvent onLeftClickPressed(PlayerEntity playerEntity, Hand hand, boolean playerFromServer, Side side);
 
-    public TypedActionResult<ItemStack> onRightClickMaintained(World world, PlayerEntity playerEntity, Hand hand);
+    public MinjaEvent onLeftClickMaintained(PlayerEntity playerEntity, Hand hand, boolean playerFromServer, Side side);
 
-    public TypedActionResult<ItemStack> onRightClickReleased(World world, PlayerEntity playerEntity, Hand hand);
+    public MinjaEvent onLeftClickReleased(PlayerEntity playerEntity, Hand hand, boolean playerFromServer, Side side);
+
+    public TypedActionResult<ItemStack> onRightClickPressed(World world, PlayerEntity playerEntity, Hand hand, Side side);
+
+    public TypedActionResult<ItemStack> onRightClickMaintained(World world, PlayerEntity playerEntity, Hand hand, Side side);
+
+    public TypedActionResult<ItemStack> onRightClickReleased(World world, PlayerEntity playerEntity, Hand hand, Side side);
 
 
 }

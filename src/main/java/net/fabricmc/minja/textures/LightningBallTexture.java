@@ -2,10 +2,10 @@ package net.fabricmc.minja.textures;
 
 import net.minecraft.util.Identifier;
 
-public class LightingBallTexture extends Texture {
+public class LightningBallTexture extends Texture {
 
 
-    public LightingBallTexture() {
+    public LightningBallTexture() {
         super(new Identifier("hud:textures/spell.png"), 16, 16);
     }
 }

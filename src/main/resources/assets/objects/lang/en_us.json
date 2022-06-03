@@ -1,6 +1,5 @@
 {
-  "itemGroup.minja.general": "Minja",
+  "itemGroup.minecraft.minja": "Minja",
   "item.objects.wand": "Wand",
-  "item.objects.grimoire": "Grimoire",
-  "item.objects.rhune": "Rhune"
+  "item.objects.grimoire": "Grimoire"
 }

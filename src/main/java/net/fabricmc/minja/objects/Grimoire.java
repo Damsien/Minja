@@ -1,61 +1,103 @@
 package net.fabricmc.minja.objects;
 
-import net.fabricmc.minja.events.MinjaItems;
-import net.fabricmc.minja.hud.SpellHUD;
-import net.fabricmc.minja.spells.LightningBall;
-import net.minecraft.entity.LivingEntity;
+import net.fabricmc.minja.clocks.Clock;
+import net.fabricmc.minja.gui.GrimoireGui;
+import net.fabricmc.minja.gui.GrimoireScreen;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.StackReference;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.screen.slot.Slot;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.ClickType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.world.World;
 
-public class Grimoire extends MinjaItems {
+/*
+ * Grimoire creates a Grimoire object and defines its interactions to the minecraft world.
+ * The Grimoire will be used to show the different Minja informations of the player :
+ * 	- name, mana, available spells, magic level, etc.
+ */
+public class Grimoire extends MinjaItem {
 
-	//public static ItemConvertible Baguette;
-	//private static Item WAND = new Item(new FabricItemSettings().group(GroupItemsMinja.Minja));
-	//private final Rarity;
-	//Item texture: /resources/assets/Items/Objects/Baguette.png
+	/*********************************************************************
+	 * 						GENERAL (Constructor + getter)
+	 ********************************************************************* */
+
+	/*
+	 * The class Grimoire creates an object Grimoire itself.
+	 * We should have only one Grimoire object : no other class creates a Grimoire object.
+	 */
 	private static Grimoire GRIMOIRE;
 
+	/*
+	 * Constructor of Grimoire, using the constructor of Item.
+	 */
 	public Grimoire(Settings settings) {
 		super(settings);
 		GRIMOIRE = this;
 	}
 
+	/*
+	 * A getter to access the Grimoire object
+	 */
 	public static Item getGrimoire(){
 		return GRIMOIRE;
 	}
 
-	@Override
-	public TypedActionResult<ItemStack> onRightClickPressed(World world, PlayerEntity playerEntity, Hand hand) {
+	/*********************************************************************
+	 * 						Clock TODO : TOUT EXPLIQUER
+	 ********************************************************************* */
 
-		//Mettre ici l'ouverture de l'HUD
-		SpellHUD.setVisible(true);
+	private MinecraftClient mc = null;
 
-		return TypedActionResult.success(playerEntity.getStackInHand(hand));
+	private MinecraftClientClock clock = new MinecraftClientClock(10);
 
+	private boolean clockStarted = false;
+
+	private class MinecraftClientClock extends Clock {
+
+		public MinecraftClientClock(long timer) {
+			super(timer);
+		}
+		private World world;
+		private PlayerEntity player;
+		private Hand hand;
+		public void initialise(World world, PlayerEntity player, Hand hand) {
+			this.world = world;
+			this.player = player;
+			this.hand = hand;
+		}
+		@Override
+		public void execute() {
+			MinecraftClient currentMc = MinecraftClient.getInstance();
+			if(currentMc == null) {
+				this.start();
+			} else {
+				mc = currentMc;
+				use(world, player, hand);
+			}
+		}
 	}
 
+	/*********************************************************************
+	 * 						WORLD INTERACTIONS : Right-click
+	 ********************************************************************* */
+
+	/*
+	 * This method is used when the player use right click with the Wand
+	 */
 	@Override
-	public TypedActionResult<ItemStack> onRightClickMaintained(World world, PlayerEntity playerEntity, Hand hand) {
-
-		// Cancel Event ==> Cancel hand animation
-		return TypedActionResult.pass(playerEntity.getStackInHand(hand));
+	public TypedActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand) {
+		if(mc != null) {
+			GrimoireScreen grimoireScreen = new GrimoireScreen(new GrimoireGui(player));
+			((Screen) grimoireScreen).init(mc, 145, 179);
+			mc.setScreen(grimoireScreen);
+		} else {
+			if(!clockStarted) {
+				clockStarted = true;
+				clock.start();
+			}
+		}
+		return super.use(world, player, hand);
 	}
-
-	@Override
-	public TypedActionResult<ItemStack> onRightClickReleased(World world, PlayerEntity playerEntity, Hand hand) {
-		//Mettre ici l'ouverture de l'HUD
-		SpellHUD.setVisible(false);
-
-		return null;
-	}
-
-
 }

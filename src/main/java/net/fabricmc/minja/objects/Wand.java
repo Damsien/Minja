@@ -1,6 +1,10 @@
 package net.fabricmc.minja.objects;
 
+		import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+		import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+		import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 		import net.fabricmc.minja.events.MinjaEvent;
+		import net.fabricmc.minja.events.NetworkEvent;
 		import net.fabricmc.minja.events.Side;
 		import net.fabricmc.minja.exceptions.NotEnoughtManaException;
 		import net.fabricmc.minja.PlayerMinja;
@@ -8,6 +12,7 @@ package net.fabricmc.minja.objects;
 		import net.minecraft.entity.player.PlayerEntity;
 		import net.minecraft.item.Item;
 		import net.minecraft.item.ItemStack;
+		import net.minecraft.network.PacketByteBuf;
 		import net.minecraft.text.LiteralText;
 		import net.minecraft.util.Hand;
 		import net.minecraft.util.TypedActionResult;
@@ -27,38 +32,52 @@ public class Wand extends MinjaItem {
 
 
 	@Override
-	public MinjaEvent onLeftClickPressed(PlayerEntity playerEntity, Hand hand, boolean playerFromServer, Side side) {
+	public MinjaEvent onLeftClickPressed(World world, PlayerEntity playerEntity, Hand hand, boolean isOtherClickActivated, Side side) {
 
-		PlayerMinja player = (PlayerMinja) playerEntity;
-		player.getActiveSpell().cast(playerEntity);
+		if(!isOtherClickActivated) {
+			PlayerMinja player = (PlayerMinja) playerEntity;
+			player.getActiveSpell().cast(playerEntity);
+			return MinjaEvent.SUCCEED;
+		}
 
-		return MinjaEvent.SUCCEED;
+		return MinjaEvent.CANCELED;
 	}
 
 	@Override
-	public TypedActionResult<ItemStack> onRightClickPressed(World world, PlayerEntity playerEntity, Hand hand, Side side) {
+	public TypedActionResult<ItemStack> onRightClickPressed(World world, PlayerEntity playerEntity, Hand hand,  boolean isOtherClickActivated, Side side) {
 
-		SpellHUD.setVisible(true);
+		if(side == Side.CLIENT) {
+			SpellHUD.setVisible(true);
+		}
 
 		return TypedActionResult.success(playerEntity.getStackInHand(hand));
 
 	}
 
 	@Override
-	public TypedActionResult<ItemStack> onRightClickMaintained(World world, PlayerEntity playerEntity, Hand hand, Side side) {
+	public TypedActionResult<ItemStack> onRightClickMaintained(World world, PlayerEntity playerEntity, Hand hand,  boolean isOtherClickActivated, Side side) {
 
 		// Cancel Event ==> Cancel hand animation
 		return TypedActionResult.pass(playerEntity.getStackInHand(hand));
 	}
 
 	@Override
-	public TypedActionResult<ItemStack> onRightClickReleased(World world, PlayerEntity playerEntity, Hand hand, Side side) {
+	public TypedActionResult<ItemStack> onRightClickReleased(World world, PlayerEntity playerEntity, Hand hand,  boolean isOtherClickActivated, Side side) {
+
+		PlayerMinja player = (PlayerMinja)playerEntity;
+
 		//Mettre ici l'ouverture de l'HUD
-		SpellHUD.setVisible(false);
+		if(side == Side.CLIENT) {
+			SpellHUD.setVisible(false);
+			int spellIndex = SpellHUD.getSelectedIndex();
+			player.setActiveSpell(spellIndex);
+
+			NetworkEvent.updateSpellIndex(spellIndex);
+
+		}
 
 		return null;
 	}
-
 
 
 }

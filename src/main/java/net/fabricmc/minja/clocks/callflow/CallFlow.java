@@ -1,4 +1,4 @@
-package net.fabricmc.minja.clocks;
+package net.fabricmc.minja.clocks.callflow;
 
 public enum CallFlow {
 

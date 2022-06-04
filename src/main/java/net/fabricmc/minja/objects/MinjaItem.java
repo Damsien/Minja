@@ -1,9 +1,10 @@
 package net.fabricmc.minja.objects;
 
 import net.fabricmc.minja.clocks.Clock;
+import net.fabricmc.minja.clocks.callflow.CallFlow;
+import net.fabricmc.minja.clocks.callflow.MouseManager;
 import net.fabricmc.minja.events.ItemEvent;
 import net.fabricmc.minja.events.MinjaEvent;
-import net.fabricmc.minja.events.MouseEvent;
 import net.fabricmc.minja.events.Side;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -13,9 +14,6 @@ import net.minecraft.text.LiteralText;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.world.World;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.Date;
 
@@ -24,22 +22,9 @@ import java.util.Date;
  * n'a pas connaissance) sans pour autant avoir à redéfinir chacune de ces méthodes. (équivalent d'un MouseAdapter en Swing)
  *
  */
-public abstract class MinjaItem extends Item implements MouseEvent, ItemEvent {
+public abstract class MinjaItem extends Item implements ItemEvent {
 
-    private long lastRightClickEvent;
-    private boolean rightClickFirstTimeServer = true;
-
-    private boolean rightClickFirstTimeClient = true;
-    private boolean rightClickPressed;
-
-
-    private long lastLeftClickEvent;
-    private boolean leftClickFirstTimeServer = true;
-    private boolean leftClickFirstTimeClient = true;
-
-    private boolean leftClickPressed;
-
-    private final int TIMER = 50;
+    private MouseManager manager = new MouseManager(this);
 
     public MinjaItem(Settings settings) {
         super(settings);
@@ -48,187 +33,76 @@ public abstract class MinjaItem extends Item implements MouseEvent, ItemEvent {
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand){
 
+        // Set two use : one for default event, the other one for new events
+        TypedActionResult<ItemStack> state1, state2 = null;
+
+        // Get who is client of this event
         Side side = world.isClient ? Side.CLIENT : Side.SERVER;
 
-        TypedActionResult<ItemStack> state, state2;
+        // Send a first (default) event to the user
+        state1 = onUse(world, user, hand, side);
 
-        state = onUse(world, user, hand, side);
-        state2 = rightClickCallFlow(world, user, hand, side);
+        // Get the current action on the mouse
+        state2 = manager.getRightClick(world, user, hand, side);
 
-        return state2 != null ? state2 : state;
+        // Return the success of the event. Priority is made on the new methods in case both are overridden
+        return state2 != null ? state2 : state1;
 
     }
 
     @Override
     final public boolean interact(World world, PlayerEntity playerEntity, Hand hand, boolean fromServerPlayer) {
 
-        MinjaEvent succeed1, succeed2;
+        // Set two use : one for default event, the other one for new events
+        MinjaEvent succeed1, succeed2 = MinjaEvent.UNDEFINED;
 
+        // Get who is client of this event
         Side side = world.isClient ? Side.CLIENT : Side.SERVER;
 
-        if(rightClickPressed) return true;
-        succeed1 =  onInteract(playerEntity, hand, fromServerPlayer, side);
-        succeed2 = leftClickCallFlow(playerEntity, hand, fromServerPlayer, side);
+        // Send a first (default) event to the user
+        succeed1 = onInteract(world, playerEntity, hand, side);
 
+        // Get the current action on the mouse
+        succeed2 = manager.getLeftClick(world, playerEntity, hand, side);
+
+        // Return the success of the event. Priority is made on the new methods in case both are overridden
         return succeed1 != MinjaEvent.UNDEFINED ? succeed1 != MinjaEvent.CANCELED : succeed2 != MinjaEvent.CANCELED;
 
     }
 
 
 
-
-    private TypedActionResult<ItemStack> rightClickCallFlow(World world, PlayerEntity user, Hand hand, Side side) {
-
-        TypedActionResult state = null;
-
-        rightClickPressed = true;
-
-        //Mettre ici l'ouverture de l'HUD
-        lastRightClickEvent = new Date().getTime();
-
-        if(rightClickFirstTimeServer && side == Side.SERVER) {
-            rightClickFirstTimeServer = false;
-            state = onRightClickPressed(world, user, hand, side);
-            Clock clock = new Clock(TIMER) {
-
-                @Override
-                public void execute() {
-                    if(new Date().getTime() - lastRightClickEvent > TIMER-10) {
-                        onRightClickReleased(world, user, hand, side);
-                        rightClickPressed = false;
-                        rightClickFirstTimeServer = true;
-                    } else {
-                        this.run();
-                    }
-                }
-            };
-            clock.start();
-        }
-        else if(rightClickFirstTimeClient && side == Side.CLIENT){
-            rightClickFirstTimeClient = false;
-            state = onRightClickPressed(world, user, hand, side);
-            Clock clock = new Clock(TIMER) {
-
-                @Override
-                public void execute() {
-                    if(new Date().getTime() - lastRightClickEvent > TIMER-10) {
-                        onRightClickReleased(world, user, hand, side);
-                        rightClickPressed = false;
-                        rightClickFirstTimeClient = true;
-                    } else {
-                        this.run();
-                    }
-                }
-            };
-            clock.start();
-
-        }
-        else {
-            state = onRightClickMaintained(world, user, hand, side);
-        }
-
-        if(state == null) state = TypedActionResult.success(user.getStackInHand(hand));
-
-        return state;
-
+    public MinjaEvent onInteract(World world, PlayerEntity playerEntity, Hand hand, Side side) {
+        return MinjaEvent.UNDEFINED;
     }
 
-    private MinjaEvent leftClickCallFlow(PlayerEntity playerEntity, Hand hand, boolean fromServerPlayer, Side side) {
 
-        MinjaEvent state;
-
-        leftClickPressed = true;
-
-        //Mettre ici l'ouverture de l'HUD
-        lastLeftClickEvent = new Date().getTime();
-
-        if(leftClickFirstTimeServer && side == Side.SERVER) {
-            leftClickFirstTimeServer = false;
-            state = onLeftClickPressed(playerEntity, hand, fromServerPlayer, side);
-            Clock clock = new Clock(TIMER) {
-
-                @Override
-                public void execute() {
-                    if(new Date().getTime() - lastLeftClickEvent > TIMER-10) {
-                        onLeftClickReleased(playerEntity, hand, fromServerPlayer,side);
-                        leftClickPressed = false;
-                        leftClickFirstTimeServer = true;
-                    } else {
-                        this.run();
-                    }
-                }
-            };
-            clock.start();
-        }
-        else if(leftClickFirstTimeClient && side == Side.CLIENT) {
-            leftClickFirstTimeClient = false;
-            state = onLeftClickPressed(playerEntity, hand, fromServerPlayer, side);
-            Clock clock = new Clock(TIMER) {
-
-                @Override
-                public void execute() {
-                    if(new Date().getTime() - lastLeftClickEvent > TIMER-10) {
-                        onLeftClickReleased(playerEntity, hand, fromServerPlayer,side);
-                        leftClickPressed = false;
-                        leftClickFirstTimeClient = true;
-                    } else {
-                        this.run();
-                    }
-                }
-            };
-            clock.start();
-
-        }
-
-        else  state = onLeftClickMaintained(playerEntity, hand, fromServerPlayer, side);
-
-        return state;
-
+    public MinjaEvent onLeftClickPressed(World world, PlayerEntity playerEntity, Hand hand, boolean otherClickSelected, Side side) {
+        return MinjaEvent.UNDEFINED;
     }
 
-    @Override
+    public MinjaEvent onLeftClickMaintained(World world, PlayerEntity playerEntity, Hand hand, boolean otherClickSelected, Side side) {
+        return MinjaEvent.UNDEFINED;
+    }
+
+    public MinjaEvent onLeftClickReleased(World world, PlayerEntity playerEntity, Hand hand, boolean otherClickSelected, Side side) {
+        return MinjaEvent.UNDEFINED;
+    }
+
     public TypedActionResult<ItemStack> onUse(World world, PlayerEntity user, Hand hand, Side side) {
         return TypedActionResult.success(user.getStackInHand(hand));
     }
 
-    public MinjaEvent onInteract(PlayerEntity playerEntity, Hand hand, boolean fromServerPlayer, Side side) {
-        return MinjaEvent.UNDEFINED;
-    }
-
-
-    @Override
-    public MinjaEvent onLeftClickPressed(PlayerEntity playerEntity, Hand hand, boolean fromServerPlayer, Side side) {
-        return MinjaEvent.UNDEFINED;
-    }
-
-    @Override
-    public MinjaEvent onLeftClickMaintained(PlayerEntity playerEntity, Hand hand, boolean playerFromServer, Side side) {
-        return MinjaEvent.UNDEFINED;
-    }
-
-    @Override
-    public MinjaEvent onLeftClickReleased(PlayerEntity playerEntity, Hand hand, boolean playerFromServer, Side side) {
-        return MinjaEvent.UNDEFINED;
-    }
-
-    @Override
-    public TypedActionResult<ItemStack> onRightClickPressed(World world, PlayerEntity playerEntity, Hand hand, Side side) {
+    public TypedActionResult<ItemStack> onRightClickPressed(World world, PlayerEntity playerEntity, Hand hand, boolean otherClickSelected, Side side) {
         return null;
     }
 
-    @Override
-    public TypedActionResult<ItemStack> onRightClickMaintained(World world, PlayerEntity playerEntity, Hand hand, Side side) {
+    public TypedActionResult<ItemStack> onRightClickMaintained(World world, PlayerEntity playerEntity, Hand hand, boolean otherClickSelected, Side side) {
         return null;
     }
 
-    @Override
-    public TypedActionResult<ItemStack> onRightClickReleased(World world, PlayerEntity playerEntity, Hand hand, Side side) {
+    public TypedActionResult<ItemStack> onRightClickReleased(World world, PlayerEntity playerEntity, Hand hand, boolean otherClickSelected, Side side) {
         return null;
-    }
-
-    @Override
-    public void onStoppedUsing(ItemStack stack, World world, LivingEntity user, int remainingUseTicks) {
-        ((PlayerEntity)user).sendMessage(new LiteralText("Arrête stp"), true);
     }
 
 

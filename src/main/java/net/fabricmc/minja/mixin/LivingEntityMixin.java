@@ -1,15 +1,10 @@
 package net.fabricmc.minja.mixin;
 
-import net.fabricmc.minja.Minja;
-import net.fabricmc.minja.events.MouseEvent;
 import net.fabricmc.minja.events.PlayerEvent;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.text.LiteralText;
 import net.minecraft.util.Hand;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;

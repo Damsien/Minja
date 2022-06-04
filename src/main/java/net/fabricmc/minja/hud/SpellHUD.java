@@ -26,7 +26,7 @@ public class SpellHUD {
     private static PointCartesien centre;
     private Vec3d cameraPosition;
 
-    private int currentIndex;
+    private static int currentIndex;
 
     private static boolean visible;
     private boolean isCenterSet;
@@ -61,6 +61,10 @@ public class SpellHUD {
 
     public static void setVisible(boolean visible) {
         SpellHUD.visible = visible;
+    }
+
+    public static int getSelectedIndex() {
+        return currentIndex;
     }
 
     public void onRenderGameOverlayPost(MatrixStack stack, float partialTicks) {

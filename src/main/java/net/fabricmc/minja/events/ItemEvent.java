@@ -12,7 +12,7 @@ public interface ItemEvent {
 
     public TypedActionResult<ItemStack> onUse(World world, PlayerEntity user, Hand hand, Side side);
 
-    public MinjaEvent onInteract(PlayerEntity playerEntity, Hand hand, boolean fromServerPlayer, Side side);
+    public MinjaEvent onInteract(World world, PlayerEntity playerEntity, Hand hand, Side side);
 
 
     /**

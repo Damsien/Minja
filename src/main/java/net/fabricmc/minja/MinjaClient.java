@@ -1,6 +1,8 @@
 package net.fabricmc.minja;
 
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.fabricmc.minja.events.NetworkEvent;
 import net.fabricmc.minja.spells.LightningBall;
 import net.fabricmc.minja.spells.Spark;
 import net.fabricmc.minja.spells.entities.EntitySpawnPacket;
@@ -22,12 +24,24 @@ public class MinjaClient implements ClientModInitializer {
     public static final Identifier PacketID = new Identifier("spells", "spawn_packet");
     @Override
     public void onInitializeClient() {
-        //ClientPlayNetworking.registerGlobalReceiver(TutorialNetworkingConstants.HIGHLIGHT_PACKET_ID, (client, handler, buf, responseSender) -> {
-    //...
-        //});
         EntityRendererRegistry.register(Minja.LightningBallEntityType, FlyingItemEntityRenderer::new);
         EntityRendererRegistry.register(Minja.SparkEntityType, FlyingItemEntityRenderer::new);
         receiveEntityPacket();
+
+
+        // SERVER DATA
+
+        // SERVER INFORMATION
+        ServerPlayNetworking.registerGlobalReceiver(NetworkEvent.UPDATE_SPELL_INDEX, (client, player, handler, buf, sender) -> {
+            // Read packet data on the event loop
+            int target = buf.readInt();
+
+            client.execute(() -> {
+                // Everything in this lambda is run on the render thread
+                ((PlayerMinja)player).setActiveSpell(target);
+
+            });
+        });
 
     }
 

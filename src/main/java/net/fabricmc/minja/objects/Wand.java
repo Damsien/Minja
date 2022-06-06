@@ -1,19 +1,32 @@
 package net.fabricmc.minja.objects;
 
-		import net.fabricmc.minja.enumerations.MinjaEvent;
-		import net.fabricmc.minja.network.NetworkEvent;
-		import net.fabricmc.minja.enumerations.Side;
-		import net.fabricmc.minja.PlayerMinja;
-		import net.fabricmc.minja.hud.SpellHUD;
-		import net.fabricmc.minja.spells.SoulSpark;
-		import net.fabricmc.minja.spells.Spell;
-		import net.minecraft.entity.player.PlayerEntity;
-		import net.minecraft.item.Item;
-		import net.minecraft.item.ItemStack;
-		import net.minecraft.text.LiteralText;
-		import net.minecraft.util.Hand;
-		import net.minecraft.util.TypedActionResult;
-		import net.minecraft.world.World;
+import net.fabricmc.minja.enumerations.MinjaEvent;
+import net.fabricmc.minja.network.NetworkEvent;
+import net.fabricmc.minja.enumerations.Side;
+import net.fabricmc.minja.PlayerMinja;
+import net.fabricmc.minja.hud.SpellHUD;
+import net.fabricmc.minja.spells.SoulSpark;
+import net.fabricmc.minja.spells.Spell;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.text.LiteralText;
+import net.minecraft.util.Hand;
+import net.minecraft.util.TypedActionResult;
+import net.minecraft.world.World;
+
+/**
+ * Item representing a magic wand. <br><br>
+ *
+ * The wand allows a player to :
+ * <ul>
+ *		<li> select a spell from their quick spell list with a right click </li>
+ *		<li> cast it if he/she has enough mana with a left click (when pressing or releasing depending on the spell) </li>
+ * </ul>
+ *
+ * @author 	Tom Froment
+ *
+ */
 
 public class Wand extends MinjaItem {
 	private static Wand WAND;
@@ -23,6 +36,10 @@ public class Wand extends MinjaItem {
 		WAND = this;
 	}
 
+	/** Obtain an instance of the wand
+	 *
+	 * @return the wand
+	 */
 	public static Item getWand(){
 		return WAND;
 	}
@@ -116,6 +133,8 @@ public class Wand extends MinjaItem {
 
 		return null;
 	}
+
+
 
 
 }

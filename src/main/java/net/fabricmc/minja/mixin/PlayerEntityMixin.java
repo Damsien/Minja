@@ -4,7 +4,7 @@ import com.mojang.authlib.GameProfile;
 import net.fabricmc.minja.Minja;
 import net.fabricmc.minja.clocks.ManaClock;
 import net.fabricmc.minja.events.PlayerEvent;
-import net.fabricmc.minja.exceptions.NotEnoughtManaException;
+import net.fabricmc.minja.exceptions.NotEnoughManaException;
 import net.fabricmc.minja.exceptions.SpellNotFoundException;
 import net.fabricmc.minja.PlayerMinja;
 import net.fabricmc.minja.objects.MinjaItem;
@@ -27,6 +27,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Injection to the class PlayerEntity
+ *
+ * @author      Damien Dassieu
+ * @author      Tom Froment
+ */
 @Mixin(PlayerEntity.class)
 public abstract class PlayerEntityMixin implements PlayerMinja, PlayerEvent {
 
@@ -59,6 +65,16 @@ public abstract class PlayerEntityMixin implements PlayerMinja, PlayerEvent {
 
     // Constructor
 
+    /**
+     * Injection of the player's spells into the constructor of PlayerEntity. <br><br>
+     *
+     *
+     * @param world
+     * @param pos
+     * @param yaw
+     * @param profile
+     * @param info
+     */
     @Inject(at = @At("TAIL"), method = "<init>")
     private void init(World world, BlockPos pos, float yaw, GameProfile profile, CallbackInfo info) {
         this.addSpell(new LightningBall());
@@ -168,11 +184,21 @@ public abstract class PlayerEntityMixin implements PlayerMinja, PlayerEvent {
     }
 
 
+    /**
+     * Get the current active spell
+     *
+     * @return the active spell
+     */
     public Spell getActiveSpell() {
         return this.spells.get(this.activeSpell);
     }
 
 
+    /**
+     * Get the current active spell index
+     *
+     * @return the position of the spell in the wheel
+     */
     public int getActiveSpellIndex() {
         return this.activeSpell;
     }
@@ -203,12 +229,12 @@ public abstract class PlayerEntityMixin implements PlayerMinja, PlayerEvent {
     /**
      * Remove the amount of mana to the current amount the player has
      * @param amount between 0 and 100
-     * @throws NotEnoughtManaException when currentAmount-removedAmount < 0
+     * @throws NotEnoughManaException when currentAmount-removedAmount < 0
      */
     @Override
-    public void removeMana(int amount) throws NotEnoughtManaException {
+    public void removeMana(int amount) throws NotEnoughManaException {
         if(mana-amount < 0) {
-            throw new NotEnoughtManaException("Not enought mana", amount, mana);
+            throw new NotEnoughManaException("Not enought mana", amount, mana);
         }
         setMana(mana-amount);
     }
@@ -231,6 +257,24 @@ public abstract class PlayerEntityMixin implements PlayerMinja, PlayerEvent {
         return MAX_MANA;
     }
 
+    /**
+     * Event triggered when the player is swinging its hand (left-clicking) <br>
+     *
+     * It's a "false" Override since this method already exists in the class PlayerEntity
+     * (which is the target of the injection), but we can't directly access it,
+     * as the interpreter does not know that we are going to realize an injection.
+     * This inheritance is simulated by the PlayerEvent interface allowing the cast. <br><br>
+     *
+     * In fact, this function is a representation of injection, since we cannot directly inject code into an inherited method.
+     *
+     * @see LivingEntityMixin#swingHand(Hand, boolean, CallbackInfo) The injection at the level above
+     *
+     * @param hand Hand holding the item
+     * @param fromServerPlayer
+     *
+     * @return the success of the event
+     *
+     */
     @Override
     public boolean onSwingItem(Hand hand, boolean fromServerPlayer) {
         PlayerEntity player = (PlayerEntity) (Object) (this);

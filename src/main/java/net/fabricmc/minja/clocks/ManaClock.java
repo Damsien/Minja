@@ -4,7 +4,7 @@ import net.fabricmc.minja.PlayerMinja;
 import net.fabricmc.minja.mixin.PlayerEntityMixin;
 import net.minecraft.entity.player.PlayerEntity;
 
-public class ManaClock extends Clock{
+public class ManaClock extends Clock {
 
     PlayerMinja player;
 

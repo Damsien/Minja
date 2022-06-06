@@ -1,10 +1,7 @@
 package net.fabricmc.minja.math;
 
-import net.fabricmc.minja.enumerations.Side;
-import net.fabricmc.minja.exceptions.InvalidContextException;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.text.LiteralText;
 import net.minecraft.util.math.Vec3d;
 
 /**
@@ -19,12 +16,10 @@ public class Vector {
      *
      * @param player the player whose information we want to retrieve
      *
-     * @return a colinear vector
+     * @return a collinear and normalized vector
      */
-    public static Vec3d colinearWithCameraPosition(PlayerEntity player) {
+    public static Vec3d collinearWithCameraPosition(PlayerEntity player) {
 
-        // Check if we correctly get the context
-        //if(MinecraftClient.getInstance() == null) throw new InvalidContextException(Side.SERVER);
 
         MinecraftClient minecraft = MinecraftClient.getInstance();
 
@@ -32,10 +27,6 @@ public class Vector {
         Vec3d O = minecraft.player.getPos().add(0,1.620,0); // Height of the eyes
 
         Vec3d v = A.subtract(O);
-
-        //String vector = "Vector v (" + v.x + ", " + v.y + ", " + v.z + ")";
-
-        //player.sendMessage(new LiteralText(vector), false);
 
         return A.add(v).normalize();
 

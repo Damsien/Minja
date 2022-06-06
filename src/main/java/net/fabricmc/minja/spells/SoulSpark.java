@@ -3,13 +3,8 @@ package net.fabricmc.minja.spells;
 import net.fabricmc.minja.math.Vector;
 import net.fabricmc.minja.network.NetworkEvent;
 import net.fabricmc.minja.spells.items.SoulSparkItem;
-import net.fabricmc.minja.spells.items.SparkItem;
 import net.fabricmc.minja.textures.SoulSparkTexture;
-import net.fabricmc.minja.textures.Texture;
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.SoulFireBlock;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.LivingEntity;
@@ -40,7 +35,7 @@ public class SoulSpark extends SpellProjectile {
 
         NetworkEvent.unhightlightAllBlocks();
 
-        Vec3d direction = Vector.colinearWithCameraPosition((PlayerEntity) player);
+        Vec3d direction = Vector.collinearWithCameraPosition((PlayerEntity) player);
 
         Vec3d cameraPosition2 = MinecraftClient.getInstance().crosshairTarget.getPos();
 

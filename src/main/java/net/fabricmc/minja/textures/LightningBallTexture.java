@@ -2,6 +2,11 @@ package net.fabricmc.minja.textures;
 
 import net.minecraft.util.Identifier;
 
+/**
+ * Texture of a LightningBall.
+ *
+ * @author Tom Froment
+ */
 public class LightningBallTexture extends Texture {
 
 

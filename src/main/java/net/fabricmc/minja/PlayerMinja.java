@@ -1,6 +1,6 @@
 package net.fabricmc.minja;
 
-import net.fabricmc.minja.exceptions.NotEnoughtManaException;
+import net.fabricmc.minja.exceptions.NotEnoughManaException;
 import net.fabricmc.minja.exceptions.SpellNotFoundException;
 import net.fabricmc.minja.spells.Spell;
 
@@ -76,9 +76,9 @@ public interface PlayerMinja {
     /**
      * Remove the amount of mana to the current amount the player has
      * @param amount between 0 and 100
-     * @throws NotEnoughtManaException when currentAmount-removedAmount < 0
+     * @throws NotEnoughManaException when currentAmount-removedAmount < 0
      */
-    public void removeMana(int amount) throws NotEnoughtManaException;
+    public void removeMana(int amount) throws NotEnoughManaException;
 
     /**
      * Get the current amount of mana the player has

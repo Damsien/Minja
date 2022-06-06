@@ -1,6 +1,7 @@
 package net.fabricmc.minja.objects;
 
 import net.fabricmc.minja.clocks.Clock;
+import net.fabricmc.minja.enumerations.Side;
 import net.fabricmc.minja.gui.GrimoireGui;
 import net.fabricmc.minja.gui.GrimoireScreen;
 import net.minecraft.client.MinecraftClient;
@@ -87,7 +88,7 @@ public class Grimoire extends MinjaItem {
 	 * This method is used when the player use right click with the Wand
 	 */
 	@Override
-	public TypedActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand) {
+	public TypedActionResult<ItemStack> onUse(World world, PlayerEntity player, Hand hand, Side side) {
 		if(mc != null) {
 			GrimoireScreen grimoireScreen = new GrimoireScreen(new GrimoireGui(player));
 			((Screen) grimoireScreen).init(mc, 145, 179);
@@ -98,6 +99,6 @@ public class Grimoire extends MinjaItem {
 				clock.start();
 			}
 		}
-		return super.use(world, player, hand);
+		return super.onUse(world, player, hand, side);
 	}
 }

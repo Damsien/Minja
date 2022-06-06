@@ -2,6 +2,11 @@ package net.fabricmc.minja.textures;
 
 import net.minecraft.util.Identifier;
 
+/**
+ * Texture useful for the Spell wheel HUD
+ *
+ * @author Tom Froment
+ */
 public class SpellHUDTexture {
 
     public static final Texture VALIDATE_CIRCLE = new Validate();

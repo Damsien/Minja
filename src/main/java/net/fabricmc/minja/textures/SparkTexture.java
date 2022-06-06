@@ -2,6 +2,11 @@ package net.fabricmc.minja.textures;
 
 import net.minecraft.util.Identifier;
 
+/**
+ * Texture of a Spark.
+ *
+ * @author Tom Froment
+ */
 public class SparkTexture extends Texture {
 
     public SparkTexture() {

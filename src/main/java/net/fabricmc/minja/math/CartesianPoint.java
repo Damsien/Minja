@@ -17,6 +17,11 @@ public class CartesianPoint {
         this.y = y;
     }
 
+    /**
+     * Convert a cartesian point to a polar point.
+     *
+     * @return Representation of the point in the polar plan.
+     */
     public PolarPoint CartToPolar() {
         double r     = Math.sqrt(x*x + y*y);
         double theta = Math.atan2(y, x);
@@ -24,11 +29,20 @@ public class CartesianPoint {
         return new PolarPoint(r,theta);
     }
 
-
+    /**
+     * Get X coordinate
+     *
+     * @return (X, _)
+     */
     public double x() {
         return this.x;
     }
 
+    /**
+     * Get Y coordinate
+     *
+     * @return (_, Y)
+     */
     public double y() {
         return this.y;
     }

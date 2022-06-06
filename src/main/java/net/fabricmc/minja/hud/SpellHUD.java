@@ -3,8 +3,10 @@ package net.fabricmc.minja.hud;
 
 import net.fabricmc.minja.PlayerMinja;
 import net.fabricmc.minja.math.CartesianPoint;
+import net.fabricmc.minja.math.Operations;
 import net.fabricmc.minja.math.PolarPoint;
 import net.fabricmc.minja.textures.SpellHUDTexture;
+import net.fabricmc.minja.util.Renderer;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.render.WorldRenderer;
@@ -15,6 +17,20 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.LiteralText;
 import net.minecraft.util.math.Vec3d;
 
+
+/**
+ *
+ * A spell wheel displayed on the player's screen when he opens his quick spell menu (right-click on a {@link net.fabricmc.minja.objects.Wand Wand}).
+ *
+ * The wheel has hybrid properties that make its behavior unclear:
+ * <ul>
+ *  <li>It must be displayed on the player's screen and the game must work properly - the player must always have access to his keyboard (HUD)</li>
+ *  <li>The player must interact with it to choose his current spell, preferably by "blocking" his mouse. Its display should be only when desired by the player (GUI)</li>
+ * </ul>
+ *
+ *
+ * @author      Tom Froment
+ */
 public class SpellHUD {
 
     private MinecraftClient minecraft;
@@ -51,23 +67,59 @@ public class SpellHUD {
         isCenterSet = false;
     }
 
+    /**
+     * Update the scaled dimension received by the InGameHud.
+     *
+     * Minecraft has a very particular logic for scaling renders, which can make dimensions really hard to calculate. <br>
+     * Fortunately, the class that owns this HUD, {@link net.fabricmc.minja.mixin.InGameHudMixin}, possess
+     * (via injection) the equivalent of the scaled dimensions. <br>
+     * This class has to provide the current dimensions before invoking the {@link #onRenderGameOverlayPost(MatrixStack, float) render method}.
+     *
+     * @param width scaled width
+     * @param height scaled height
+     */
     public void updateScreenDimension(int width, int height) {
         this.width = width/2;
         this.height = height/2;
     }
 
+    /**
+     * Update the current mouse center.
+     *
+     * We will use the mouse position (more precisely its angle) to determine the current spell selected by the user. <br><br>
+     *
+     * However, this position calculation must be done in relation to the origin of the window (top left): <br>
+     * when the HUD is "opened" ({@link #setVisible(boolean) visible}), we will retrieve the current position of
+     * the mouse, which will serve as a "relative center" to translate future mouse positions to the origin.
+     */
     public void updateCenter() {
         centre = new CartesianPoint(minecraft.mouse.getX(), minecraft.mouse.getY());
     }
 
+    /**
+     * Make the window visible.
+     *
+     * @param visible the visibility of the window
+     */
     public static void setVisible(boolean visible) {
         SpellHUD.visible = visible;
     }
 
+    /**
+     * Get the current index on the wheel selection
+     *
+     * @return the current index "circled"
+     */
     public static int getSelectedIndex() {
         return currentIndex;
     }
 
+    /**
+     * Render the HUD in game.
+     *
+     * @param stack
+     * @param partialTicks
+     */
     public void onRenderGameOverlayPost(MatrixStack stack, float partialTicks) {
 
         final double LINE = (height * 0.7); // length between the center and each spells
@@ -114,7 +166,7 @@ public class SpellHUD {
 
         // Get polar info for our new points
         PolarPoint M = Mc.CartToPolar();
-        double thetaModulo = modulo(M.theta(), 2*Math.PI);
+        double thetaModulo = Operations.modulo(M.theta(), 2*Math.PI);
 
 
         // Get number of spells available for the users
@@ -164,19 +216,20 @@ public class SpellHUD {
 
     }
 
-    private void sendMessage(String message) {
-        sendMessage(message,false);
-    }
-
-    private void sendMessage(String message, boolean actionBar) {
-        minecraft.player.sendMessage(new LiteralText(message),actionBar);
-    }
-
+    /**
+     * Called when the HUD is closed.
+     *
+     * In fact, this method is called a tick after its closure.
+     */
     private void onClosed() {
         isCenterSet = false;
         player.setActiveSpell(currentIndex);
     }
 
+    /**
+     * Called when the HUD is opened the first time.
+     *
+     */
     private void onOpened() {
         currentIndex = player.getActiveSpellIndex();
         this.updateCenter();
@@ -185,6 +238,7 @@ public class SpellHUD {
         calculateCameraPosition();
     }
 
+    /** TO_REPLACE */
     private void calculateCameraPosition() {
 
         Vec3d A =  minecraft.crosshairTarget.getPos();
@@ -196,29 +250,46 @@ public class SpellHUD {
 
     }
 
+    /**
+     * Draw the render in the matrix if the spell is selected
+     * @param stack matrix drawn
+     * @param x X coordinate
+     * @param y Y coordinate
+     * @param i index of the spell
+     */
     private void drawOK(MatrixStack stack, double x, double y, int i) {
         Renderer.draw(stack, SpellHUDTexture.VALIDATE_CIRCLE, x, y);
         Renderer.draw(stack, player.getSpell(i), x, y);
     }
 
+    /**
+     * Draw the render in the matrix if the spell is not selected
+     * @param stack matrix drawn
+     * @param x X coordinate
+     * @param y Y coordinate
+     * @param i index of the spell
+     */
     private void drawKO(MatrixStack stack, double x, double y, int i) {
         Renderer.draw(stack, player.getSpell(i), x, y);
     }
 
-    private double modulo(double r, double mod) {
-        double result = r % (mod);
-        if (result<0) result += mod;
-        return result;
-    }
-
-    private boolean isInInterval(PolarPoint vertex, int vertexIndex, double angleMoyen, double angleDeLaSouris) {
+    /**
+     * Check if the mouse is in the interval for a specific point.
+     *
+     * @param vertex position of the current spell
+     * @param vertexIndex the index of the current spell
+     * @param mediumAngle the angle between two nodes
+     * @param mouseAngle the angle of the mouse in the Polar plan
+     *
+     */
+    private boolean isInInterval(PolarPoint vertex, int vertexIndex, double mediumAngle, double mouseAngle) {
         // Calculate the range of selection of the iterating spell
-        double borneInf = modulo(vertex.theta() - angleMoyen / 2, 2*Math.PI);
-        double borneSup = modulo(vertex.theta() + angleMoyen / 2, 2*Math.PI);
+        double borneInf = Operations.modulo(vertex.theta() - mediumAngle / 2, 2*Math.PI);
+        double borneSup = Operations.modulo(vertex.theta() + mediumAngle / 2, 2*Math.PI);
 
         // Check if the mouse is in the range of the iterating spell
-        return vertexIndex != 0     ? borneInf < angleDeLaSouris && angleDeLaSouris < borneSup                                                   // Classic case
-                : (borneInf < angleDeLaSouris && angleDeLaSouris < 2*Math.PI) || 0 < angleDeLaSouris && angleDeLaSouris < borneSup; //  Case 0 : borneSup < borneInf
+        return vertexIndex != 0     ? borneInf < mouseAngle && mouseAngle < borneSup                                                   // Classic case
+                : (borneInf < mouseAngle && mouseAngle < 2*Math.PI) || 0 < mouseAngle && mouseAngle < borneSup; //  Case 0 : borneSup < borneInf
     }
 
 

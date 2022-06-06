@@ -18,10 +18,20 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
+/**
+ * Registry for all global functions
+ *
+ * @author      Tom Froment
+ */
 public class ServerRegistry {
 
     private static Map<RetentionPosition, MagmaCubeEntity>  retentionHighlightedBlocks = new HashMap<>();
 
+    /**
+     * Register all the global functions
+     *
+     * @author      Tom Froment
+     */
     public static void registerAllEvents() {
 
         ServerPlayNetworking.registerGlobalReceiver(NetworkEvent.UPDATE_SPELL_INDEX, (client, player, handler, buf, sender) -> {
@@ -104,6 +114,11 @@ public class ServerRegistry {
     }
 
 
+    /**
+     * Representation of the position of a block to compare two objects BlockPos
+     *
+     * @author      Tom Froment
+     */
     static private class RetentionPosition {
         int x;
         int y;

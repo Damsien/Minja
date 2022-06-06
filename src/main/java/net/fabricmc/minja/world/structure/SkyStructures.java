@@ -22,6 +22,7 @@ import org.apache.logging.log4j.Level;
 
 import java.util.Optional;
 
+
 public class SkyStructures extends StructureFeature<StructurePoolFeatureConfig> {
 
     public SkyStructures(Codec<StructurePoolFeatureConfig> codec) {

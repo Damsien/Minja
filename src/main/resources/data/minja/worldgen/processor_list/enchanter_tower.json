@@ -7,11 +7,24 @@
       "rules": [
         {
           "input_predicate": {
-            "block": "minecraft:stone_bricks",
-            "probability" : 0.5,
+            "block": "minecraft:stone_bricks_stairs",
+            "probability" : 0.1,
             "predicate_type": "minecraft:random_block_match"
           },
           "location_predicate": {
+            "predicate_type": "minecraft:always_true"
+          },
+          "output_state": {
+            "Name": "minecraft:mossy_stone_bricks_stairs"
+          }
+        },
+        {
+          "input_predicate": {
+            "block": "minecraft:stone_bricks",
+            "probability": 0.1,
+            "predicate_type": "minecraft:random_block_match"
+          },
+          "location_predicate":{
             "predicate_type": "minecraft:always_true"
           },
           "output_state": {
@@ -20,20 +33,33 @@
         },
         {
           "input_predicate": {
-            "block": "minecraft:stone_bricks",
-            "probability": 0.05,
+            "block": "minecraft:cobblestone",
+            "probability": 0.1,
             "predicate_type": "minecraft:random_block_match"
           },
           "location_predicate":{
             "predicate_type": "minecraft:always_true"
           },
           "output_state": {
-            "Name": "minecraft:emerald_ore"
+            "Name": "minecraft:mossy_cobblestone"
+          }
+        },
+        {
+          "input_predicate": {
+            "block": "minecraft:stone_bricks_wall",
+            "probability": 0.1,
+            "predicate_type": "minecraft:random_block_match"
+          },
+          "location_predicate":{
+            "predicate_type": "minecraft:always_true"
+          },
+          "output_state": {
+            "Name": "minecraft:mossy_stone_bricks_wall"
           }
         },
         {
           "input_predicate":{
-            "block": "minecraft:bookshelf",
+            "block": "minecraft:enchanting_table",
             "probability": 0.4,
             "predicate_type": "minecraft:random_block_match"
           },
@@ -46,21 +72,8 @@
         },
         {
           "input_predicate":{
-            "block": "minecraft:candle",
-            "probability": 0.8,
-            "predicate_type": "minecraft:random_block_match"
-          },
-          "location_predicate":{
-            "predicate_type": "minecraft:always_true"
-          },
-          "output_state": {
-            "Name": "minecraft:block.minecraft.air"
-          }
-        },
-        {
-          "input_predicate":{
-            "block": "minecraft:brown_candle",
-            "probability": 0.8,
+            "block": "minecraft:bookshelf",
+            "probability": 0.3,
             "predicate_type": "minecraft:random_block_match"
           },
           "location_predicate":{

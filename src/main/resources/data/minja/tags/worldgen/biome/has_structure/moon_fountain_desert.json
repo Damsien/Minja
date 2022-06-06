@@ -3,10 +3,6 @@
 
   "_comment": " This file is used to choose in which biomes our structure will be in ",
   "values": [
-    "#minja:oceans",
-    "#minja:mountains",
-    "#minja:rocky_mountains",
-    "#minja:snowy_mountains",
-    "#minja:beaches"
+    "#minja:collections/deserts"
   ]
 }

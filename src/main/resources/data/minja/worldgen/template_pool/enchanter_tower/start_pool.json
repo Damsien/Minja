@@ -1,0 +1,46 @@
+{
+  // This is the name of the template pool itself.
+  "name": "minja:enchanter_tower/start_pool",
+
+  // The template pool to refer to if the entries in 'elements' fails to generate.
+  "fallback": "minecraft:empty",
+
+  "elements": [
+    {
+      // How likely out of all the element for this one to be chosen.
+      "weight": 1,
+      "element": {
+
+        // The Identifier of the nbt file itself of the structure piece.
+        "location": "minja:enchanter_tower",
+
+        // Processor JSON files used to randomize or replace blocks dynamically.
+        "processors": "minja:enchanter_tower",
+
+        // If set to 'terrain_matching', the house would be deformed to fit the change in land.
+        "projection": "rigid",
+
+        // The kind of element we are spawning.
+        "element_type": "minecraft:single_pool_element"
+      }
+    },
+    {
+      // How likely out of all the element for this one to be chosen.
+      "weight": 1,
+      "element": {
+
+        // The Identifier of the nbt file itself of the structure piece.
+        "location": "minja:enchanter_tower_broken",
+
+        // Processor JSON files used to randomize or replace blocks dynamically.
+        "processors": "minja:enchanter_tower",
+
+        // If set to 'terrain_matching', the house would be deformed to fit the change in land.
+        "projection": "rigid",
+
+        // The kind of element we are spawning.
+        "element_type": "minecraft:single_pool_element"
+      }
+    }
+  ]
+}

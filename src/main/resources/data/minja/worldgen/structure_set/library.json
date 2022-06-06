@@ -8,17 +8,16 @@
     }
   ],
   "placement": {
-    // Make sure this is unique and does not match any other structure set's salt
+    // Identifier number, which is unique for every build
     "salt": 534683544,
 
     // The average distance apart in chunks for spawn attempts
     "spacing": 20,
 
     // Minimum distance apart in chunks for spawn attempts
-    // MUST ALWAYS BE SMALLER THAN spacing ABOVE
     "separation": 6,
 
-    // The kind of placement to use. The other kind is ring based like strongholds use.
+    // The kind of placement to use.
     "type": "minecraft:random_spread"
   }
 }

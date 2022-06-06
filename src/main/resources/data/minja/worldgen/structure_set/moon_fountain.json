@@ -1,20 +1,26 @@
 {
   // What structures to pick to try and spawn if a spot passes the placement check.
+  // If two or more structures in this list can spawn in a biome at a spot, a random one based on weight is chosen to spawn
   "structures": [
     {
-      "structure": "minja:sky_boat",
+      "structure": "minja:moon_fountain",
+      "weight": 1
+    },
+    {
+      "structure": "minja:moon_fountain_desert",
       "weight": 1
     }
+
   ],
   "placement": {
     // Identifier number, which is unique for every build
-    "salt": 774358923,
+    "salt": 784523845,
 
     // The average distance apart in chunks for spawn attempts
     "spacing": 30,
 
     // Minimum distance apart in chunks for spawn attempts
-    "separation": 12,
+    "separation": 6,
 
     // The kind of placement to use.
     "type": "minecraft:random_spread"

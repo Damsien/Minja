@@ -1,4 +1,4 @@
-package net.fabricmc.minja.events;
+package net.fabricmc.minja.enumerations;
 
 public enum MinjaEvent {
     UNDEFINED,

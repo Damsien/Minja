@@ -1,5 +1,6 @@
 {
   "itemGroup.minja.general": "Minja",
   "item.spells.lightningball": "Lightning Ball",
-  "item.spells.spark": "Spark"
+  "item.spells.spark": "Spark",
+  "item.spells.soul_spark": "Soul Spark"
 }

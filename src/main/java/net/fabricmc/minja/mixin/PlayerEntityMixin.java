@@ -9,6 +9,7 @@ import net.fabricmc.minja.exceptions.SpellNotFoundException;
 import net.fabricmc.minja.PlayerMinja;
 import net.fabricmc.minja.objects.MinjaItem;
 import net.fabricmc.minja.spells.LightningBall;
+import net.fabricmc.minja.spells.SoulSpark;
 import net.fabricmc.minja.spells.Spark;
 import net.fabricmc.minja.spells.Spell;
 import net.minecraft.client.MinecraftClient;
@@ -62,6 +63,7 @@ public abstract class PlayerEntityMixin implements PlayerMinja, PlayerEvent {
     private void init(World world, BlockPos pos, float yaw, GameProfile profile, CallbackInfo info) {
         this.addSpell(new LightningBall());
         this.addSpell(new Spark());
+        this.addSpell(new SoulSpark());
         System.out.println("=============");
         if(world.isClient) {
             System.out.println(MinecraftClient.getInstance().getSession().getUsername());
@@ -289,6 +291,15 @@ public abstract class PlayerEntityMixin implements PlayerMinja, PlayerEvent {
         }
         if(nbt.contains("activeSpell")) {
             activeSpell = nbt.getInt("activeSpell");
+        }
+    }
+
+    @Inject(method = "tick", at = @At("TAIL"))
+    public void tick(CallbackInfo ci) {
+        PlayerEntity player = (PlayerEntity) (Object) (this);
+        Item item = player.getStackInHand(Hand.MAIN_HAND).getItem();
+        if(item instanceof MinjaItem) {
+            ((MinjaItem)player.getStackInHand(Hand.MAIN_HAND).getItem()).tick(player.getWorld());
         }
     }
 

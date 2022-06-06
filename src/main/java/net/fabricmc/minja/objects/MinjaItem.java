@@ -1,21 +1,15 @@
 package net.fabricmc.minja.objects;
 
-import net.fabricmc.minja.clocks.Clock;
-import net.fabricmc.minja.clocks.callflow.CallFlow;
 import net.fabricmc.minja.clocks.callflow.MouseManager;
 import net.fabricmc.minja.events.ItemEvent;
-import net.fabricmc.minja.events.MinjaEvent;
-import net.fabricmc.minja.events.Side;
-import net.minecraft.entity.LivingEntity;
+import net.fabricmc.minja.enumerations.MinjaEvent;
+import net.fabricmc.minja.enumerations.Side;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.text.LiteralText;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.world.World;
-
-import java.util.Date;
 
 /**
  * Classe abstraite permettant l'usage du @Override sur les méthodes injectées dans ItemMixin (dont le compilateur
@@ -70,6 +64,13 @@ public abstract class MinjaItem extends Item implements ItemEvent {
 
     }
 
+    public void tick(World world) {
+        Side side = world.isClient ? Side.CLIENT : Side.SERVER;
+        manager.tick(side);
+        onTick();
+    }
+
+    /** **/
 
 
     public MinjaEvent onInteract(World world, PlayerEntity playerEntity, Hand hand, Side side) {
@@ -104,6 +105,8 @@ public abstract class MinjaItem extends Item implements ItemEvent {
     public TypedActionResult<ItemStack> onRightClickReleased(World world, PlayerEntity playerEntity, Hand hand, boolean otherClickSelected, Side side) {
         return null;
     }
+
+    public void onTick() {}
 
 
 

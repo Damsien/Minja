@@ -1,18 +1,15 @@
 package net.fabricmc.minja.objects;
 
-		import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-		import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
-		import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-		import net.fabricmc.minja.events.MinjaEvent;
-		import net.fabricmc.minja.events.NetworkEvent;
-		import net.fabricmc.minja.events.Side;
-		import net.fabricmc.minja.exceptions.NotEnoughtManaException;
+		import net.fabricmc.minja.enumerations.MinjaEvent;
+		import net.fabricmc.minja.network.NetworkEvent;
+		import net.fabricmc.minja.enumerations.Side;
 		import net.fabricmc.minja.PlayerMinja;
 		import net.fabricmc.minja.hud.SpellHUD;
+		import net.fabricmc.minja.spells.SoulSpark;
+		import net.fabricmc.minja.spells.Spell;
 		import net.minecraft.entity.player.PlayerEntity;
 		import net.minecraft.item.Item;
 		import net.minecraft.item.ItemStack;
-		import net.minecraft.network.PacketByteBuf;
 		import net.minecraft.text.LiteralText;
 		import net.minecraft.util.Hand;
 		import net.minecraft.util.TypedActionResult;
@@ -34,13 +31,51 @@ public class Wand extends MinjaItem {
 	@Override
 	public MinjaEvent onLeftClickPressed(World world, PlayerEntity playerEntity, Hand hand, boolean isOtherClickActivated, Side side) {
 
+
 		if(!isOtherClickActivated) {
 			PlayerMinja player = (PlayerMinja) playerEntity;
-			player.getActiveSpell().cast(playerEntity);
+			Spell courant = player.getActiveSpell();
+			if(!(courant instanceof SoulSpark)) {
+				courant.cast(playerEntity);
+			}
+			return MinjaEvent.SUCCEED;
+		}
+
+
+
+		return MinjaEvent.CANCELED;
+	}
+
+	@Override
+	public MinjaEvent onLeftClickMaintained(World world, PlayerEntity playerEntity, Hand hand, boolean isOtherClickActivated, Side side) {
+
+		if(!isOtherClickActivated) {
+			playerEntity.sendMessage(new LiteralText("LEFT CLICK MAINTAINED"), false);
+			PlayerMinja player = (PlayerMinja) playerEntity;
+			Spell courant = player.getActiveSpell();
+			if(courant instanceof SoulSpark) {
+				((SoulSpark) courant).precast(playerEntity);
+			}
+
+		}
+
+		return MinjaEvent.CANCELED;
+	}
+
+	@Override
+	public MinjaEvent onLeftClickReleased(World world, PlayerEntity playerEntity, Hand hand, boolean isOtherClickActivated, Side side) {
+
+		if(!isOtherClickActivated) {
+			PlayerMinja player = (PlayerMinja) playerEntity;
+			Spell courant = player.getActiveSpell();
+			if(courant instanceof SoulSpark) {
+				courant.cast(playerEntity);
+			}
 			return MinjaEvent.SUCCEED;
 		}
 
 		return MinjaEvent.CANCELED;
+
 	}
 
 	@Override
@@ -50,12 +85,15 @@ public class Wand extends MinjaItem {
 			SpellHUD.setVisible(true);
 		}
 
-		return TypedActionResult.success(playerEntity.getStackInHand(hand));
+		return TypedActionResult.pass(playerEntity.getStackInHand(hand));
 
 	}
 
 	@Override
 	public TypedActionResult<ItemStack> onRightClickMaintained(World world, PlayerEntity playerEntity, Hand hand,  boolean isOtherClickActivated, Side side) {
+
+
+
 
 		// Cancel Event ==> Cancel hand animation
 		return TypedActionResult.pass(playerEntity.getStackInHand(hand));

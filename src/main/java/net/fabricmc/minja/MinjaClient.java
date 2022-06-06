@@ -1,10 +1,8 @@
 package net.fabricmc.minja;
 
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.fabricmc.minja.events.NetworkEvent;
-import net.fabricmc.minja.spells.LightningBall;
-import net.fabricmc.minja.spells.Spark;
+import net.fabricmc.minja.network.NetworkEvent;
+import net.fabricmc.minja.network.ServerRegistry;
 import net.fabricmc.minja.spells.entities.EntitySpawnPacket;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
@@ -13,8 +11,12 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.entity.*;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
-import net.minecraft.text.LiteralText;
+import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.entity.effect.StatusEffects;
+import net.minecraft.entity.mob.MagmaCubeEntity;
+import net.minecraft.nbt.*;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.registry.Registry;
 
@@ -26,22 +28,14 @@ public class MinjaClient implements ClientModInitializer {
     public void onInitializeClient() {
         EntityRendererRegistry.register(Minja.LightningBallEntityType, FlyingItemEntityRenderer::new);
         EntityRendererRegistry.register(Minja.SparkEntityType, FlyingItemEntityRenderer::new);
+        EntityRendererRegistry.register(Minja.SoulSparkEntityType, FlyingItemEntityRenderer::new);
         receiveEntityPacket();
 
 
         // SERVER DATA
 
         // SERVER INFORMATION
-        ServerPlayNetworking.registerGlobalReceiver(NetworkEvent.UPDATE_SPELL_INDEX, (client, player, handler, buf, sender) -> {
-            // Read packet data on the event loop
-            int target = buf.readInt();
-
-            client.execute(() -> {
-                // Everything in this lambda is run on the render thread
-                ((PlayerMinja)player).setActiveSpell(target);
-
-            });
-        });
+        ServerRegistry.registerAllEvents();
 
     }
 

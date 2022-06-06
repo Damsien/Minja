@@ -8,8 +8,10 @@ import net.fabricmc.minja.objects.Grimoire;
 import net.fabricmc.minja.objects.Wand;
 import net.fabricmc.minja.spells.*;
 import net.fabricmc.minja.spells.entities.LightningBallEntity;
+import net.fabricmc.minja.spells.entities.SoulSparkEntity;
 import net.fabricmc.minja.spells.entities.SparkEntity;
 import net.fabricmc.minja.spells.items.LightningBallItem;
+import net.fabricmc.minja.spells.items.SoulSparkItem;
 import net.fabricmc.minja.spells.items.SparkItem;
 import net.fabricmc.minja.world.structure.ModStructures;
 import net.minecraft.entity.EntityDimensions;
@@ -70,10 +72,11 @@ public class Minja implements ModInitializer {
 	/* ****************************************************************** */
 
 	/*
-	 * Every Spell that is linked to an iten has is item instancied here
+	 * Every Spell that is linked to an item has is item instancied here
 	 */
 	public static final Item LIGHTNINGBALL = new LightningBallItem(new Item.Settings().group(MinjaItemGroup).maxCount(1));
 	public static final Item SPARK = new SparkItem(new Item.Settings().group(MinjaItemGroup).maxCount(1));
+	public static final Item SOUL_SPARK = new SoulSparkItem(new Item.Settings().group(MinjaItemGroup).maxCount(1));
 	/* ****************************************************************** */
 
 	/*
@@ -92,6 +95,15 @@ public class Minja implements ModInitializer {
 			Registry.ENTITY_TYPE,
 			new Identifier("spells", "spark"),
 			FabricEntityTypeBuilder.<SparkEntity>create(SpawnGroup.MISC, SparkEntity::new)
+					.dimensions(EntityDimensions.fixed(0.25F, 0.25F))
+					.trackRangeBlocks(4).trackedUpdateRate(10)
+					.build()
+	);
+
+	public static final EntityType<SoulSparkEntity> SoulSparkEntityType = Registry.register(
+			Registry.ENTITY_TYPE,
+			new Identifier("spells", "soul_spark"),
+			FabricEntityTypeBuilder.<SoulSparkEntity>create(SpawnGroup.MISC, SoulSparkEntity::new)
 					.dimensions(EntityDimensions.fixed(0.25F, 0.25F))
 					.trackRangeBlocks(4).trackedUpdateRate(10)
 					.build()
@@ -143,6 +155,9 @@ public class Minja implements ModInitializer {
 		LOGGER.info("Lightning Ball launched");
 
 		Registry.register(Registry.ITEM, new Identifier("spells", "spark"), SPARK);
+		LOGGER.info("Spark launched");
+
+		Registry.register(Registry.ITEM, new Identifier("spells", "soul_spark"), SOUL_SPARK);
 		LOGGER.info("Spark launched");
 
 		//Register every Minja structure

@@ -1,52 +1,90 @@
 package net.fabricmc.minja.spells.entities;
 
-import com.mojang.serialization.MapCodec;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.minja.Minja;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
+import net.fabricmc.minja.network.NetworkEvent;
+import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.client.util.ClientPlayerTickable;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.*;
 import net.minecraft.entity.passive.AnimalEntity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.thrown.ThrownItemEntity;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.fluid.WaterFluid;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.particle.ItemStackParticleEffect;
 import net.minecraft.particle.ParticleEffect;
 import net.minecraft.particle.ParticleTypes;
-import net.minecraft.text.LiteralText;
+import net.minecraft.state.property.Property;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.BlockBox;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public class SparkEntity extends ThrownItemEntity {
+public class SoulSparkEntity extends ThrownItemEntity {
 
+    private final int MAX_HEIGHT = 5;
 
-    public SparkEntity(EntityType<SparkEntity> sparkEntityEntityType, World world) {
+    public SoulSparkEntity(EntityType<SoulSparkEntity> sparkEntityEntityType, World world) {
         super(sparkEntityEntityType, world);
     }
 
-    public SparkEntity(LivingEntity owner, World world) {
-        super(Minja.SparkEntityType, owner, world);
+    public SoulSparkEntity(LivingEntity owner, World world) {
+        super(Minja.SoulSparkEntityType, owner, world);
     }
 
-    public SparkEntity(double x, double y, double z, World world) {
-        super(Minja.SparkEntityType, x, y, z, world);
+    public SoulSparkEntity(double x, double y, double z, World world) {
+        super(Minja.SoulSparkEntityType, x, y, z, world);
     }
+
+
 
     @Override
-    protected Item getDefaultItem() {
-        return Minja.SPARK;
+    public void tick() {
+        super.tick();
+
+        if(getOwner() == null) return;
+
+        // Get the world and position of the current block
+        if(!world.isClient) return;
+        BlockPos position = getBlockPos();
+
+        System.out.println("Properties :");
+        for(Property p : world.getBlockState(position).getProperties()) {
+            System.out.println(p.getName());
+        }
+
+        int i=0;
+        while(i<MAX_HEIGHT) {
+
+            // Get current block
+            BlockPos iterator_position = position.down(i);
+            BlockState block = world.getBlockState(iterator_position);
+            BlockEntity entity = world.getBlockEntity(iterator_position);
+
+            // Get Fire Block
+            SoulFireBlock fire = (SoulFireBlock) Blocks.SOUL_FIRE;
+
+            // Check if there is a solid block
+            if(!block.isAir() && block.isFullCube(world, iterator_position)) {
+
+                // Get block on top of the current iteration
+                BlockPos upperBlockPos = position.down(i-1);
+                BlockState upperBlockState = world.getBlockState(upperBlockPos);
+
+                // Check if there if it's a free block
+                if(upperBlockState.isAir()) {
+
+                    // Spawn fire
+                    world.setBlockState(upperBlockPos, fire.getDefaultState());
+
+                    // make spawn an entity
+
+                    return;
+                }
+
+            }
+            i++;
+        }
     }
 
     @Environment(EnvType.CLIENT)
@@ -95,5 +133,10 @@ public class SparkEntity extends ThrownItemEntity {
         if (entity instanceof AnimalEntity) {
             entity.kill();
         }
+    }
+
+    @Override
+    protected Item getDefaultItem() {
+        return Minja.SOUL_SPARK;
     }
 }

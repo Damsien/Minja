@@ -1,8 +1,7 @@
 package net.fabricmc.minja.clocks.callflow;
 
 import net.fabricmc.minja.clocks.Clock;
-import net.fabricmc.minja.clocks.callflow.CallFlow;
-import net.fabricmc.minja.events.Side;
+import net.fabricmc.minja.enumerations.Side;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Hand;
 import net.minecraft.world.World;
@@ -10,7 +9,6 @@ import net.minecraft.world.World;
 public abstract class GenericCallFlow<EventCallback> {
 
     protected boolean isFirstTimeClicked = true;
-    final protected long TIMER;
 
 
     private Side side;
@@ -21,16 +19,6 @@ public abstract class GenericCallFlow<EventCallback> {
 
     private Hand hand;
 
-
-
-
-    public GenericCallFlow() {
-        TIMER = 60;
-    }
-
-    public GenericCallFlow(long timer) {
-        TIMER = timer;
-    }
 
     public void updateAttribute(World w, PlayerEntity u, Hand h, Side s) {
         world = w;
@@ -45,21 +33,9 @@ public abstract class GenericCallFlow<EventCallback> {
 
         head();
 
-
         if (isFirstTimeClicked) {
             afterPressed();
             isFirstTimeClicked = false;
-
-            Clock clock = new Clock(TIMER) {
-
-                @Override
-                public void execute() {
-                    if (checkEvent())  {  triggerReleased(); afterReleased(); isFirstTimeClicked = true; }
-                    else               this.run();
-
-                }
-            };
-            clock.start();
             return triggerPressed();
         }
 
@@ -101,6 +77,16 @@ public abstract class GenericCallFlow<EventCallback> {
     }
 
     public abstract boolean checkEvent();
+
+    public void tick() {
+
+
+        if (!isFirstTimeClicked && checkEvent())  {
+            triggerReleased();
+            afterReleased();
+            isFirstTimeClicked = true;
+        }
+    }
 
 
 }

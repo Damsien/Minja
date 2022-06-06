@@ -2,7 +2,8 @@ package net.fabricmc.minja.hud;
 
 
 import net.fabricmc.minja.PlayerMinja;
-import net.fabricmc.minja.mixin.PlayerEntityMixin;
+import net.fabricmc.minja.math.CartesianPoint;
+import net.fabricmc.minja.math.PolarPoint;
 import net.fabricmc.minja.textures.SpellHUDTexture;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
@@ -23,7 +24,7 @@ public class SpellHUD {
     private ItemRenderer itemRenderer;
     private PlayerMinja player;
 
-    private static PointCartesien centre;
+    private static CartesianPoint centre;
     private Vec3d cameraPosition;
 
     private static int currentIndex;
@@ -44,7 +45,7 @@ public class SpellHUD {
         fontRenderer = minecraft.textRenderer;
         itemRenderer = minecraft.getItemRenderer();
         player = (PlayerMinja) minecraft.player;
-        centre = new PointCartesien(minecraft.mouse.getX(),minecraft.mouse.getY());
+        centre = new CartesianPoint(minecraft.mouse.getX(),minecraft.mouse.getY());
 
         visible = false;
         isCenterSet = false;
@@ -56,7 +57,7 @@ public class SpellHUD {
     }
 
     public void updateCenter() {
-        centre = new PointCartesien(minecraft.mouse.getX(), minecraft.mouse.getY());
+        centre = new CartesianPoint(minecraft.mouse.getX(), minecraft.mouse.getY());
     }
 
     public static void setVisible(boolean visible) {
@@ -89,17 +90,17 @@ public class SpellHUD {
 
 
         // Get the position of the mouse
-        PointCartesien mousePos = new PointCartesien(minecraft.mouse.getX(), minecraft.mouse.getY());
+        CartesianPoint mousePos = new CartesianPoint(minecraft.mouse.getX(), minecraft.mouse.getY());
 
         // Calculate the difference between the relative center (centre) and the actual position of the mouse
-        PointCartesien delta = new PointCartesien(mousePos.x - centre.x, mousePos.y - centre.y);
+        CartesianPoint delta = new CartesianPoint(mousePos.x() - centre.x(), mousePos.y() - centre.y());
 
 
         // Get the origin of the window
-        PointCartesien crosshair = new PointCartesien(0,0);
+        CartesianPoint crosshair = new CartesianPoint(0,0);
 
         // Create a point with the same difference from the origin
-        PointCartesien Mc = new PointCartesien(crosshair.x + delta.x, crosshair.y + delta.y);
+        CartesianPoint Mc = new CartesianPoint(crosshair.x() + delta.x(), crosshair.y() + delta.y());
 
         /** DRAWINGS FOR DEBUG ** /
          fontRenderer.draw(stack, "C", (float) (centre.x), (float) (centre.y), Color.RED.getRGB());
@@ -112,8 +113,8 @@ public class SpellHUD {
          **/
 
         // Get polar info for our new points
-        PointPolaire M = Mc.CardToPolar();
-        double thetaModulo = modulo(M.theta, 2*Math.PI);
+        PolarPoint M = Mc.CartToPolar();
+        double thetaModulo = modulo(M.theta(), 2*Math.PI);
 
 
         // Get number of spells available for the users
@@ -123,21 +124,21 @@ public class SpellHUD {
         double rad = Math.toRadians(360 / length);
 
         // Check if the mouse is in the safe range
-        boolean isInSafeRange = M.r > SAFE_RANGE;
+        boolean isInSafeRange = M.r() > SAFE_RANGE;
 
         // Draw the wheel
         for(int i=0 ; i < length ; i++) {
 
             // Create a new point at the origin and get its info
-            PointPolaire pp = new PointPolaire(LINE,  i * rad);
-            PointCartesien p = pp.PolarToCard();
+            PolarPoint pp = new PolarPoint(LINE,  i * rad);
+            CartesianPoint p = pp.PolarToCart();
 
             // In case we are in the safe range :
             if(!isInSafeRange) {
 
                 // Check if the current spell drawn is the active one
-                if(i == currentIndex)   drawOK(stack, width+p.x, height +p.y, i);
-                else                    drawKO(stack, width+p.x, height +p.y, i);
+                if(i == currentIndex)   drawOK(stack, width+p.x(), height +p.y(), i);
+                else                    drawKO(stack, width+p.x(), height +p.y(), i);
 
 
                 // In case we are in the selection zone :
@@ -151,10 +152,10 @@ public class SpellHUD {
                         minecraft.player.playSound(SoundEvents.UI_BUTTON_CLICK,1.0F, 1.0F);
                     }
 
-                    drawOK(stack, width+p.x, height +p.y, i);
+                    drawOK(stack, width+p.x(), height +p.y(), i);
                 }
                 else
-                    drawKO(stack, width+p.x, height +p.y, i);
+                    drawKO(stack, width+p.x(), height +p.y(), i);
 
             }
         }
@@ -210,66 +211,16 @@ public class SpellHUD {
         return result;
     }
 
-    private boolean isInInterval(PointPolaire vertex, int vertexIndex, double angleMoyen, double angleDeLaSouris) {
+    private boolean isInInterval(PolarPoint vertex, int vertexIndex, double angleMoyen, double angleDeLaSouris) {
         // Calculate the range of selection of the iterating spell
-        double borneInf = modulo(vertex.theta - angleMoyen / 2, 2*Math.PI);
-        double borneSup = modulo(vertex.theta + angleMoyen / 2, 2*Math.PI);
+        double borneInf = modulo(vertex.theta() - angleMoyen / 2, 2*Math.PI);
+        double borneSup = modulo(vertex.theta() + angleMoyen / 2, 2*Math.PI);
 
         // Check if the mouse is in the range of the iterating spell
         return vertexIndex != 0     ? borneInf < angleDeLaSouris && angleDeLaSouris < borneSup                                                   // Classic case
                 : (borneInf < angleDeLaSouris && angleDeLaSouris < 2*Math.PI) || 0 < angleDeLaSouris && angleDeLaSouris < borneSup; //  Case 0 : borneSup < borneInf
     }
 
-
-
-
-
-
-
-
-
-    class PointPolaire {
-
-        private double r;
-        private double theta;
-
-
-        PointPolaire(double r, double theta) {
-            this.r = r;
-            this.theta = theta;
-        }
-
-        public PointCartesien PolarToCard() {
-            double x = r * Math.cos(theta);
-            double y = r * Math.sin(theta);
-            return new PointCartesien(x,y);
-        }
-
-    }
-
-    class PointCartesien {
-
-        double x;
-
-        double y;
-
-        public PointCartesien(double x, double y) {
-            this.x = x;
-            this.y = y;
-        }
-
-        public PointPolaire CardToPolar() {
-            double r     = Math.sqrt(x*x + y*y);
-            double theta = Math.atan2(y, x);
-
-            return new PointPolaire(r,theta);
-        }
-
-        public void translater(PointCartesien p) {
-            this.x += p.x;
-            this.y += p.y;
-        }
-    }
 
 
 }

@@ -1,25 +1,17 @@
 package net.fabricmc.minja.clocks.callflow;
 
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.fabricmc.minja.Minja;
 import net.fabricmc.minja.enumerations.MouseButton;
-import net.fabricmc.minja.events.MinjaEvent;
-import net.fabricmc.minja.events.NetworkEvent;
-import net.fabricmc.minja.events.Side;
+import net.fabricmc.minja.enumerations.MinjaEvent;
+import net.fabricmc.minja.network.NetworkEvent;
+import net.fabricmc.minja.enumerations.Side;
 import net.fabricmc.minja.objects.MinjaItem;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.text.LiteralText;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.world.World;
-
-import java.util.Date;
 
 public class MouseManager {
 
@@ -57,7 +49,6 @@ public class MouseManager {
 
             });
         });
-
     }
 
 
@@ -73,6 +64,13 @@ public class MouseManager {
         GenericCallFlow<MinjaEvent> callFlow = (s == Side.CLIENT) ?  leftClickClient : leftClickServer;
         callFlow.updateAttribute(w, u, h, s);
         return callFlow.triggerCurrentAction();
+    }
+
+    public void tick(Side side) {
+        switch(side) {
+            case CLIENT -> { leftClickClient.tick(); rightClickClient.tick();}
+            case SERVER -> { leftClickServer.tick(); rightClickServer.tick();}
+        }
     }
 
 
@@ -103,7 +101,7 @@ public class MouseManager {
 
     // Left Click - Client
 
-    class ClientLeftClickCallFlow extends GenericCallFlow<MinjaEvent> {
+    class ClientLeftClickCallFlow extends LeftClickCallFlow<MinjaEvent> {
 
         @Override public MinjaEvent triggerReleased() {
             isLeftClickEnabledOnClient = false;
@@ -128,7 +126,7 @@ public class MouseManager {
 
 
     // Right Click - Server
-    class ServerRightClickCallFlow extends ServerCallFlow<TypedActionResult<ItemStack>> {
+    class ServerRightClickCallFlow extends GenericCallFlow<TypedActionResult<ItemStack>> {
 
             @Override public TypedActionResult<ItemStack> triggerReleased() {
                 return item.onRightClickReleased(this.getWorld(), this.getUser(), this.getHand(), isLeftClickEnabledOnServer, this.getSide());
@@ -151,7 +149,7 @@ public class MouseManager {
     }
 
     // Left Click - Server
-    class ServerLeftClickCallFlow extends ServerCallFlow<MinjaEvent> {
+    class ServerLeftClickCallFlow extends LeftClickCallFlow<MinjaEvent> {
 
         @Override public MinjaEvent triggerReleased() {
             return item.onLeftClickReleased(this.getWorld(), this.getUser(), this.getHand(), isRightClickEnabledOnServer, this.getSide());

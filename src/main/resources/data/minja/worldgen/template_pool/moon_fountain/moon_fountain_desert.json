@@ -1,22 +1,21 @@
 {
   // This is the name of the template pool itself.
-  "name": "minja:library/start_pool",
+  "name": "minja:enchanter_tower/moon_fountain_desert",
 
   // The template pool to refer to if the entries in 'elements' fails to generate.
   "fallback": "minecraft:empty",
 
   "elements": [
     {
-
       // How likely out of all the element for this one to be chosen.
       "weight": 1,
       "element": {
 
         // The Identifier of the nbt file itself of the structure piece.
-        "location": "minja:library",
+        "location": "minja:moon_fountain_desert",
 
         // Processor JSON files used to randomize or replace blocks dynamically.
-        "processors": "minja:library",
+        "processors": "minecraft:empty",
 
         // If set to 'terrain_matching', the house would be deformed to fit the change in land.
         "projection": "rigid",

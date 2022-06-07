@@ -125,25 +125,35 @@ public class MouseManager {
      */
     class ClientRightClickCallFlow extends GenericCallFlow<TypedActionResult<ItemStack>> {
 
-        @Override public TypedActionResult<ItemStack> triggerReleased() {
-            isRightClickEnabledOnClient = false;
-
-            NetworkEvent.triggerMouseReleased(MouseButton.RIGHT);
-
-            Context c = this.getContext();
-            return item.onRightClickReleased(c.getWorld(), c.getUser(), c.getHand(), isLeftClickEnabledOnClient, c.getSide());
-        }
-
         @Override public TypedActionResult<ItemStack> triggerPressed() {
             isRightClickEnabledOnClient = true;
             Context c = this.getContext();
-            return item.onRightClickPressed(c.getWorld(), c.getUser(), c.getHand(), isLeftClickEnabledOnClient, c.getSide());
+
+
+            TypedActionResult<ItemStack> event1 = item.onRightClickPressed(c.getWorld(), c.getUser(), c.getHand(), isRightClickEnabledOnClient, c.getSide());
+            TypedActionResult<ItemStack> event2 = item.onRightClickClientPressed(c.getWorld(), c.getUser(), c.getHand(), isRightClickEnabledOnClient);
+            return event2 != null ? event2 : event1;
         }
 
         @Override public TypedActionResult<ItemStack> triggerMaintained() {
             Context c = this.getContext();
-            return item.onRightClickMaintained(c.getWorld(), c.getUser(), c.getHand(), isLeftClickEnabledOnClient, c.getSide());
+
+            TypedActionResult<ItemStack> event1 = item.onRightClickMaintained(c.getWorld(), c.getUser(), c.getHand(), isRightClickEnabledOnClient, c.getSide());
+            TypedActionResult<ItemStack> event2 = item.onRightClickClientMaintained(c.getWorld(), c.getUser(), c.getHand(), isRightClickEnabledOnClient);
+            return event2 != null ? event2 : event1;
         }
+
+        @Override public TypedActionResult<ItemStack> triggerReleased() {
+            isRightClickEnabledOnClient = false;
+            NetworkEvent.triggerMouseReleased(MouseButton.RIGHT);
+            Context c = this.getContext();
+
+            TypedActionResult<ItemStack> event1 = item.onRightClickReleased(c.getWorld(), c.getUser(), c.getHand(), isRightClickEnabledOnClient, c.getSide());
+            TypedActionResult<ItemStack> event2 = item.onRightClickClientReleased(c.getWorld(), c.getUser(), c.getHand(), isRightClickEnabledOnClient);
+            return event2 != null ? event2 : event1;
+        }
+
+
 
         @Override public boolean isReleased() {
             return !MinecraftClient.getInstance().mouse.wasRightButtonClicked();
@@ -156,23 +166,36 @@ public class MouseManager {
      */
     class ClientLeftClickCallFlow extends LeftClickCallFlow<MinjaEvent> {
 
-        @Override public MinjaEvent triggerReleased() {
-            isLeftClickEnabledOnClient = false;
-            NetworkEvent.triggerMouseReleased(MouseButton.LEFT);
-            Context c = this.getContext();
-            return item.onLeftClickReleased(c.getWorld(), c.getUser(), c.getHand(), isRightClickEnabledOnClient, c.getSide());
-        }
+
 
         @Override public MinjaEvent triggerPressed() {
             isLeftClickEnabledOnClient = true;
             Context c = this.getContext();
-            return item.onLeftClickPressed(c.getWorld(), c.getUser(), c.getHand(), isRightClickEnabledOnClient, c.getSide());
+
+            MinjaEvent event1 = item.onLeftClickPressed(c.getWorld(), c.getUser(), c.getHand(), isRightClickEnabledOnClient, c.getSide());
+            MinjaEvent event2 = item.onLeftClickClientPressed(c.getWorld(), c.getUser(), c.getHand(), isRightClickEnabledOnClient);
+            return event2 != MinjaEvent.UNDEFINED ? event2 : event1;
         }
 
         @Override public MinjaEvent triggerMaintained() {
             Context c = this.getContext();
-            return item.onLeftClickMaintained(c.getWorld(), c.getUser(), c.getHand(), isRightClickEnabledOnClient, c.getSide());
+
+            MinjaEvent event1 = item.onLeftClickMaintained(c.getWorld(), c.getUser(), c.getHand(), isRightClickEnabledOnClient, c.getSide());
+            MinjaEvent event2 = item.onLeftClickClientMaintained(c.getWorld(), c.getUser(), c.getHand(), isRightClickEnabledOnClient);
+            return event2 != MinjaEvent.UNDEFINED ? event2 : event1;
         }
+
+        @Override public MinjaEvent triggerReleased() {
+            isLeftClickEnabledOnClient = false;
+            NetworkEvent.triggerMouseReleased(MouseButton.LEFT);
+            Context c = this.getContext();
+
+            MinjaEvent event1 = item.onLeftClickReleased(c.getWorld(), c.getUser(), c.getHand(), isRightClickEnabledOnClient, c.getSide());
+            MinjaEvent event2 = item.onLeftClickClientReleased(c.getWorld(), c.getUser(), c.getHand(), isRightClickEnabledOnClient);
+            return event2 != MinjaEvent.UNDEFINED ? event2 : event1;
+        }
+
+
 
         @Override public boolean isReleased() {
             return !MinecraftClient.getInstance().mouse.wasLeftButtonClicked();
@@ -186,21 +209,30 @@ public class MouseManager {
      */
     class ServerRightClickCallFlow extends GenericCallFlow<TypedActionResult<ItemStack>> {
 
-            @Override public TypedActionResult<ItemStack> triggerReleased() {
-                Context c = this.getContext();
-                return item.onRightClickReleased(c.getWorld(), c.getUser(), c.getHand(), isLeftClickEnabledOnServer, c.getSide());
-            }
+        @Override public TypedActionResult<ItemStack> triggerPressed() {
+            isRightClickEnabledOnServer = true;
+            Context c = this.getContext();
 
-            @Override public TypedActionResult<ItemStack> triggerPressed() {
-                isRightClickEnabledOnServer = true;
-                Context c = this.getContext();
-                return item.onRightClickPressed(c.getWorld(), c.getUser(), c.getHand(), isLeftClickEnabledOnServer, c.getSide());
-            }
+            TypedActionResult<ItemStack> event1 = item.onRightClickPressed(c.getWorld(), c.getUser(), c.getHand(), isRightClickEnabledOnClient, c.getSide());
+            TypedActionResult<ItemStack> event2 = item.onRightClickServerPressed(c.getWorld(), c.getUser(), c.getHand(), isRightClickEnabledOnClient);
+            return event2 != null ? event2 : event1;
+        }
 
-            @Override public TypedActionResult<ItemStack> triggerMaintained() {
-                Context c = this.getContext();
-                return item.onRightClickMaintained(c.getWorld(), c.getUser(), c.getHand(), isLeftClickEnabledOnServer, c.getSide());
-            }
+        @Override public TypedActionResult<ItemStack> triggerMaintained() {
+            Context c = this.getContext();
+
+            TypedActionResult<ItemStack> event1 = item.onRightClickMaintained(c.getWorld(), c.getUser(), c.getHand(), isRightClickEnabledOnClient, c.getSide());
+            TypedActionResult<ItemStack> event2 = item.onRightClickServerMaintained(c.getWorld(), c.getUser(), c.getHand(), isRightClickEnabledOnClient);
+            return event2 != null ? event2 : event1;
+        }
+
+        @Override public TypedActionResult<ItemStack> triggerReleased() {
+            Context c = this.getContext();
+
+            TypedActionResult<ItemStack> event1 = item.onRightClickReleased(c.getWorld(), c.getUser(), c.getHand(), isRightClickEnabledOnClient, c.getSide());
+            TypedActionResult<ItemStack> event2 = item.onRightClickServerReleased(c.getWorld(), c.getUser(), c.getHand(), isRightClickEnabledOnClient);
+            return event2 != null ? event2 : event1;
+        }
 
         @Override public boolean isReleased() {
             return !isRightClickEnabledOnServer;
@@ -214,20 +246,30 @@ public class MouseManager {
      */
     class ServerLeftClickCallFlow extends LeftClickCallFlow<MinjaEvent> {
 
-        @Override public MinjaEvent triggerReleased() {
-            Context c = this.getContext();
-            return item.onLeftClickReleased(c.getWorld(), c.getUser(), c.getHand(), isRightClickEnabledOnServer, c.getSide());
-        }
-
         @Override public MinjaEvent triggerPressed() {
             isLeftClickEnabledOnServer = true;
             Context c = this.getContext();
-            return item.onLeftClickPressed(c.getWorld(), c.getUser(), c.getHand(), isRightClickEnabledOnServer, c.getSide());
+
+
+            MinjaEvent event1 = item.onLeftClickPressed(c.getWorld(), c.getUser(), c.getHand(), isRightClickEnabledOnClient, c.getSide());
+            MinjaEvent event2 = item.onLeftClickServerPressed(c.getWorld(), c.getUser(), c.getHand(), isRightClickEnabledOnClient);
+            return event2 != MinjaEvent.UNDEFINED ? event2 : event1;
         }
 
         @Override public MinjaEvent triggerMaintained() {
             Context c = this.getContext();
-            return item.onLeftClickMaintained(c.getWorld(), c.getUser(), c.getHand(), isRightClickEnabledOnServer, c.getSide());
+
+            MinjaEvent event1 = item.onLeftClickMaintained(c.getWorld(), c.getUser(), c.getHand(), isRightClickEnabledOnClient, c.getSide());
+            MinjaEvent event2 = item.onLeftClickServerMaintained(c.getWorld(), c.getUser(), c.getHand(), isRightClickEnabledOnClient);
+            return event2 != MinjaEvent.UNDEFINED ? event2 : event1;
+        }
+
+        @Override public MinjaEvent triggerReleased() {
+            Context c = this.getContext();
+
+            MinjaEvent event1 = item.onLeftClickReleased(c.getWorld(), c.getUser(), c.getHand(), isRightClickEnabledOnClient, c.getSide());
+            MinjaEvent event2 = item.onLeftClickServerReleased(c.getWorld(), c.getUser(), c.getHand(), isRightClickEnabledOnClient);
+            return event2 != MinjaEvent.UNDEFINED ? event2 : event1;
         }
 
         @Override public boolean isReleased() {

@@ -149,11 +149,35 @@ public abstract class MinjaItem extends Item implements ItemEvent, MouseEvent, T
         return MinjaEvent.UNDEFINED;
     }
 
+    @Override  public MinjaEvent onLeftClickClientPressed(World world, PlayerEntity playerEntity, Hand hand, boolean otherClickSelected) {
+        return MinjaEvent.UNDEFINED;
+    }
+
+    @Override  public MinjaEvent onLeftClickServerPressed(World world, PlayerEntity playerEntity, Hand hand, boolean otherClickSelected) {
+        return MinjaEvent.UNDEFINED;
+    }
+
     @Override  public MinjaEvent onLeftClickMaintained(World world, PlayerEntity playerEntity, Hand hand, boolean otherClickSelected, Side side) {
         return MinjaEvent.UNDEFINED;
     }
 
+    @Override  public MinjaEvent onLeftClickClientMaintained(World world, PlayerEntity playerEntity, Hand hand, boolean otherClickSelected) {
+        return MinjaEvent.UNDEFINED;
+    }
+
+    @Override  public MinjaEvent onLeftClickServerMaintained(World world, PlayerEntity playerEntity, Hand hand, boolean otherClickSelected) {
+        return MinjaEvent.UNDEFINED;
+    }
+
     @Override  public MinjaEvent onLeftClickReleased(World world, PlayerEntity playerEntity, Hand hand, boolean otherClickSelected, Side side) {
+        return MinjaEvent.UNDEFINED;
+    }
+
+    @Override  public MinjaEvent onLeftClickClientReleased(World world, PlayerEntity playerEntity, Hand hand, boolean otherClickSelected) {
+        return MinjaEvent.UNDEFINED;
+    }
+
+    @Override  public MinjaEvent onLeftClickServerReleased(World world, PlayerEntity playerEntity, Hand hand, boolean otherClickSelected) {
         return MinjaEvent.UNDEFINED;
     }
 
@@ -165,13 +189,38 @@ public abstract class MinjaItem extends Item implements ItemEvent, MouseEvent, T
         return null;
     }
 
+    @Override  public TypedActionResult<ItemStack> onRightClickServerPressed(World world, PlayerEntity playerEntity, Hand hand, boolean otherClickSelected) {
+        return null;
+    }
+
+    @Override  public TypedActionResult<ItemStack> onRightClickClientPressed(World world, PlayerEntity playerEntity, Hand hand, boolean otherClickSelected) {
+        return null;
+    }
+
     @Override  public TypedActionResult<ItemStack> onRightClickMaintained(World world, PlayerEntity playerEntity, Hand hand, boolean otherClickSelected, Side side) {
+        return null;
+    }
+
+    @Override  public TypedActionResult<ItemStack> onRightClickServerMaintained(World world, PlayerEntity playerEntity, Hand hand, boolean otherClickSelected) {
+        return null;
+    }
+
+    @Override  public TypedActionResult<ItemStack> onRightClickClientMaintained(World world, PlayerEntity playerEntity, Hand hand, boolean otherClickSelected) {
         return null;
     }
 
     @Override  public TypedActionResult<ItemStack> onRightClickReleased(World world, PlayerEntity playerEntity, Hand hand, boolean otherClickSelected, Side side) {
         return null;
     }
+
+    @Override  public TypedActionResult<ItemStack> onRightClickServerReleased(World world, PlayerEntity playerEntity, Hand hand, boolean otherClickSelected) {
+        return null;
+    }
+
+    @Override  public TypedActionResult<ItemStack> onRightClickClientReleased(World world, PlayerEntity playerEntity, Hand hand, boolean otherClickSelected) {
+        return null;
+    }
+
 
     @Override public void onTick(Side side) {}
 

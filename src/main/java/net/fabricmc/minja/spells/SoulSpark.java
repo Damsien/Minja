@@ -44,7 +44,7 @@ public class SoulSpark extends SpellProjectile {
 
         PlayerEntity p = (PlayerEntity) player;
 
-        p.sendMessage(new LiteralText(vector2), false);
+        //p.sendMessage(new LiteralText(vector2), false);
 
         int j=0;
         while(j<MAX_LENGTH) {

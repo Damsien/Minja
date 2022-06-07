@@ -67,7 +67,7 @@ public class Wand extends MinjaItem {
 	public MinjaEvent onLeftClickMaintained(World world, PlayerEntity playerEntity, Hand hand, boolean isOtherClickActivated, Side side) {
 
 		if(!isOtherClickActivated) {
-			playerEntity.sendMessage(new LiteralText("LEFT CLICK MAINTAINED"), false);
+			//playerEntity.sendMessage(new LiteralText("LEFT CLICK MAINTAINED"), false);
 			PlayerMinja player = (PlayerMinja) playerEntity;
 			Spell courant = player.getActiveSpell();
 			if(courant instanceof SoulSpark) {

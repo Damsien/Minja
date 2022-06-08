@@ -31,6 +31,7 @@ package net.fabricmc.minja.clocks;
  * </pre>
  *
  * @author      Tom Froment
+ * @author      Damien Dassieu
  *
  */
 public abstract class Clock implements Runnable {
@@ -76,7 +77,7 @@ public abstract class Clock implements Runnable {
      * Doesn't stop the callback function if callback has already been reached.
      * Useful to break an alarm.
      */
-    final public void stop() {
+    public void stop() {
         isStopped = true;
     }
 
@@ -86,6 +87,7 @@ public abstract class Clock implements Runnable {
      *
      */
     final public void start() {
+        isStopped = false;
         if(thread == null || thread.isAlive()) {
             this.thread = new Thread(this);
             this.thread.start();

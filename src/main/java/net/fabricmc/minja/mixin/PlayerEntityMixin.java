@@ -6,8 +6,10 @@ import net.fabricmc.minja.clocks.ManaClock;
 import net.fabricmc.minja.events.PlayerEvent;
 import net.fabricmc.minja.exceptions.NotEnoughManaException;
 import net.fabricmc.minja.exceptions.SpellNotFoundException;
-import net.fabricmc.minja.PlayerMinja;
+import net.fabricmc.minja.network.NetworkEvent;
+import net.fabricmc.minja.player.PlayerMinja;
 import net.fabricmc.minja.objects.MinjaItem;
+import net.fabricmc.minja.player.ServerPlayerMinja;
 import net.fabricmc.minja.spells.LightningBall;
 import net.fabricmc.minja.spells.SoulSpark;
 import net.fabricmc.minja.spells.Spark;
@@ -16,6 +18,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -42,11 +45,6 @@ public abstract class PlayerEntityMixin implements PlayerMinja, PlayerEvent {
     private static final int MAX_MANA = 100;
 
     /**
-     * MAX_SPELLS is the maximum spells that the player can use
-     */
-    private static final int MAX_SPELLS = 8;
-
-    /**
      * Mana is a fuel for using spells
      */
     private int mana;
@@ -60,6 +58,8 @@ public abstract class PlayerEntityMixin implements PlayerMinja, PlayerEvent {
      * Active spell is the current selected spell by the player
      */
     private int activeSpell = 0;
+
+    private ServerPlayerEntity serverPlayer;
 
     private ManaClock manaClock;
 
@@ -80,20 +80,22 @@ public abstract class PlayerEntityMixin implements PlayerMinja, PlayerEvent {
         this.addSpell(new LightningBall());
         this.addSpell(new Spark());
         this.addSpell(new SoulSpark());
-        System.out.println("=============");
-        if(world.isClient) {
-            System.out.println(MinecraftClient.getInstance().getSession().getUsername());
-            setMana(
-                    ((PlayerMinja)MinecraftClient.getInstance().getServer().getPlayerManager().getPlayer(
-                            MinecraftClient.getInstance().getSession().getUsername())).getMana()
-            );
-        } else {
-            setMana(0);
+
+        if(MinecraftClient.getInstance().getServer().getPlayerManager().getPlayerList().size() != 0) {
+            serverPlayer = (MinecraftClient.getInstance().getServer().getPlayerManager().getPlayer(
+                    MinecraftClient.getInstance().getSession().getUsername()));
         }
-        manaClock = new ManaClock(1500, this);
-        runManaRegeneration();
-        System.out.println("init " + this.getClass());
-        System.out.println("=============");
+
+        setMana(0);
+        if(world.isClient && serverPlayer != null) {
+            setMana(((PlayerMinja)serverPlayer).getMana());
+            ((ServerPlayerMinja)serverPlayer).setPlayer(this);
+        }
+
+        if(world.isClient) {
+            runManaRegeneration();
+        }
+
     }
 
     // Spells
@@ -210,9 +212,7 @@ public abstract class PlayerEntityMixin implements PlayerMinja, PlayerEvent {
      * Set the amount of mana the player have
      * @param amount between 0 and 100
      */
-    private void setMana(int amount) {
-        System.out.println("Instance : " + this.getClass());
-        System.out.println("Set mana : " + mana);
+    public void setMana(int amount) {
         if(amount < 0) mana = 0;
         else mana = Math.min(amount, MAX_MANA);
     }
@@ -229,7 +229,7 @@ public abstract class PlayerEntityMixin implements PlayerMinja, PlayerEvent {
     /**
      * Remove the amount of mana to the current amount the player has
      * @param amount between 0 and 100
-     * @throws NotEnoughManaException when currentAmount-removedAmount < 0
+     * @throws NotEnoughManaException when currentAmount-removedAmount is under 0
      */
     @Override
     public void removeMana(int amount) throws NotEnoughManaException {
@@ -286,13 +286,21 @@ public abstract class PlayerEntityMixin implements PlayerMinja, PlayerEvent {
 
     }
 
-    private void runManaRegeneration() {
+    /**
+     * Start the player's mana regeneration
+     */
+    public void runManaRegeneration() {
+        manaClock = ManaClock.getInstance(3000, this);
         manaClock.start();
     }
 
-    private void stopManaRegeneration() {
+    /**
+     * Stop the player's mana regeneration
+     */
+    public void stopManaRegeneration() {
         manaClock.stop();
     }
+
 
     /**
      * DO NOT USE
@@ -303,8 +311,6 @@ public abstract class PlayerEntityMixin implements PlayerMinja, PlayerEvent {
     @Inject(method = "writeCustomDataToNbt", at = @At("RETURN"))
     public void writeCustomDataToNbt(NbtCompound nbt, CallbackInfo ci) {
         nbt.putInt("mana", mana);
-        System.out.println("Instance : " + this.getClass());
-        System.out.println("Write mana : " + mana);
         int i = 0;
         for(Spell spell : spells) {
             if(spell != null) {
@@ -324,17 +330,15 @@ public abstract class PlayerEntityMixin implements PlayerMinja, PlayerEvent {
     @Inject(method = "readCustomDataFromNbt", at = @At("RETURN"))
     public void readCustomDataFromNbt(NbtCompound nbt, CallbackInfo ci) {
         setMana(nbt.getInt("mana"));
-        System.out.println("Instance : " + this.getClass());
-        System.out.println("Read mana " + mana);
         for(int i = 0; i < MAX_SPELLS; i++) {
             if(nbt.contains("spell"+i)) {
-                spells.add(Minja.SPELLS_MAP.get(
+                addSpell(Minja.SPELLS_MAP.get(
                         nbt.getString("spell"+i)+"/"+nbt.getString("spell"+i))
                 );
             }
         }
         if(nbt.contains("activeSpell")) {
-            activeSpell = nbt.getInt("activeSpell");
+            setActiveSpell(nbt.getInt("activeSpell"));
         }
     }
 

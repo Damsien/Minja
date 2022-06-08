@@ -1,11 +1,10 @@
 package net.fabricmc.minja.mixin;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.fabricmc.minja.PlayerMinja;
+import net.fabricmc.minja.player.PlayerMinja;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.hud.InGameHud;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Identifier;
 import org.spongepowered.asm.mixin.Mixin;

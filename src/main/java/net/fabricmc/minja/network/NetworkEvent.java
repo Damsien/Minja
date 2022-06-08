@@ -3,10 +3,15 @@ package net.fabricmc.minja.network;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.minja.enumerations.MouseButton;
+import net.fabricmc.minja.player.PlayerMinja;
+import net.fabricmc.minja.spells.Spell;
 import net.minecraft.entity.EntityType;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
+
+import java.util.List;
 
 /**
  * Send data packet to the "Server" to keep Client and Server Up To Date
@@ -14,6 +19,18 @@ import net.minecraft.util.math.BlockPos;
  * @author      Tom Froment
  */
 public class NetworkEvent {
+
+    /** Identifier for running mana regeneration (or registering the callback) */
+    public static Identifier MANA_REGENERATION = new Identifier("player", "mana_regeneration");
+
+    /**
+     *  Run mana regeneration
+     */
+    public static void runManaRegeneration() {
+        PacketByteBuf buf = PacketByteBufs.create();
+        ClientPlayNetworking.send(NetworkEvent.MANA_REGENERATION, buf);
+    }
+
 
     /** Identifier for triggering a mouse release (or registering the callback) */
     public static Identifier MOUSE_TRIGGER_RELEASED = new Identifier("mouse", "released");

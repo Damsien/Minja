@@ -9,10 +9,8 @@ import net.minecraft.structure.PostPlacementProcessor;
 import net.minecraft.structure.StructureGeneratorFactory;
 import net.minecraft.structure.StructurePiecesGenerator;
 import net.minecraft.structure.pool.StructurePoolBasedGenerator;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.collection.Pool;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.registry.Registry;
 import net.minecraft.world.Heightmap;
 import net.minecraft.world.biome.SpawnSettings;
 import net.minecraft.world.gen.chunk.VerticalBlockSample;
@@ -23,21 +21,21 @@ import org.apache.logging.log4j.Level;
 import java.util.Optional;
 
 /**
- * Item representing our own-made structures that need to spawn above the land (in the sky) <br><br>
+ * Item representing our own-made structures that need to spawn on the land <br><br>
  *
- * SkyStructures will be used by the structure json files to determine the place of the structure.
+ * LandStructures will be used by the structure json files to determine the place of the structure.
  *
  * @author 	Camille Perrin
  *
  */
-public class SkyStructures extends StructureFeature<StructurePoolFeatureConfig> {
+public class VillageStructures extends StructureFeature<StructurePoolFeatureConfig> {
 
     /**
      * Create the pieces layout of the structure and give it to the game
      * @param codec
      */
-    public SkyStructures(Codec<StructurePoolFeatureConfig> codec) {
-        super(codec, SkyStructures::createPiecesGenerator, PostPlacementProcessor.EMPTY);
+    public VillageStructures(Codec<StructurePoolFeatureConfig> codec) {
+        super(codec, VillageStructures::createPiecesGenerator, PostPlacementProcessor.EMPTY);
     }
 
     /**
@@ -46,8 +44,8 @@ public class SkyStructures extends StructureFeature<StructurePoolFeatureConfig> 
      * @Information No other hostiles mobs will spawn in the structure of the same entity classification.
      */
     public static final Pool<SpawnSettings.SpawnEntry> STRUCTURE_MONSTERS = Pool.of(
-            new SpawnSettings.SpawnEntry(EntityType.ZOMBIE, 100, 4, 9),
-            new SpawnSettings.SpawnEntry(EntityType.WITCH, 100, 2, 3)
+            new SpawnSettings.SpawnEntry(EntityType.VINDICATOR, 100, 4, 9),
+            new SpawnSettings.SpawnEntry(EntityType.WITCH, 100, 4, 9)
     );
 
     /**
@@ -93,29 +91,25 @@ public class SkyStructures extends StructureFeature<StructurePoolFeatureConfig> 
     public static Optional<StructurePiecesGenerator<StructurePoolFeatureConfig>> createPiecesGenerator(StructureGeneratorFactory.Context<StructurePoolFeatureConfig> context) {
 
         // Check if the spot is valid for our structure.
-        if (!SkyStructures.isFeatureChunk(context)) {
+        if (!VillageStructures.isFeatureChunk(context)) {
             return Optional.empty();
         }
 
         // Turns the chunk coordinates into actual coordinates we can use. (Gets center of that chunk)
         BlockPos blockpos = context.chunkPos().getCenterAtY(0);
 
-        // That int will be used to up the structure in the sky
-        int TopLandY = context.chunkGenerator().getHeightOnGround(blockpos.getX(), blockpos.getZ(), Heightmap.Type.WORLD_SURFACE_WG, context.world() );
-        blockpos = blockpos.up(TopLandY + 60);
-
         Optional<StructurePiecesGenerator<StructurePoolFeatureConfig>> structurePiecesGenerator =
                 StructurePoolBasedGenerator.generate(
                         context, // Used for StructurePoolBasedGenerator to get all the proper behaviors done.
                         PoolStructurePiece::new, // Needed in order to create a list of jigsaw pieces when making the structure's layout.
                         blockpos, // Position of the structure. Y value is ignored if last parameter is set to true.
-                        false,  // Special boundary adjustments for villages. false = make pieces not be partially intersecting.
-                        false // Place at heightmap (top land). false = structure will be placed at the passed in blockpos's Y value instead.
+                        false, // Special boundary adjustments for villages. false = make pieces not be partially intersecting.
+                        true // Place at heightmap (top land).
                 );
 
         if(structurePiecesGenerator.isPresent()) {
             // This is returning the coordinates of the center starting piece, for debug
-            Minja.LOGGER.debug("Sky boat at " + blockpos, Level.DEBUG);
+            Minja.LOGGER.debug("Land structure at " + blockpos, Level.DEBUG);
         }
 
         return structurePiecesGenerator;

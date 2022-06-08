@@ -29,8 +29,15 @@ import net.minecraft.world.World;
  */
 
 public class Wand extends MinjaItem {
+
+	/**
+	 * The class Wand creates an object Wand itself.
+	 * We should have only one Wand object : no other class creates a Wand object.
+	 */
 	private static Wand WAND;
 
+	/** Constructor of Wand, using the constructor of Item
+	 */
 	public Wand(Settings settings) {
 		super(settings);
 		WAND = this;

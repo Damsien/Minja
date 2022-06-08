@@ -13,33 +13,35 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.world.World;
 
-/*
- * Grimoire creates a Grimoire object and defines its interactions to the minecraft world.
- * The Grimoire will be used to show the different Minja informations of the player :
- * 	- name, mana, available spells, magic level, etc.
+/**
+ * Item representing a magic Grimoire. <br><br>
+ *
+ * The Grimoire will be used by the player to show his different Minja information :
+ * <ul>
+ *		<li> name, mana, available spells, magic level, etc </li>
+ * </ul>
+ *
+ * @author 	Camille Perrin
+ *
  */
 public class Grimoire extends MinjaItem {
 
-	/*********************************************************************
-	 * 						GENERAL (Constructor + getter)
-	 ********************************************************************* */
-
-	/*
+	/**
 	 * The class Grimoire creates an object Grimoire itself.
 	 * We should have only one Grimoire object : no other class creates a Grimoire object.
 	 */
 	private static Grimoire GRIMOIRE;
 
-	/*
-	 * Constructor of Grimoire, using the constructor of Item.
+	/** Constructor of Grimoire, using the constructor of Item
 	 */
 	public Grimoire(Settings settings) {
 		super(settings);
 		GRIMOIRE = this;
 	}
 
-	/*
-	 * A getter to access the Grimoire object
+	/** A getter to access the Grimoire object
+	 *
+	 * @return the static instance of Grimoire
 	 */
 	public static Item getGrimoire(){
 		return GRIMOIRE;
@@ -80,11 +82,7 @@ public class Grimoire extends MinjaItem {
 		}
 	}
 
-	/*********************************************************************
-	 * 						WORLD INTERACTIONS : Right-click
-	 ********************************************************************* */
-
-	/*
+	/**
 	 * This method is used when the player use right click with the Wand
 	 */
 	@Override

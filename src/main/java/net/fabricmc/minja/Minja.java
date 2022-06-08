@@ -30,7 +30,7 @@ import org.slf4j.LoggerFactory;
 import java.util.HashMap;
 import java.util.Map;
 
-/*
+/**
  * Minja is the class that if first used when the MOD is launching.
  * It is used for initialisation of minja items, spells, etc
  */
@@ -40,13 +40,13 @@ public class Minja implements ModInitializer {
 	 * 						GENERAL
 	 ********************************************************************* */
 
-	/*
+	/**
 	 * That String defines how we will refer to the entire project.
 	 * Whenever we need to find something that our MOD add to the game, it will be under that name
 	 */
 	private static final String MOD_ID = "minja";
 
-	/*
+	/**
 	 * This logger is used to write text to the console and the log file.
 	 */
 	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
@@ -56,7 +56,7 @@ public class Minja implements ModInitializer {
 	* 						ITEMS
 	********************************************************************* */
 
-	/*
+	/**
 	 * The ItemGroup Minja is creating an inventory group of all the minja objects.
 	 * Any Minja object will be find in the inventory (creative gamemode) under the Minja Group
 	 */
@@ -64,14 +64,14 @@ public class Minja implements ModInitializer {
 					new Identifier("minja"))
 			.icon(() -> new ItemStack(Wand.getWand())).build();
 
-	/*
+	/**
 	 * Every item created by Minja has to be instancied one here
 	 */
 	private static Wand WAND = new Wand(new FabricItemSettings().group(MinjaItemGroup).maxCount(1).maxDamage(0));
 	private static Grimoire GRIMOIRE = new Grimoire(new FabricItemSettings().group(MinjaItemGroup).maxCount(1).maxDamage(0));
 	/* ****************************************************************** */
 
-	/*
+	/**
 	 * Every Spell that is linked to an item has is item instancied here
 	 */
 	public static final Item LIGHTNINGBALL = new LightningBallItem(new Item.Settings().group(MinjaItemGroup).maxCount(1));
@@ -79,7 +79,7 @@ public class Minja implements ModInitializer {
 	public static final Item SOUL_SPARK = new SoulSparkItem(new Item.Settings().group(MinjaItemGroup).maxCount(1));
 	/* ****************************************************************** */
 
-	/*
+	/**
 	 * Regardless of if a spell is linked to an item, every spell has to be an 'Entity' in the game.
 	 * Every spell Entity is registered here
 	 */
@@ -114,14 +114,14 @@ public class Minja implements ModInitializer {
 	 * 						SPELLS INITIALISATION
 	 ********************************************************************* */
 
-	/*
+	/**
 	 * CETTE LIGNE DOIT ETRE EXPLIQUEE : ARNAUD ???
 	 * En plus spells_map n'est jamais utilisé, normal ?
 	 * TODO : A EXPLIQUER
 	 */
 	public static Map<String, Spell> SPELLS_MAP = initializeAllSpells();
 
-	/*
+	/**
 	 * CETTE FINCTION DOIT ETRE EXPLIQUEE : DAMIEN
 	 * TODO : A EXPLIQUER
 	 */
@@ -138,7 +138,7 @@ public class Minja implements ModInitializer {
 	 * 						ITEMS INITIALISATION
 	 ********************************************************************* */
 
-	/*
+	/**
 	 * This code runs as soon as Minecraft is in a mod-load-ready state.
 	 * It is used to initialize (register) every item we created so it can be in the game.
 	 * Warning : some things (like resources) may still be uninitialized.

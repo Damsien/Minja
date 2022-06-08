@@ -1,6 +1,6 @@
 {
   // The base structure class to use for the behavior of the structure. (Like extra terrain checks and such)
-  "type": "minecraft:village",
+  "type": "minja:land_structures",
 
   "config": {
     // the path to the template pool json file to use
@@ -15,7 +15,7 @@
 
   // If true, land will be add around the bottom of the structure. (Based on the starting piece's y value)
   // We put true since the structure is on the ground
-  "adapt_noise": false,
+  "adapt_noise": true,
 
   // What mobs can spawn over time in the structure.
   "spawn_overrides": {

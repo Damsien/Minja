@@ -1,0 +1,26 @@
+{
+  "replace": false,
+
+  "_comment": " This file is used to choose in which biomes our structure will be in ",
+  "values": [
+    "#minja:collections/any_forest",
+    "#minja:collections/badlands",
+    "#minja:collections/beaches",
+    "#minja:collections/caves",
+    "#minja:collections/deserts",
+    "#minja:collections/floral",
+    "#minja:collections/hills",
+    "#minja:collections/icy",
+    "#minja:collections/jungle",
+    "#minja:collections/meadows",
+    "#minja:collections/mountains",
+    "#minja:collections/mushrooms",
+    "#minja:collections/plains",
+    "#minja:collections/rocky_mountains",
+    "#minja:collections/savannas",
+    "#minja:collections/plains",
+    "#minja:collections/stony_shores",
+    "#minja:collections/swamps",
+    "#minja:collections/taigas"
+  ]
+}

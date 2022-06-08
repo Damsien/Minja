@@ -1,0 +1,23 @@
+{
+  // What structures to pick to try and spawn if a spot passes the placement check.
+  // If two or more structures in this list can spawn in a biome at a spot, a random one based on weight is chosen to spawn
+  "structures": [
+    {
+      "structure": "minja:village/heavy_statue",
+      "weight": 1
+    }
+  ],
+  "placement": {
+    // Identifier number, which is unique for every build
+    "salt": 165723905,
+
+    // The average distance apart in chunks for spawn attempts
+    "spacing": 20,
+
+    // Minimum distance apart in chunks for spawn attempts
+    "separation": 6,
+
+    // The kind of placement to use.
+    "type": "minecraft:random_spread"
+  }
+}

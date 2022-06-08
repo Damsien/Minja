@@ -11,7 +11,6 @@ import io.github.cottonmc.cotton.gui.widget.icon.Icon;
 import io.github.cottonmc.cotton.gui.widget.icon.TextureIcon;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.minja.PlayerMinja;
 import net.fabricmc.minja.objects.Grimoire;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.ClickableWidget;

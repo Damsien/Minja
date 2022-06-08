@@ -90,6 +90,9 @@ public abstract class PlayerEntityMixin implements PlayerMinja, PlayerEvent {
         if(world.isClient && serverPlayer != null) {
             setMana(((PlayerMinja)serverPlayer).getMana());
             ((ServerPlayerMinja)serverPlayer).setPlayer(this);
+        }
+
+        if(world.isClient) {
             runManaRegeneration();
         }
 

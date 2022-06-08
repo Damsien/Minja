@@ -1,7 +1,7 @@
 package net.fabricmc.minja.hud;
 
 
-import net.fabricmc.minja.PlayerMinja;
+import net.fabricmc.minja.player.PlayerMinja;
 import net.fabricmc.minja.math.CartesianPoint;
 import net.fabricmc.minja.math.Operations;
 import net.fabricmc.minja.math.PolarPoint;
@@ -14,7 +14,6 @@ import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.command.argument.EntityAnchorArgumentType;
 import net.minecraft.sound.SoundEvents;
-import net.minecraft.text.LiteralText;
 import net.minecraft.util.math.Vec3d;
 
 

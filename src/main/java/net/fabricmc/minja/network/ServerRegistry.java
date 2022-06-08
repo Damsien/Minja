@@ -1,8 +1,10 @@
 package net.fabricmc.minja.network;
 
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.fabricmc.minja.PlayerMinja;
-import net.minecraft.block.Block;
+import net.fabricmc.minja.Minja;
+import net.fabricmc.minja.mixin.PlayerEntityMixin;
+import net.fabricmc.minja.player.PlayerMinja;
+import net.fabricmc.minja.spells.Spell;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -33,6 +35,17 @@ public class ServerRegistry {
      * @author      Tom Froment
      */
     public static void registerAllEvents() {
+
+        ServerPlayNetworking.registerGlobalReceiver(NetworkEvent.MANA_REGENERATION, (client, player, handler, buf, sender) -> {
+            // Read packet data on the event loop
+            buf.clear();
+
+            client.execute(() -> {
+                // Everything in this lambda is run on the render thread
+                ((PlayerMinja)player).runManaRegeneration();
+
+            });
+        });
 
         ServerPlayNetworking.registerGlobalReceiver(NetworkEvent.UPDATE_SPELL_INDEX, (client, player, handler, buf, sender) -> {
             // Read packet data on the event loop

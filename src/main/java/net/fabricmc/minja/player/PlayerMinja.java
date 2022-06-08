@@ -1,5 +1,6 @@
-package net.fabricmc.minja;
+package net.fabricmc.minja.player;
 
+import net.fabricmc.minja.clocks.ManaClock;
 import net.fabricmc.minja.exceptions.NotEnoughManaException;
 import net.fabricmc.minja.exceptions.SpellNotFoundException;
 import net.fabricmc.minja.spells.Spell;
@@ -7,6 +8,11 @@ import net.fabricmc.minja.spells.Spell;
 import java.util.List;
 
 public interface PlayerMinja {
+
+    /**
+     * MAX_SPELLS is the maximum spells that the player can use
+     */
+    public static final int MAX_SPELLS = 8;
 
     // Spells
 
@@ -74,6 +80,12 @@ public interface PlayerMinja {
     public void addMana(int amount);
 
     /**
+     * Set the amount of mana the player have
+     * @param amount between 0 and 100
+     */
+    public void setMana(int amount);
+
+    /**
      * Remove the amount of mana to the current amount the player has
      * @param amount between 0 and 100
      * @throws NotEnoughManaException when currentAmount-removedAmount < 0
@@ -91,5 +103,15 @@ public interface PlayerMinja {
      * @return max_mana
      */
     public int getManaMax();
+
+    /**
+     * Stop the player's mana regeneration
+    */
+    public void stopManaRegeneration();
+
+    /**
+     * Start the player's mana regeneration
+     */
+    public void runManaRegeneration();
 
 }

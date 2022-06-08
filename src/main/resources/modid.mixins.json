@@ -4,12 +4,13 @@
   "package": "net.fabricmc.minja.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
+    "ServerPlayerEntityMixin"
   ],
   "client": [
     "InGameHudMixin",
-    "SpellHudMixin",
-    "PlayerEntityMixin",
     "LivingEntityMixin",
+    "PlayerEntityMixin",
+    "SpellHudMixin",
     "StructureFeatureAccessor"
   ],
   "injectors": {

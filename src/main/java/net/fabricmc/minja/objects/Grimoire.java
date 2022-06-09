@@ -21,7 +21,6 @@ import net.minecraft.world.World;
  *		<li> name, mana, available spells, magic level, etc </li>
  * </ul>
  *
- * @author 	Camille Perrin
  *
  */
 public class Grimoire extends MinjaItem {

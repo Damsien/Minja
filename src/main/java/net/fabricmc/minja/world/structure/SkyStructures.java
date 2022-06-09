@@ -27,7 +27,6 @@ import java.util.Optional;
  *
  * SkyStructures will be used by the structure json files to determine the place of the structure.
  *
- * @author 	Camille Perrin
  *
  */
 public class SkyStructures extends StructureFeature<StructurePoolFeatureConfig> {

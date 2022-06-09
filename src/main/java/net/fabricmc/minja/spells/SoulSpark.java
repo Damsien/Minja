@@ -11,6 +11,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.LiteralText;
 import net.minecraft.util.Hand;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 
@@ -18,7 +19,7 @@ public class SoulSpark extends SpellProjectile {
 
 
     public SoulSpark() {
-        super("Soul Spark", 20, new SoulSparkTexture(), "Complex");
+        super("Soul Spark", 20, new SoulSparkTexture(), new Identifier("spells:textures/item/soul_spark.png"), "Basic");
     }
 
     @Override

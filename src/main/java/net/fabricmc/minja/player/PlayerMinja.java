@@ -71,6 +71,8 @@ public interface PlayerMinja {
 
     public int getActiveSpellIndex();
 
+    public void swapSpells(int indexSpell1, int indexSpell2);
+
     // Mana
 
     /**

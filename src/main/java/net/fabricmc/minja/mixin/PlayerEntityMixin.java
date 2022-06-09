@@ -205,6 +205,13 @@ public abstract class PlayerEntityMixin implements PlayerMinja, PlayerEvent {
         return this.activeSpell;
     }
 
+    public void swapSpells(int indexSpell1, int indexSpell2) {
+        Spell spell1 = spells.get(indexSpell1);
+        Spell spell2 = spells.get(indexSpell2);
+        spells.add(indexSpell1, spell2);
+        spells.add(indexSpell2, spell1);
+    }
+
 
     // Mana
 

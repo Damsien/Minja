@@ -45,7 +45,7 @@ public class GrimoireGui extends LightweightGuiDescription {
         displayedWidgets = new ArrayList<>();
         MatrixStack matrixStack = new MatrixStack();
         setRootPanel(root);
-        root.setSize(126, 180); // 7 & 10 for 18x18 gridpannel
+        root.setSize(144, 198); // 8 & 11 for 18x18 gridpannel
         // root.setLocation(145,179);
         root.setInsets(Insets.ROOT_PANEL);
         BACKGROUND.paintBackground(matrixStack, 0,0, root);
@@ -55,6 +55,7 @@ public class GrimoireGui extends LightweightGuiDescription {
 
         /* PAGE 2 */
         pages.put(2, "page2");
+        initSpellWheel();
 
         //WLabel mana = new WLabel(new LiteralText("Current mana : " + ((PlayerMinja) player).getMana() + "/" + ((PlayerMinja) player).getManaMax()), 0x000000);
         //pages.get(2).add(new Component(mana, 0, 5, 2, 1));
@@ -119,6 +120,27 @@ public class GrimoireGui extends LightweightGuiDescription {
         display();
     }
 
+    private void initSpellWheel() {
+        buttonsSpellWheel = new HashMap<>();
+        buttonPrioritySpellWheel = new ArrayList<>();
+        buttonsSpellWheel.put(0, new Component(new TransparentButton(), 6, 5, 1, 1));
+        buttonPrioritySpellWheel.add(0);
+        buttonsSpellWheel.put(1, new Component(new TransparentButton(), 6, 7, 1, 1));
+        buttonPrioritySpellWheel.add(6);
+        buttonsSpellWheel.put(2, new Component(new TransparentButton(), 5, 8, 1, 1));
+        buttonPrioritySpellWheel.add(3);
+        buttonsSpellWheel.put(3, new Component(new TransparentButton(), 2, 8, 1, 1));
+        buttonPrioritySpellWheel.add(5);
+        buttonsSpellWheel.put(4, new Component(new TransparentButton(), 1, 7, 1, 1));
+        buttonPrioritySpellWheel.add(1);
+        buttonsSpellWheel.put(5, new Component(new TransparentButton(), 1, 5, 1, 1));
+        buttonPrioritySpellWheel.add(7);
+        buttonsSpellWheel.put(6, new Component(new TransparentButton(), 2, 4, 1, 1));
+        buttonPrioritySpellWheel.add(2);
+        buttonsSpellWheel.put(7, new Component(new TransparentButton(), 5, 4, 1, 1));
+        buttonPrioritySpellWheel.add(4);
+    }
+
     private List<Component> getComponents(Integer page) {
         try {
             return (List<Component>) GrimoireGui.class.getMethod(pages.get(page)).invoke(this);
@@ -142,13 +164,6 @@ public class GrimoireGui extends LightweightGuiDescription {
         TransparentButton button = new TransparentButton(new TextureIcon(new Identifier("gui:textures/leftarrow.png")), null);
         button = button.setOnClick(new PreviousPage());
         components.add(new Component(button, 0, 10, 1, 1));
-
-        WLabel mana = new WLabel(new LiteralText("Nb clic btn : " + cpt));
-        components.add(new Component(mana, 0, 5, 3, 1));
-
-        TransparentButton button2 = new TransparentButton(new TextureIcon(new Identifier("gui:textures/leftarrow.png")), null);
-        button2 = button2.setOnClick(new IncCpt());
-        components.add(new Component(button2, 2, 2, 1, 1));
 
         return components;
     }
@@ -186,6 +201,12 @@ public class GrimoireGui extends LightweightGuiDescription {
             super();
             this.icon = icon;
             this.label = label;
+        }
+
+        public TransparentButton() {
+            super();
+            this.icon = null;
+            this.label = null;
         }
 
         @Environment(EnvType.CLIENT)
@@ -226,6 +247,17 @@ public class GrimoireGui extends LightweightGuiDescription {
         public TransparentButton setOnClick(@Nullable Runnable onClick) {
             return (TransparentButton) super.setOnClick(onClick);
         }
+
+        @Override
+        public TransparentButton setLabel(Text label) {
+            this.label = label;
+            return this;
+        }
+        @Override
+        public TransparentButton setIcon(Icon icon) {
+            this.icon = icon;
+            return this;
+        }
     }
 
     class NextPage implements Runnable {
@@ -241,15 +273,6 @@ public class GrimoireGui extends LightweightGuiDescription {
         @Override
         public void run() {
             previousPage();
-        }
-    }
-
-    class IncCpt implements Runnable {
-
-        @Override
-        public void run() {
-            cpt = cpt + 1;
-            update();
         }
     }
 

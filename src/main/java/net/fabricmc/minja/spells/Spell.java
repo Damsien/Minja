@@ -11,12 +11,14 @@ import net.minecraft.util.Identifier;
 public abstract class Spell {
     private String name;
     private int manaCost;
-    private Texture icon;
+    private Identifier icon;
+    private Texture texture;
     private String type;
 
-    public Spell(String name, int manaCost, Texture icon, String type) {
+    public Spell(String name, int manaCost, Texture texture, Identifier icon, String type) {
         this.name = name;
         this.manaCost = manaCost;
+        this.texture = texture;
         this.icon = icon;
         this.type = type;
     }
@@ -35,7 +37,11 @@ public abstract class Spell {
         return manaCost;
     }
 
-    public Texture getIcon() {
+    public Texture getTexture() {
+        return texture;
+    }
+
+    public Identifier getIcon() {
         return icon;
     }
 

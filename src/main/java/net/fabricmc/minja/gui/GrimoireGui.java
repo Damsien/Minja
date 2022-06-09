@@ -12,6 +12,8 @@ import io.github.cottonmc.cotton.gui.widget.icon.TextureIcon;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.minja.objects.Grimoire;
+import net.fabricmc.minja.player.PlayerMinja;
+import net.fabricmc.minja.spells.Spell;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.util.math.MatrixStack;
@@ -37,10 +39,17 @@ public class GrimoireGui extends LightweightGuiDescription {
 
     private Integer currentPage;
 
+    private PlayerMinja player;
+
+    private Map<Integer, Component> buttonsSpellWheel;
+
+    private List<Integer> buttonPrioritySpellWheel;
+
     private WGridPanel root = new WGridPanel();
 
     public GrimoireGui(PlayerEntity player) {
         pages = new HashMap<>();
+        this.player = (PlayerMinja) player;
         currentPage = 1;
         displayedWidgets = new ArrayList<>();
         MatrixStack matrixStack = new MatrixStack();
@@ -145,13 +154,28 @@ public class GrimoireGui extends LightweightGuiDescription {
         try {
             return (List<Component>) GrimoireGui.class.getMethod(pages.get(page)).invoke(this);
         } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-            System.out.print("AAAAAAAAAAAAAAAAAAAA" + e.toString());
             return null;
         }
     }
 
     public List<Component> page1() {
         List<Component> components = new ArrayList<>();
+
+        WLabel pageNumber = new WLabel(new LiteralText("Page : " + currentPage + "/" + pages.size()));
+        components.add(new Component(pageNumber, 5, 0, 3, 1));
+
+        WLabel name = new WLabel(new LiteralText("Name : " + ((PlayerEntity) player).getName().getString()));
+        components.add(new Component(name, 0, 2, 3, 1));
+
+        WLabel sorcererClass = new WLabel(new LiteralText("Class : " + "Novice"));
+        components.add(new Component(sorcererClass, 0, 3, 3, 1));
+
+        WLabel level = new WLabel(new LiteralText("Level : " + "1"));
+        components.add(new Component(level, 0, 4, 3, 1));
+
+        WLabel manaMax = new WLabel(new LiteralText("Maximum mana : " + player.getManaMax()));
+        components.add(new Component(manaMax, 0, 5, 3, 1));
+
         TransparentButton button = new TransparentButton(new TextureIcon(new Identifier("gui:textures/rightarrow.png")), null);
         button = button.setOnClick(new NextPage());
         components.add(new Component(button, 7, 10, 1, 1));
@@ -161,6 +185,26 @@ public class GrimoireGui extends LightweightGuiDescription {
 
     public List<Component> page2() {
         List<Component> components = new ArrayList<>();
+
+        WLabel pageNumber = new WLabel(new LiteralText("Page : " + currentPage + "/" + pages.size()));
+        components.add(new Component(pageNumber, 5, 0, 3, 1));
+
+        WSprite spellWheel = new WSprite(new Identifier("gui:textures/spellwheel.png"));
+        components.add(new Component(spellWheel, 1, 4, 6, 5));
+
+        int selectedSpell = player.getActiveSpellIndex();
+        List<Spell> spells = player.getSpells();
+        int currentSpell = 0;
+
+        for(int i = 0; i < buttonsSpellWheel.size(); i++) {
+            if(buttonPrioritySpellWheel.get(i) < spells.size()) {
+                Component currentButton = buttonsSpellWheel.get(i);
+                ((TransparentButton) currentButton.getWidget()).setIcon(new TextureIcon(spells.get(currentSpell).getIcon()));
+                components.add(currentButton);
+                currentSpell++;
+            }
+        }
+
         TransparentButton button = new TransparentButton(new TextureIcon(new Identifier("gui:textures/leftarrow.png")), null);
         button = button.setOnClick(new PreviousPage());
         components.add(new Component(button, 0, 10, 1, 1));

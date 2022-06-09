@@ -189,15 +189,19 @@ public class GrimoireGui extends LightweightGuiDescription {
         WLabel pageNumber = new WLabel(new LiteralText("Page : " + currentPage + "/" + pages.size()));
         components.add(new Component(pageNumber, 5, 0, 3, 1));
 
-        WSprite spellWheel = new WSprite(new Identifier("gui:textures/spellwheel.png"));
-        components.add(new Component(spellWheel, 1, 4, 6, 5));
+        /* SPELL WHEEL */
 
         int selectedSpell = player.getActiveSpellIndex();
         List<Spell> spells = player.getSpells();
+        int nbSpells = spells.size();
         int currentSpell = 0;
 
+        WSprite spellWheel = new WSprite(new Identifier("gui:textures/spellwheel/spellwheel" + nbSpells + ".png"));
+        components.add(new Component(spellWheel, 1, 4, 6, 5));
+
+
         for(int i = 0; i < buttonsSpellWheel.size(); i++) {
-            if(buttonPrioritySpellWheel.get(i) < spells.size()) {
+            if(buttonPrioritySpellWheel.get(i) < nbSpells) {
                 Component currentButton = buttonsSpellWheel.get(i);
                 ((TransparentButton) currentButton.getWidget()).setIcon(new TextureIcon(spells.get(currentSpell).getIcon()));
                 components.add(currentButton);

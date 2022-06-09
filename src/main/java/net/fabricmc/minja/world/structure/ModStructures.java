@@ -13,7 +13,6 @@ import net.minecraft.world.gen.feature.StructurePoolFeatureConfig;
 /**
  * ModStructures is used to register all of our own-made structures into the minecraft server. <br><br>
  *
- * @author 	Camille Perrin
  *
  */
 public class ModStructures {

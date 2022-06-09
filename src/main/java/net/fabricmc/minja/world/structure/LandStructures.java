@@ -25,7 +25,6 @@ import java.util.Optional;
  *
  * LandStructures will be used by the structure json files to determine the place of the structure.
  *
- * @author 	Camille Perrin
  *
  */
 public class LandStructures extends StructureFeature<StructurePoolFeatureConfig> {

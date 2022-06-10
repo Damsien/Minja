@@ -255,8 +255,6 @@ public abstract class PlayerEntityMixin implements PlayerMinja, PlayerEvent {
      */
     @Override
     public void removeMana(int amount) throws NotEnoughManaException {
-        System.out.println(this.getClass());
-        System.out.println(amount);
         if(mana-amount < 0) {
             throw new NotEnoughManaException("Not enought mana", amount, mana);
         }
@@ -318,7 +316,7 @@ public abstract class PlayerEntityMixin implements PlayerMinja, PlayerEvent {
      * @param ci
      */
     @Inject(method = "writeCustomDataToNbt", at = @At("RETURN"))
-    public void writeCustomDataToNbt(NbtCompound nbt, CallbackInfo ci) {
+    private void writeCustomDataToNbt(NbtCompound nbt, CallbackInfo ci) {
         nbt.putInt("mana", mana);
         int i = 0;
         for(Spell spell : spells) {
@@ -337,7 +335,7 @@ public abstract class PlayerEntityMixin implements PlayerMinja, PlayerEvent {
      * @param ci
      */
     @Inject(method = "readCustomDataFromNbt", at = @At("RETURN"))
-    public void readCustomDataFromNbt(NbtCompound nbt, CallbackInfo ci) {
+    private void readCustomDataFromNbt(NbtCompound nbt, CallbackInfo ci) {
         setMana(nbt.getInt("mana"));
         for(int i = 0; i < MAX_SPELLS; i++) {
             if(nbt.contains("spell"+i)) {

@@ -130,6 +130,10 @@ public class Minja implements ModInitializer {
 
 		Spell lightningBall = new LightningBall();
 		map.put(lightningBall.getName()+"/"+lightningBall.getType(), lightningBall);
+		Spell spark = new Spark();
+		map.put(spark.getName()+"/"+spark.getType(), spark);
+		Spell soulSpark = new SoulSpark();
+		map.put(soulSpark.getName()+"/"+soulSpark.getType(), soulSpark);
 
 		return map;
 	}

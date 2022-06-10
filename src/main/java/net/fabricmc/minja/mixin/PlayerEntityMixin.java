@@ -5,6 +5,7 @@ import net.fabricmc.minja.Minja;
 import net.fabricmc.minja.events.PlayerEvent;
 import net.fabricmc.minja.exceptions.NotEnoughManaException;
 import net.fabricmc.minja.exceptions.SpellNotFoundException;
+import net.fabricmc.minja.network.NetworkEvent;
 import net.fabricmc.minja.player.PlayerMinja;
 import net.fabricmc.minja.objects.MinjaItem;
 import net.fabricmc.minja.spells.LightningBall;
@@ -104,6 +105,8 @@ public abstract class PlayerEntityMixin implements PlayerMinja, PlayerEvent {
         if(world.isClient && serverPlayer != null) {
             setMana(((PlayerMinja)serverPlayer).getMana());
             setActiveSpell(((PlayerMinja)serverPlayer).getActiveSpellIndex());
+            spells.clear();
+            spells.addAll(((PlayerMinja) serverPlayer).getSpells());
         }
 
     }
@@ -223,7 +226,9 @@ public abstract class PlayerEntityMixin implements PlayerMinja, PlayerEvent {
     public void swapSpells(int indexSpell1, int indexSpell2) {
         Spell spell1 = spells.get(indexSpell1);
         Spell spell2 = spells.get(indexSpell2);
+        spells.remove(indexSpell1);
         spells.add(indexSpell1, spell2);
+        spells.remove(indexSpell2);
         spells.add(indexSpell2, spell1);
     }
 
@@ -321,7 +326,7 @@ public abstract class PlayerEntityMixin implements PlayerMinja, PlayerEvent {
         int i = 0;
         for(Spell spell : spells) {
             if(spell != null) {
-                nbt.putString("spell"+i, spell + "/" + spell.getType() + "/" + i);
+                nbt.putString("spell"+i, spell.getName() + "/" + spell.getType());
                 i++;
             }
         }
@@ -337,11 +342,12 @@ public abstract class PlayerEntityMixin implements PlayerMinja, PlayerEvent {
     @Inject(method = "readCustomDataFromNbt", at = @At("RETURN"))
     private void readCustomDataFromNbt(NbtCompound nbt, CallbackInfo ci) {
         setMana(nbt.getInt("mana"));
+        spells.clear();
         for(int i = 0; i < MAX_SPELLS; i++) {
             if(nbt.contains("spell"+i)) {
                 addSpell(Minja.SPELLS_MAP.get(
-                        nbt.getString("spell"+i)+"/"+nbt.getString("spell"+i))
-                );
+                        nbt.getString("spell"+i)
+                ));
             }
         }
         if(nbt.contains("activeSpell")) {

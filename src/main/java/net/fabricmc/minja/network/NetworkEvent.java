@@ -91,4 +91,20 @@ public class NetworkEvent {
         ClientPlayNetworking.send(NetworkEvent.UNHIGHLIGHT_ALL_BLOCKS, PacketByteBufs.empty());
     }
 
+    /** Identifier for "swap_spells" */
+    public static Identifier SWAP_SPELLS = new Identifier("spells", "swap_spells");
+
+    /**
+     * Swap two spells for a player
+     *
+     * @param spellIndex1 the position of the first spell
+     * @param spellIndex2 the position of the second spell
+     */
+    public static void swapSpells(int spellIndex1, int spellIndex2) {
+        PacketByteBuf buf = PacketByteBufs.create();
+        buf.writeInt(spellIndex1);
+        buf.writeInt(spellIndex2);
+        ClientPlayNetworking.send(NetworkEvent.SWAP_SPELLS, buf);
+    }
+
 }

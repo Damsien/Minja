@@ -6,18 +6,25 @@ import io.github.cottonmc.cotton.gui.client.LightweightGuiDescription;
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
 import io.github.cottonmc.cotton.gui.widget.*;
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment;
+import io.github.cottonmc.cotton.gui.widget.data.InputResult;
 import io.github.cottonmc.cotton.gui.widget.data.Insets;
 import io.github.cottonmc.cotton.gui.widget.icon.Icon;
 import io.github.cottonmc.cotton.gui.widget.icon.TextureIcon;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.minja.network.NetworkEvent;
 import net.fabricmc.minja.objects.Grimoire;
 import net.fabricmc.minja.player.PlayerMinja;
 import net.fabricmc.minja.spells.Spell;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.screen.narration.Narration;
+import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
+import net.minecraft.client.gui.screen.narration.NarrationPart;
 import net.minecraft.client.gui.widget.ClickableWidget;
+import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
@@ -41,7 +48,7 @@ public class GrimoireGui extends LightweightGuiDescription {
 
     private PlayerMinja player;
 
-    private Map<Integer, Component> buttonsSpellWheel;
+    private List<Component> buttonsSpellWheel;
 
     private List<Integer> buttonPrioritySpellWheel;
 
@@ -112,15 +119,9 @@ public class GrimoireGui extends LightweightGuiDescription {
         root.validate(this);
     }
 
-    public void nextPage(){
+    public void changePage(int direction){
         delete();
-        currentPage = currentPage + 1;
-        display();
-    }
-
-    public void previousPage(){
-        delete();
-        currentPage = currentPage - 1;
+        currentPage = currentPage + direction;
         display();
     }
 
@@ -129,25 +130,29 @@ public class GrimoireGui extends LightweightGuiDescription {
         display();
     }
 
+    public void refresh(){
+        root.validate(this);
+    }
+
     private void initSpellWheel() {
-        buttonsSpellWheel = new HashMap<>();
+        buttonsSpellWheel = new ArrayList<>();
         buttonPrioritySpellWheel = new ArrayList<>();
-        buttonsSpellWheel.put(0, new Component(new TransparentButton(), 6, 5, 1, 1));
-        buttonPrioritySpellWheel.add(0);
-        buttonsSpellWheel.put(1, new Component(new TransparentButton(), 6, 7, 1, 1));
-        buttonPrioritySpellWheel.add(6);
-        buttonsSpellWheel.put(2, new Component(new TransparentButton(), 5, 8, 1, 1));
-        buttonPrioritySpellWheel.add(3);
-        buttonsSpellWheel.put(3, new Component(new TransparentButton(), 2, 8, 1, 1));
-        buttonPrioritySpellWheel.add(5);
-        buttonsSpellWheel.put(4, new Component(new TransparentButton(), 1, 7, 1, 1));
-        buttonPrioritySpellWheel.add(1);
-        buttonsSpellWheel.put(5, new Component(new TransparentButton(), 1, 5, 1, 1));
-        buttonPrioritySpellWheel.add(7);
-        buttonsSpellWheel.put(6, new Component(new TransparentButton(), 2, 4, 1, 1));
-        buttonPrioritySpellWheel.add(2);
-        buttonsSpellWheel.put(7, new Component(new TransparentButton(), 5, 4, 1, 1));
-        buttonPrioritySpellWheel.add(4);
+        buttonsSpellWheel.add(0, new Component(new TransparentButton(), 6, 5, 1, 1));
+        buttonPrioritySpellWheel.add(0, 0);
+        buttonsSpellWheel.add(1, new Component(new TransparentButton(), 6, 7, 1, 1));
+        buttonPrioritySpellWheel.add(1, 6);
+        buttonsSpellWheel.add(2, new Component(new TransparentButton(), 5, 8, 1, 1));
+        buttonPrioritySpellWheel.add(2, 3);
+        buttonsSpellWheel.add(3, new Component(new TransparentButton(), 2, 8, 1, 1));
+        buttonPrioritySpellWheel.add(3, 5);
+        buttonsSpellWheel.add(4, new Component(new TransparentButton(), 1, 7, 1, 1));
+        buttonPrioritySpellWheel.add(4, 1);
+        buttonsSpellWheel.add(5, new Component(new TransparentButton(), 1, 5, 1, 1));
+        buttonPrioritySpellWheel.add(5, 7);
+        buttonsSpellWheel.add(6, new Component(new TransparentButton(), 2, 4, 1, 1));
+        buttonPrioritySpellWheel.add(6, 2);
+        buttonsSpellWheel.add(7, new Component(new TransparentButton(), 5, 4, 1, 1));
+        buttonPrioritySpellWheel.add(7, 4);
     }
 
     private List<Component> getComponents(Integer page) {
@@ -189,6 +194,9 @@ public class GrimoireGui extends LightweightGuiDescription {
         WLabel pageNumber = new WLabel(new LiteralText("Page : " + currentPage + "/" + pages.size()));
         components.add(new Component(pageNumber, 5, 0, 3, 1));
 
+        WLabel spellDescription = new WLabel(new LiteralText(""));
+        components.add(new Component(spellDescription, 0, 2, 6, 1));
+
         /* SPELL WHEEL */
 
         int selectedSpell = player.getActiveSpellIndex();
@@ -200,13 +208,14 @@ public class GrimoireGui extends LightweightGuiDescription {
         components.add(new Component(spellWheel, 1, 4, 6, 5));
 
 
-        for(int i = 0; i < buttonsSpellWheel.size(); i++) {
-            if(buttonPrioritySpellWheel.get(i) < nbSpells) {
-                Component currentButton = buttonsSpellWheel.get(i);
-                ((TransparentButton) currentButton.getWidget()).setIcon(new TextureIcon(spells.get(currentSpell).getIcon()));
-                components.add(currentButton);
-                currentSpell++;
-            }
+        for(Component currentComponent : getButtonsSpellWheelDisplayed(nbSpells)) {
+            TransparentButton currentButton = (TransparentButton) currentComponent.getWidget();
+            currentButton.setIcon(new TextureIcon(spells.get(currentSpell).getIcon()));
+            currentComponent.setWidget(currentButton.setOnHover(new AddSpellDescription(currentSpell, spellDescription)));
+            currentComponent.setWidget(currentButton.setOnHoverLost(new RemoveSpellDescription(spellDescription)));
+            currentComponent.setWidget(currentButton.setOnClick(new SwapSpells(nbSpells, selectedSpell, player)));
+            components.add(currentComponent);
+            currentSpell++;
         }
 
         TransparentButton button = new TransparentButton(new TextureIcon(new Identifier("gui:textures/leftarrow.png")), null);
@@ -214,6 +223,16 @@ public class GrimoireGui extends LightweightGuiDescription {
         components.add(new Component(button, 0, 10, 1, 1));
 
         return components;
+    }
+
+    public List<Component> getButtonsSpellWheelDisplayed(int nbSpells) {
+        List<Component> buttonsDisplayed= new ArrayList<>();
+        for(int i = 0; i < buttonsSpellWheel.size(); i++) {
+            if(buttonPrioritySpellWheel.get(i) < nbSpells) {
+                buttonsDisplayed.add(buttonsSpellWheel.get(i));
+            }
+        }
+        return buttonsDisplayed;
     }
 
     class Component {
@@ -236,6 +255,10 @@ public class GrimoireGui extends LightweightGuiDescription {
         public WWidget getWidget(){
             return this.widget;
         }
+
+        public void setWidget(WWidget widget){
+            this.widget = widget;
+        }
     }
 
     class TransparentButton extends WButton {
@@ -244,6 +267,16 @@ public class GrimoireGui extends LightweightGuiDescription {
         private Icon icon = null;
         @Nullable
         private Text label;
+
+        @Nullable
+        private Runnable onHover = null;
+
+        @Nullable
+        private Runnable onHoverLost = null;
+
+        private boolean recentlyHovered = false;
+
+        private boolean clicked = false;
 
         public TransparentButton(Icon icon, Text label) {
             super();
@@ -255,6 +288,64 @@ public class GrimoireGui extends LightweightGuiDescription {
             super();
             this.icon = null;
             this.label = null;
+        }
+
+        @Environment(EnvType.CLIENT)
+        @Override
+        public void tick() {
+            if(isHovered()) { // onHover
+                recentlyHovered = true;
+                if(onHover != null) {onHover.run();}
+            } else {
+                if(recentlyHovered) { // onHoverLost
+                    recentlyHovered = false;
+                    if(onHoverLost != null) {onHoverLost.run();}
+                }
+            }
+        }
+
+        /**
+         * Gets the hover handler of this button.
+         *
+         * @return the hover handler
+         * @since 2.2.0
+         */
+        @Nullable
+        public Runnable getOnHover() {
+            return onHover;
+        }
+
+        /**
+         * Sets the hover handler of this button.
+         *
+         * @param onHover the new hover handler
+         * @return this button
+         */
+        public WButton setOnHover(@Nullable Runnable onHover) {
+            this.onHover = onHover;
+            return this;
+        }
+
+        /**
+         * Gets the click handler of this button.
+         *
+         * @return the hover lost handler
+         * @since 2.2.0
+         */
+        @Nullable
+        public Runnable getOnHoverLost() {
+            return onHoverLost;
+        }
+
+        /**
+         * Sets the hover lost handler of this button.
+         *
+         * @param onHoverLost the new hover lost handler
+         * @return this button
+         */
+        public WButton setOnHoverLost(@Nullable Runnable onHoverLost) {
+            this.onHoverLost = onHoverLost;
+            return this;
         }
 
         @Environment(EnvType.CLIENT)
@@ -296,11 +387,22 @@ public class GrimoireGui extends LightweightGuiDescription {
             return (TransparentButton) super.setOnClick(onClick);
         }
 
+        public void setClicked(boolean clicked) {
+            this.clicked = clicked;
+        }
+        @Environment(EnvType.CLIENT)
+        @Override
+        public InputResult onClick(int x, int y, int button) {
+            clicked = !clicked;
+            return super.onClick(x, y, button);
+        }
+
         @Override
         public TransparentButton setLabel(Text label) {
             this.label = label;
             return this;
         }
+
         @Override
         public TransparentButton setIcon(Icon icon) {
             this.icon = icon;
@@ -312,7 +414,7 @@ public class GrimoireGui extends LightweightGuiDescription {
 
         @Override
         public void run() {
-            nextPage();
+            changePage(1);
         }
     }
 
@@ -320,9 +422,82 @@ public class GrimoireGui extends LightweightGuiDescription {
 
         @Override
         public void run() {
-            previousPage();
+            changePage(-1);
         }
     }
 
+    class AddSpellDescription implements Runnable {
+
+        private final int spellNumber;
+
+        private final WLabel spellDescription;
+
+        public AddSpellDescription(int spellNumber, WLabel spellDescription) {
+            this.spellNumber = spellNumber;
+            this.spellDescription = spellDescription;
+        }
+        @Override
+        public void run() {
+            spellDescription.setText(Text.of(player.getSpell(spellNumber).quickDescription()));
+            refresh();
+        }
+    }
+
+    class RemoveSpellDescription implements Runnable {
+
+        private final WLabel spellDescription;
+
+        public RemoveSpellDescription(WLabel spellDescription) {
+            this.spellDescription = spellDescription;
+        }
+        @Override
+        public void run() {
+            spellDescription.setText(Text.of(""));
+            refresh();
+        }
+    }
+
+    class SwapSpells implements Runnable {
+
+        private int nbSpells;
+
+        private int selectedSpell;
+
+        private PlayerMinja player;
+
+        public SwapSpells(int nbSpells, int selectedSpell, PlayerMinja player) {
+            this.nbSpells = nbSpells;
+            this.selectedSpell = selectedSpell;
+            this.player = player;
+        }
+
+        @Override
+        public void run() {
+            int firstSwap = -1;
+            List<Component> displayedButtons = getButtonsSpellWheelDisplayed(nbSpells);
+            for(int i = 0; i < displayedButtons.size(); i++) {
+                TransparentButton currentButton = (TransparentButton) displayedButtons.get(i).getWidget();
+                if(currentButton.clicked) {
+                    if(firstSwap == -1) {
+                        firstSwap = i;
+                    } else { // Swapping spells
+                        player.swapSpells(firstSwap, i);
+                        NetworkEvent.swapSpells(firstSwap, i);
+                        if(selectedSpell == firstSwap) { // Saving selected spell
+                            selectedSpell = i;
+                        } else if (selectedSpell == i) {
+                            selectedSpell = firstSwap;
+                        }
+                        player.setActiveSpell(selectedSpell);
+                        NetworkEvent.updateSpellIndex(selectedSpell);
+                        ((TransparentButton) displayedButtons.get(firstSwap).getWidget()).setClicked(false);
+                        ((TransparentButton) displayedButtons.get(i).getWidget()).setClicked(false);
+                        break;
+                    }
+                }
+            }
+            update();
+        }
+    }
 }
 

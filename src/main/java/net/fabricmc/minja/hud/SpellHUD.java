@@ -54,7 +54,6 @@ public class SpellHUD {
 
 
     public SpellHUD() {
-
         minecraft = MinecraftClient.getInstance();
         worldRenderer = minecraft.worldRenderer;
         fontRenderer = minecraft.textRenderer;

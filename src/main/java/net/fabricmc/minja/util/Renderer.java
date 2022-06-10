@@ -102,7 +102,7 @@ public class Renderer extends DrawableHelper {
      * @param y     Y coordinate
      */
     public static void draw(MatrixStack stack, Spell spell, double x, double y) {
-        draw(stack, spell.getIcon(),x,y);
+        draw(stack, spell.getTexture(),x,y);
     }
 
 }

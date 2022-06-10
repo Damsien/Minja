@@ -48,11 +48,6 @@ public class SoulSparkEntity extends ThrownItemEntity {
         if(!world.isClient) return;
         BlockPos position = getBlockPos();
 
-        System.out.println("Properties :");
-        for(Property p : world.getBlockState(position).getProperties()) {
-            System.out.println(p.getName());
-        }
-
         int i=0;
         while(i<MAX_HEIGHT) {
 

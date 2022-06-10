@@ -1,16 +1,16 @@
 package net.fabricmc.minja.objects;
 
 import net.fabricmc.minja.enumerations.MinjaEvent;
+import net.fabricmc.minja.exceptions.NotEnoughManaException;
 import net.fabricmc.minja.network.NetworkEvent;
 import net.fabricmc.minja.enumerations.Side;
-import net.fabricmc.minja.PlayerMinja;
+import net.fabricmc.minja.player.PlayerMinja;
 import net.fabricmc.minja.hud.SpellHUD;
 import net.fabricmc.minja.spells.SoulSpark;
 import net.fabricmc.minja.spells.Spell;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.text.LiteralText;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.world.World;
@@ -60,7 +60,12 @@ public class Wand extends MinjaItem {
 			PlayerMinja player = (PlayerMinja) playerEntity;
 			Spell courant = player.getActiveSpell();
 			if(!(courant instanceof SoulSpark)) {
-				courant.cast(playerEntity);
+				try {
+					player.removeMana(courant.getManaCost());
+					courant.cast(playerEntity);
+				} catch (NotEnoughManaException e) {
+					System.out.println("Not enought mana");
+				}
 			}
 			return MinjaEvent.SUCCEED;
 		}

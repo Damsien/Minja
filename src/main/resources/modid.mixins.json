@@ -7,9 +7,9 @@
   ],
   "client": [
     "InGameHudMixin",
-    "SpellHudMixin",
-    "PlayerEntityMixin",
     "LivingEntityMixin",
+    "PlayerEntityMixin",
+    "SpellHudMixin",
     "StructureFeatureAccessor"
   ],
   "injectors": {

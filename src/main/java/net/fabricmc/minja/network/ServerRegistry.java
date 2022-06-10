@@ -1,8 +1,10 @@
 package net.fabricmc.minja.network;
 
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.fabricmc.minja.PlayerMinja;
-import net.minecraft.block.Block;
+import net.fabricmc.minja.Minja;
+import net.fabricmc.minja.mixin.PlayerEntityMixin;
+import net.fabricmc.minja.player.PlayerMinja;
+import net.fabricmc.minja.spells.Spell;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -100,6 +102,7 @@ public class ServerRegistry {
         ServerPlayNetworking.registerGlobalReceiver(NetworkEvent.UNHIGHLIGHT_ALL_BLOCKS, (client, player, handler, buf, sender) -> {
             // Read packet data on the event loop
 
+
             client.execute(() -> {
                 // Everything in this lambda is run on the render thread
                 for(RetentionPosition key : retentionHighlightedBlocks.keySet()) {
@@ -107,6 +110,18 @@ public class ServerRegistry {
                     block.remove(Entity.RemovalReason.KILLED);
                     retentionHighlightedBlocks.remove(key);
                 }
+            });
+        });
+
+        ServerPlayNetworking.registerGlobalReceiver(NetworkEvent.SWAP_SPELLS, (client, player, handler, buf, sender) -> {
+            // Read packet data on the event loop
+            int spellIndex1 = buf.readInt();
+            int spellIndex2 = buf.readInt();
+            buf.clear();
+
+            client.execute(() -> {
+                // Everything in this lambda is run on the render thread
+                ((PlayerMinja) player).swapSpells(spellIndex1, spellIndex2);
             });
         });
 

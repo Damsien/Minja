@@ -1,4 +1,4 @@
-package net.fabricmc.minja;
+package net.fabricmc.minja.player;
 
 import net.fabricmc.minja.exceptions.NotEnoughManaException;
 import net.fabricmc.minja.exceptions.SpellNotFoundException;
@@ -7,6 +7,11 @@ import net.fabricmc.minja.spells.Spell;
 import java.util.List;
 
 public interface PlayerMinja {
+
+    /**
+     * MAX_SPELLS is the maximum spells that the player can use
+     */
+    public static final int MAX_SPELLS = 8;
 
     // Spells
 
@@ -61,9 +66,26 @@ public interface PlayerMinja {
      */
     public void setActiveSpell(String name, String type) throws SpellNotFoundException;
 
+    /**
+     * Get the current active spell
+     *
+     * @return the active spell
+     */
     public Spell getActiveSpell();
 
+    /**
+     * Get the current active spell index
+     *
+     * @return the position of the spell in the wheel
+     */
     public int getActiveSpellIndex();
+
+    /**
+     * Switch two spells index of the spells list
+     * @param indexSpell1
+     * @param indexSpell2
+     */
+    public void swapSpells(int indexSpell1, int indexSpell2);
 
     // Mana
 
@@ -72,6 +94,12 @@ public interface PlayerMinja {
      * @param amount between 0 and 100
      */
     public void addMana(int amount);
+
+    /**
+     * Set the amount of mana the player have
+     * @param amount between 0 and 100
+     */
+    public void setMana(int amount);
 
     /**
      * Remove the amount of mana to the current amount the player has

@@ -3,10 +3,15 @@ package net.fabricmc.minja.network;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.minja.enumerations.MouseButton;
+import net.fabricmc.minja.player.PlayerMinja;
+import net.fabricmc.minja.spells.Spell;
 import net.minecraft.entity.EntityType;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
+
+import java.util.List;
 
 /**
  * Send data packet to the "Server" to keep Client and Server Up To Date
@@ -84,6 +89,22 @@ public class NetworkEvent {
      */
     public static void unhightlightAllBlocks() {
         ClientPlayNetworking.send(NetworkEvent.UNHIGHLIGHT_ALL_BLOCKS, PacketByteBufs.empty());
+    }
+
+    /** Identifier for "swap_spells" */
+    public static Identifier SWAP_SPELLS = new Identifier("spells", "swap_spells");
+
+    /**
+     * Swap two spells for a player
+     *
+     * @param spellIndex1 the position of the first spell
+     * @param spellIndex2 the position of the second spell
+     */
+    public static void swapSpells(int spellIndex1, int spellIndex2) {
+        PacketByteBuf buf = PacketByteBufs.create();
+        buf.writeInt(spellIndex1);
+        buf.writeInt(spellIndex2);
+        ClientPlayNetworking.send(NetworkEvent.SWAP_SPELLS, buf);
     }
 
 }

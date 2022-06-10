@@ -21,7 +21,6 @@ import net.minecraft.world.World;
  *		<li> name, mana, available spells, magic level, etc </li>
  * </ul>
  *
- * @author 	Camille Perrin
  *
  */
 public class Grimoire extends MinjaItem {
@@ -47,56 +46,14 @@ public class Grimoire extends MinjaItem {
 		return GRIMOIRE;
 	}
 
-	/*********************************************************************
-	 * 						Clock TODO : TOUT EXPLIQUER
-	 ********************************************************************* */
-
-	private MinecraftClient mc = null;
-
-	private MinecraftClientClock clock = new MinecraftClientClock(10);
-
-	private boolean clockStarted = false;
-
-	private class MinecraftClientClock extends Clock {
-
-		public MinecraftClientClock(long timer) {
-			super(timer);
-		}
-		private World world;
-		private PlayerEntity player;
-		private Hand hand;
-		public void initialise(World world, PlayerEntity player, Hand hand) {
-			this.world = world;
-			this.player = player;
-			this.hand = hand;
-		}
-		@Override
-		public void execute() {
-			MinecraftClient currentMc = MinecraftClient.getInstance();
-			if(currentMc == null) {
-				this.start();
-			} else {
-				mc = currentMc;
-				use(world, player, hand);
-			}
-		}
-	}
-
-	/**
-	 * This method is used when the player use right click with the Wand
-	 */
 	@Override
-	public TypedActionResult<ItemStack> onUse(World world, PlayerEntity player, Hand hand, Side side) {
-		if(mc != null) {
-			GrimoireScreen grimoireScreen = new GrimoireScreen(new GrimoireGui(player));
-			((Screen) grimoireScreen).init(mc, 145, 179);
+	public TypedActionResult<ItemStack> onUse(World world, PlayerEntity user, Hand hand, Side side) {
+		if(side == Side.CLIENT) {
+			GrimoireScreen grimoireScreen = new GrimoireScreen(new GrimoireGui(user));
+			MinecraftClient mc = MinecraftClient.getInstance();
+			((Screen) grimoireScreen).init(mc, 144, 198);
 			mc.setScreen(grimoireScreen);
-		} else {
-			if(!clockStarted) {
-				clockStarted = true;
-				clock.start();
-			}
 		}
-		return super.onUse(world, player, hand, side);
+		return TypedActionResult.success(user.getStackInHand(hand));
 	}
 }

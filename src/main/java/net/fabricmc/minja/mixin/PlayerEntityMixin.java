@@ -2,11 +2,11 @@ package net.fabricmc.minja.mixin;
 
 import com.mojang.authlib.GameProfile;
 import net.fabricmc.minja.Minja;
-import net.fabricmc.minja.clocks.ManaClock;
 import net.fabricmc.minja.events.PlayerEvent;
 import net.fabricmc.minja.exceptions.NotEnoughManaException;
 import net.fabricmc.minja.exceptions.SpellNotFoundException;
-import net.fabricmc.minja.PlayerMinja;
+import net.fabricmc.minja.network.NetworkEvent;
+import net.fabricmc.minja.player.PlayerMinja;
 import net.fabricmc.minja.objects.MinjaItem;
 import net.fabricmc.minja.spells.LightningBall;
 import net.fabricmc.minja.spells.SoulSpark;
@@ -16,6 +16,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -42,14 +43,24 @@ public abstract class PlayerEntityMixin implements PlayerMinja, PlayerEvent {
     private static final int MAX_MANA = 100;
 
     /**
-     * MAX_SPELLS is the maximum spells that the player can use
-     */
-    private static final int MAX_SPELLS = 8;
-
-    /**
      * Mana is a fuel for using spells
      */
     private int mana;
+
+    /**
+     * Global variable used to control the mana regeneration
+     */
+    private int tickSecond = 0;
+
+    /**
+     * The time between each mana regeneration (in ms)
+     */
+    private final static int MANA_REGENERATION_TIME = 3000;
+
+    /**
+     * The amount of mana added to the player for each mana regeneration
+     */
+    private final static int MANA_REGENERATION_AMOUNT = 5;
 
     /**
      * Spells are all the spells that the player can use. It's representing by a wheel
@@ -60,8 +71,6 @@ public abstract class PlayerEntityMixin implements PlayerMinja, PlayerEvent {
      * Active spell is the current selected spell by the player
      */
     private int activeSpell = 0;
-
-    private ManaClock manaClock;
 
     // Constructor
 
@@ -80,20 +89,26 @@ public abstract class PlayerEntityMixin implements PlayerMinja, PlayerEvent {
         this.addSpell(new LightningBall());
         this.addSpell(new Spark());
         this.addSpell(new SoulSpark());
-        System.out.println("=============");
-        if(world.isClient) {
-            System.out.println(MinecraftClient.getInstance().getSession().getUsername());
-            setMana(
-                    ((PlayerMinja)MinecraftClient.getInstance().getServer().getPlayerManager().getPlayer(
-                            MinecraftClient.getInstance().getSession().getUsername())).getMana()
-            );
-        } else {
-            setMana(0);
+
+        ServerPlayerEntity serverPlayer = null;
+
+        // Get the player server side
+        if(MinecraftClient.getInstance().getServer().getPlayerManager().getPlayerList().size() != 0) {
+             serverPlayer = (MinecraftClient.getInstance().getServer()
+                    .getPlayerManager().getPlayer(
+                    MinecraftClient.getInstance().getSession().getUsername()));
         }
-        manaClock = new ManaClock(1500, this);
-        runManaRegeneration();
-        System.out.println("init " + this.getClass());
-        System.out.println("=============");
+
+        setMana(0);
+
+        // Client synchronization with the server
+        if(world.isClient && serverPlayer != null) {
+            setMana(((PlayerMinja)serverPlayer).getMana());
+            setActiveSpell(((PlayerMinja)serverPlayer).getActiveSpellIndex());
+            spells.clear();
+            spells.addAll(((PlayerMinja) serverPlayer).getSpells());
+        }
+
     }
 
     // Spells
@@ -203,6 +218,20 @@ public abstract class PlayerEntityMixin implements PlayerMinja, PlayerEvent {
         return this.activeSpell;
     }
 
+    /**
+     * Switch two spells index of the spells list
+     * @param indexSpell1
+     * @param indexSpell2
+     */
+    public void swapSpells(int indexSpell1, int indexSpell2) {
+        Spell spell1 = spells.get(indexSpell1);
+        Spell spell2 = spells.get(indexSpell2);
+        spells.remove(indexSpell1);
+        spells.add(indexSpell1, spell2);
+        spells.remove(indexSpell2);
+        spells.add(indexSpell2, spell1);
+    }
+
 
     // Mana
 
@@ -210,9 +239,7 @@ public abstract class PlayerEntityMixin implements PlayerMinja, PlayerEvent {
      * Set the amount of mana the player have
      * @param amount between 0 and 100
      */
-    private void setMana(int amount) {
-        System.out.println("Instance : " + this.getClass());
-        System.out.println("Set mana : " + mana);
+    public void setMana(int amount) {
         if(amount < 0) mana = 0;
         else mana = Math.min(amount, MAX_MANA);
     }
@@ -229,7 +256,7 @@ public abstract class PlayerEntityMixin implements PlayerMinja, PlayerEvent {
     /**
      * Remove the amount of mana to the current amount the player has
      * @param amount between 0 and 100
-     * @throws NotEnoughManaException when currentAmount-removedAmount < 0
+     * @throws NotEnoughManaException when currentAmount-removedAmount is under 0
      */
     @Override
     public void removeMana(int amount) throws NotEnoughManaException {
@@ -286,13 +313,6 @@ public abstract class PlayerEntityMixin implements PlayerMinja, PlayerEvent {
 
     }
 
-    private void runManaRegeneration() {
-        manaClock.start();
-    }
-
-    private void stopManaRegeneration() {
-        manaClock.stop();
-    }
 
     /**
      * DO NOT USE
@@ -301,14 +321,12 @@ public abstract class PlayerEntityMixin implements PlayerMinja, PlayerEvent {
      * @param ci
      */
     @Inject(method = "writeCustomDataToNbt", at = @At("RETURN"))
-    public void writeCustomDataToNbt(NbtCompound nbt, CallbackInfo ci) {
+    private void writeCustomDataToNbt(NbtCompound nbt, CallbackInfo ci) {
         nbt.putInt("mana", mana);
-        System.out.println("Instance : " + this.getClass());
-        System.out.println("Write mana : " + mana);
         int i = 0;
         for(Spell spell : spells) {
             if(spell != null) {
-                nbt.putString("spell"+i, spell + "/" + spell.getType() + "/" + i);
+                nbt.putString("spell"+i, spell.getName() + "/" + spell.getType());
                 i++;
             }
         }
@@ -322,28 +340,40 @@ public abstract class PlayerEntityMixin implements PlayerMinja, PlayerEvent {
      * @param ci
      */
     @Inject(method = "readCustomDataFromNbt", at = @At("RETURN"))
-    public void readCustomDataFromNbt(NbtCompound nbt, CallbackInfo ci) {
+    private void readCustomDataFromNbt(NbtCompound nbt, CallbackInfo ci) {
         setMana(nbt.getInt("mana"));
-        System.out.println("Instance : " + this.getClass());
-        System.out.println("Read mana " + mana);
+        spells.clear();
         for(int i = 0; i < MAX_SPELLS; i++) {
             if(nbt.contains("spell"+i)) {
-                spells.add(Minja.SPELLS_MAP.get(
-                        nbt.getString("spell"+i)+"/"+nbt.getString("spell"+i))
-                );
+                addSpell(Minja.SPELLS_MAP.get(
+                        nbt.getString("spell"+i)
+                ));
             }
         }
         if(nbt.contains("activeSpell")) {
-            activeSpell = nbt.getInt("activeSpell");
+            setActiveSpell(nbt.getInt("activeSpell"));
         }
     }
 
+    /**
+     * Tick is triggering every 1/20 second.
+     * It allows the implementation of a clock sync with the game.
+     * @param ci
+     */
     @Inject(method = "tick", at = @At("TAIL"))
     public void tick(CallbackInfo ci) {
         PlayerEntity player = (PlayerEntity) (Object) (this);
         Item item = player.getStackInHand(Hand.MAIN_HAND).getItem();
         if(item instanceof MinjaItem) {
             ((MinjaItem)player.getStackInHand(Hand.MAIN_HAND).getItem()).tick(player.getWorld());
+        }
+
+        tickSecond++;
+        // Triggered every 3 seconds
+        // Mana regeneration
+        if(tickSecond == (20 * (MANA_REGENERATION_TIME / 1000))) {
+            tickSecond = 0;
+            addMana(MANA_REGENERATION_AMOUNT);
         }
     }
 

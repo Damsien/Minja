@@ -3,6 +3,8 @@ package net.fabricmc.minja.util;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.LiteralText;
 
+import java.awt.*;
+
 /**
  * Tool for send a message to a player
  *

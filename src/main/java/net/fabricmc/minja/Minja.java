@@ -4,6 +4,7 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
+import net.fabricmc.minja.enumerations.Environment;
 import net.fabricmc.minja.objects.Grimoire;
 import net.fabricmc.minja.objects.Wand;
 import net.fabricmc.minja.spells.*;
@@ -25,6 +26,8 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import tests.mouse.ClientServerCallFlow;
+import tests.mouse.SideCallFlow;
 
 
 import java.util.HashMap;
@@ -35,6 +38,7 @@ import java.util.Map;
  * It is used for initialisation of minja items, spells, etc
  */
 public class Minja implements ModInitializer {
+
 
 	/*********************************************************************
 	 * 						GENERAL
@@ -64,6 +68,9 @@ public class Minja implements ModInitializer {
 					new Identifier("minja"))
 			.icon(() -> new ItemStack(Wand.getWand())).build();
 
+	public static final ItemGroup MinjaTestGroup = FabricItemGroupBuilder.create(
+					new Identifier("minja_test"))
+			.icon(() -> new ItemStack(Wand.getWand())).build();
 	/**
 	 * Every item created by Minja has to be instancied one here
 	 */
@@ -79,6 +86,14 @@ public class Minja implements ModInitializer {
 	public static final Item SOUL_SPARK = new SoulSparkItem(new Item.Settings().group(MinjaItemGroup).maxCount(1));
 	/* ****************************************************************** */
 
+	/**
+	 * Test development
+	 */
+
+	private static ClientServerCallFlow RUNE0 = new ClientServerCallFlow(new FabricItemSettings().group(MinjaTestGroup).maxCount(1).maxDamage(0));
+
+	private static SideCallFlow RUNE1 = new SideCallFlow(new FabricItemSettings().group(MinjaTestGroup).maxCount(1).maxDamage(0));
+	/* ****************************************************************** */
 	/**
 	 * Regardless of if a spell is linked to an item, every spell has to be an 'Entity' in the game.
 	 * Every spell Entity is registered here
@@ -159,6 +174,14 @@ public class Minja implements ModInitializer {
 
 		Registry.register(Registry.ITEM, new Identifier("spells", "soul_spark"), SOUL_SPARK);
 		LOGGER.info("Spark launched");
+
+		// Dev only
+
+		Registry.register(Registry.ITEM, new Identifier("test", "rune0"), RUNE0);
+		LOGGER.info("Test");
+
+		Registry.register(Registry.ITEM, new Identifier("test", "rune1"), RUNE1);
+		LOGGER.info("Test");
 
 		//Register every Minja structure
 		ModStructures.RegisterStructureFeatures();

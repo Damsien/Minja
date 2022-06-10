@@ -64,7 +64,6 @@ public abstract class MinjaItem extends Item implements ItemEvent, MouseEvent, T
         // Set two use : one for default event, the other one for new events
         TypedActionResult<ItemStack> state1, state2 = null;
 
-        // Get who is client of this event
         Side side = world.isClient ? Side.CLIENT : Side.SERVER;
 
         // Send a first (default) event to the user
@@ -106,7 +105,6 @@ public abstract class MinjaItem extends Item implements ItemEvent, MouseEvent, T
         // Set two use : one for default event, the other one for new events
         MinjaEvent succeed1, succeed2 = MinjaEvent.UNDEFINED;
 
-        // Get who is client of this event
         Side side = world.isClient ? Side.CLIENT : Side.SERVER;
 
         // Send a first (default) event to the user

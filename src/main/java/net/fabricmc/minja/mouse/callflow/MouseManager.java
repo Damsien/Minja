@@ -145,6 +145,7 @@ public class MouseManager {
 
         @Override public TypedActionResult<ItemStack> triggerReleased() {
             isRightClickEnabledOnClient = false;
+            isRightClickEnabledOnServer = false;
             NetworkEvent.triggerMouseReleased(MouseButton.RIGHT);
             Context c = this.getContext();
 
@@ -187,6 +188,7 @@ public class MouseManager {
 
         @Override public MinjaEvent triggerReleased() {
             isLeftClickEnabledOnClient = false;
+            isLeftClickEnabledOnServer = false;
             NetworkEvent.triggerMouseReleased(MouseButton.LEFT);
             Context c = this.getContext();
 

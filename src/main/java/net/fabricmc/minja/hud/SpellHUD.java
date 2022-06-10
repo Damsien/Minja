@@ -56,7 +56,6 @@ public class SpellHUD {
 
     public SpellHUD() {
 
-        minecraft = MinecraftClient.getInstance();
         worldRenderer = minecraft.worldRenderer;
         fontRenderer = minecraft.textRenderer;
         itemRenderer = minecraft.getItemRenderer();
@@ -65,6 +64,10 @@ public class SpellHUD {
 
         visible = false;
         isCenterSet = false;
+    }
+
+    public void updateClient(MinecraftClient client) {
+        this.minecraft = client;
     }
 
     /**

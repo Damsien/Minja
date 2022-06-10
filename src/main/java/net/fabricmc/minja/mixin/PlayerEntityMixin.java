@@ -90,6 +90,7 @@ public abstract class PlayerEntityMixin implements PlayerMinja, PlayerEvent {
         this.addSpell(new Spark());
         this.addSpell(new SoulSpark());
 
+
         ServerPlayerEntity serverPlayer = null;
 
         // Get the player server side
@@ -108,6 +109,7 @@ public abstract class PlayerEntityMixin implements PlayerMinja, PlayerEvent {
             spells.clear();
             spells.addAll(((PlayerMinja) serverPlayer).getSpells());
         }
+
 
     }
 

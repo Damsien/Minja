@@ -1,10 +1,9 @@
 package net.fabricmc.minja.hud;
 
-
-import net.fabricmc.minja.PlayerMinja;
 import net.fabricmc.minja.math.CartesianPoint;
 import net.fabricmc.minja.math.Operations;
 import net.fabricmc.minja.math.PolarPoint;
+import net.fabricmc.minja.player.PlayerMinja;
 import net.fabricmc.minja.textures.SpellHUDTexture;
 import net.fabricmc.minja.util.Renderer;
 import net.minecraft.client.MinecraftClient;
@@ -55,11 +54,7 @@ public class SpellHUD {
 
 
     public SpellHUD() {
-
-        worldRenderer = minecraft.worldRenderer;
-        fontRenderer = minecraft.textRenderer;
-        itemRenderer = minecraft.getItemRenderer();
-        player = (PlayerMinja) minecraft.player;
+        updateClient(MinecraftClient.getInstance());
         centre = new CartesianPoint(minecraft.mouse.getX(),minecraft.mouse.getY());
 
         visible = false;
@@ -67,7 +62,11 @@ public class SpellHUD {
     }
 
     public void updateClient(MinecraftClient client) {
-        this.minecraft = client;
+        minecraft = client;
+        worldRenderer = minecraft.worldRenderer;
+        fontRenderer = minecraft.textRenderer;
+        itemRenderer = minecraft.getItemRenderer();
+        player = (PlayerMinja) minecraft.player;
     }
 
     /**

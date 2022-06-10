@@ -1,6 +1,5 @@
 package net.fabricmc.minja.player;
 
-import net.fabricmc.minja.clocks.ManaClock;
 import net.fabricmc.minja.exceptions.NotEnoughManaException;
 import net.fabricmc.minja.exceptions.SpellNotFoundException;
 import net.fabricmc.minja.spells.Spell;
@@ -67,10 +66,25 @@ public interface PlayerMinja {
      */
     public void setActiveSpell(String name, String type) throws SpellNotFoundException;
 
+    /**
+     * Get the current active spell
+     *
+     * @return the active spell
+     */
     public Spell getActiveSpell();
 
+    /**
+     * Get the current active spell index
+     *
+     * @return the position of the spell in the wheel
+     */
     public int getActiveSpellIndex();
 
+    /**
+     * Switch two spells index of the spells list
+     * @param indexSpell1
+     * @param indexSpell2
+     */
     public void swapSpells(int indexSpell1, int indexSpell2);
 
     // Mana
@@ -105,15 +119,5 @@ public interface PlayerMinja {
      * @return max_mana
      */
     public int getManaMax();
-
-    /**
-     * Stop the player's mana regeneration
-    */
-    public void stopManaRegeneration();
-
-    /**
-     * Start the player's mana regeneration
-     */
-    public void runManaRegeneration();
 
 }

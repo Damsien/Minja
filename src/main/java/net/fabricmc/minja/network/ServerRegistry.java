@@ -36,17 +36,6 @@ public class ServerRegistry {
      */
     public static void registerAllEvents() {
 
-        ServerPlayNetworking.registerGlobalReceiver(NetworkEvent.MANA_REGENERATION, (client, player, handler, buf, sender) -> {
-            // Read packet data on the event loop
-            buf.clear();
-
-            client.execute(() -> {
-                // Everything in this lambda is run on the render thread
-                ((PlayerMinja)player).runManaRegeneration();
-
-            });
-        });
-
         ServerPlayNetworking.registerGlobalReceiver(NetworkEvent.UPDATE_SPELL_INDEX, (client, player, handler, buf, sender) -> {
             // Read packet data on the event loop
             int target = buf.readInt();

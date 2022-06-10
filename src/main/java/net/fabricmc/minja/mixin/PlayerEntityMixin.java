@@ -2,14 +2,11 @@ package net.fabricmc.minja.mixin;
 
 import com.mojang.authlib.GameProfile;
 import net.fabricmc.minja.Minja;
-import net.fabricmc.minja.clocks.ManaClock;
 import net.fabricmc.minja.events.PlayerEvent;
 import net.fabricmc.minja.exceptions.NotEnoughManaException;
 import net.fabricmc.minja.exceptions.SpellNotFoundException;
-import net.fabricmc.minja.network.NetworkEvent;
 import net.fabricmc.minja.player.PlayerMinja;
 import net.fabricmc.minja.objects.MinjaItem;
-import net.fabricmc.minja.player.ServerPlayerMinja;
 import net.fabricmc.minja.spells.LightningBall;
 import net.fabricmc.minja.spells.SoulSpark;
 import net.fabricmc.minja.spells.Spark;
@@ -50,6 +47,21 @@ public abstract class PlayerEntityMixin implements PlayerMinja, PlayerEvent {
     private int mana;
 
     /**
+     * Global variable used to control the mana regeneration
+     */
+    private int tickSecond = 0;
+
+    /**
+     * The time between each mana regeneration (in ms)
+     */
+    private final static int MANA_REGENERATION_TIME = 3000;
+
+    /**
+     * The amount of mana added to the player for each mana regeneration
+     */
+    private final static int MANA_REGENERATION_AMOUNT = 5;
+
+    /**
      * Spells are all the spells that the player can use. It's representing by a wheel
      */
     private final List<Spell> spells = new ArrayList<Spell>(MAX_SPELLS);
@@ -58,10 +70,6 @@ public abstract class PlayerEntityMixin implements PlayerMinja, PlayerEvent {
      * Active spell is the current selected spell by the player
      */
     private int activeSpell = 0;
-
-    private ServerPlayerEntity serverPlayer;
-
-    private ManaClock manaClock;
 
     // Constructor
 
@@ -81,19 +89,21 @@ public abstract class PlayerEntityMixin implements PlayerMinja, PlayerEvent {
         this.addSpell(new Spark());
         this.addSpell(new SoulSpark());
 
+        ServerPlayerEntity serverPlayer = null;
+
+        // Get the player server side
         if(MinecraftClient.getInstance().getServer().getPlayerManager().getPlayerList().size() != 0) {
-            serverPlayer = (MinecraftClient.getInstance().getServer().getPlayerManager().getPlayer(
+             serverPlayer = (MinecraftClient.getInstance().getServer()
+                    .getPlayerManager().getPlayer(
                     MinecraftClient.getInstance().getSession().getUsername()));
         }
 
         setMana(0);
+
+        // Client synchronization with the server
         if(world.isClient && serverPlayer != null) {
             setMana(((PlayerMinja)serverPlayer).getMana());
-            ((ServerPlayerMinja)serverPlayer).setPlayer(this);
-        }
-
-        if(world.isClient) {
-            runManaRegeneration();
+            setActiveSpell(((PlayerMinja)serverPlayer).getActiveSpellIndex());
         }
 
     }
@@ -205,6 +215,11 @@ public abstract class PlayerEntityMixin implements PlayerMinja, PlayerEvent {
         return this.activeSpell;
     }
 
+    /**
+     * Switch two spells index of the spells list
+     * @param indexSpell1
+     * @param indexSpell2
+     */
     public void swapSpells(int indexSpell1, int indexSpell2) {
         Spell spell1 = spells.get(indexSpell1);
         Spell spell2 = spells.get(indexSpell2);
@@ -240,6 +255,8 @@ public abstract class PlayerEntityMixin implements PlayerMinja, PlayerEvent {
      */
     @Override
     public void removeMana(int amount) throws NotEnoughManaException {
+        System.out.println(this.getClass());
+        System.out.println(amount);
         if(mana-amount < 0) {
             throw new NotEnoughManaException("Not enought mana", amount, mana);
         }
@@ -293,21 +310,6 @@ public abstract class PlayerEntityMixin implements PlayerMinja, PlayerEvent {
 
     }
 
-    /**
-     * Start the player's mana regeneration
-     */
-    public void runManaRegeneration() {
-        manaClock = ManaClock.getInstance(3000, this);
-        manaClock.start();
-    }
-
-    /**
-     * Stop the player's mana regeneration
-     */
-    public void stopManaRegeneration() {
-        manaClock.stop();
-    }
-
 
     /**
      * DO NOT USE
@@ -349,12 +351,25 @@ public abstract class PlayerEntityMixin implements PlayerMinja, PlayerEvent {
         }
     }
 
+    /**
+     * Tick is triggering every 1/20 second.
+     * It allows the implementation of a clock sync with the game.
+     * @param ci
+     */
     @Inject(method = "tick", at = @At("TAIL"))
     public void tick(CallbackInfo ci) {
         PlayerEntity player = (PlayerEntity) (Object) (this);
         Item item = player.getStackInHand(Hand.MAIN_HAND).getItem();
         if(item instanceof MinjaItem) {
             ((MinjaItem)player.getStackInHand(Hand.MAIN_HAND).getItem()).tick(player.getWorld());
+        }
+
+        tickSecond++;
+        // Triggered every 3 seconds
+        // Mana regeneration
+        if(tickSecond == (20 * (MANA_REGENERATION_TIME / 1000))) {
+            tickSecond = 0;
+            addMana(MANA_REGENERATION_AMOUNT);
         }
     }
 

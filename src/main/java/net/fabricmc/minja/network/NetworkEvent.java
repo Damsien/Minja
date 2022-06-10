@@ -20,18 +20,6 @@ import java.util.List;
  */
 public class NetworkEvent {
 
-    /** Identifier for running mana regeneration (or registering the callback) */
-    public static Identifier MANA_REGENERATION = new Identifier("player", "mana_regeneration");
-
-    /**
-     *  Run mana regeneration
-     */
-    public static void runManaRegeneration() {
-        PacketByteBuf buf = PacketByteBufs.create();
-        ClientPlayNetworking.send(NetworkEvent.MANA_REGENERATION, buf);
-    }
-
-
     /** Identifier for triggering a mouse release (or registering the callback) */
     public static Identifier MOUSE_TRIGGER_RELEASED = new Identifier("mouse", "released");
 

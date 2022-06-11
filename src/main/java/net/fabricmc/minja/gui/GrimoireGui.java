@@ -1,36 +1,20 @@
 package net.fabricmc.minja.gui;
 
 import io.github.cottonmc.cotton.gui.client.BackgroundPainter;
-import io.github.cottonmc.cotton.gui.client.LibGui;
 import io.github.cottonmc.cotton.gui.client.LightweightGuiDescription;
-import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
 import io.github.cottonmc.cotton.gui.widget.*;
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment;
-import io.github.cottonmc.cotton.gui.widget.data.InputResult;
 import io.github.cottonmc.cotton.gui.widget.data.Insets;
 import io.github.cottonmc.cotton.gui.widget.data.VerticalAlignment;
-import io.github.cottonmc.cotton.gui.widget.icon.Icon;
 import io.github.cottonmc.cotton.gui.widget.icon.TextureIcon;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.fabricmc.minja.network.NetworkEvent;
-import net.fabricmc.minja.objects.Grimoire;
 import net.fabricmc.minja.player.PlayerMinja;
 import net.fabricmc.minja.spells.Spell;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.narration.Narration;
-import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
-import net.minecraft.client.gui.screen.narration.NarrationPart;
-import net.minecraft.client.gui.widget.ClickableWidget;
-import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
-import org.checkerframework.checker.units.qual.C;
-import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
@@ -39,7 +23,7 @@ public class GrimoireGui extends LightweightGuiDescription {
 
     public int cpt = 0;
     private static BackgroundPainter BACKGROUND = BackgroundPainter.createNinePatch(
-            new Identifier("gui:textures/leftpagegrimoireopen.png")
+            new Identifier("gui:textures/grimoiretexture.png")
     );
     private Map<Integer, String> pages;
 
@@ -74,22 +58,7 @@ public class GrimoireGui extends LightweightGuiDescription {
         pages.put(2, "page2");
         initSpellWheel();
 
-        //WLabel mana = new WLabel(new LiteralText("Current mana : " + ((PlayerMinja) player).getMana() + "/" + ((PlayerMinja) player).getManaMax()), 0x000000);
-        //pages.get(2).add(new Component(mana, 0, 5, 2, 1));
-
-        //WSprite icon = new WSprite(new Identifier("minecraft:textures/item/redstone.png"));
-        //root.add(icon, 10, 10, 18, 18);
-        /*
-        WButton button = new WButton(new TextureIcon(new Identifier("gui:textures/rightarrow.png")), Text.of("Button"));
-        root.add(button, 0, 3, 3, 1);
-        button = button.setOnClick(new Test());
-
-        WLabel mana = new WLabel(new LiteralText("Current mana : " + ((PlayerMinja) player).getMana() + "/" + ((PlayerMinja) player).getManaMax()), 0x000000);
-        root.add(mana, 0, 5, 2, 1);
-
-        WLabel spells = new WLabel(new LiteralText(((PlayerMinja) player).getSpells().toString()));
-        root.add(spells, 0, 7, 2, 1);
-        */
+        /* DISPLAYING FIRST PAGE */
         display();
     }
 
@@ -254,181 +223,6 @@ public class GrimoireGui extends LightweightGuiDescription {
         return buttonsDisplayed;
     }
 
-    class Component {
-        private int[] coords;
-        private WWidget widget;
-
-        public Component(WWidget widget, int x, int y, int w, int h){
-            this.coords = new int[4];
-            this.coords[0] = x;
-            this.coords[1] = y;
-            this.coords[2] = w;
-            this.coords[3] = h;
-            this.widget = widget;
-        }
-
-        public int[] getCoords(){
-            return this.coords;
-        }
-
-        public WWidget getWidget(){
-            return this.widget;
-        }
-
-        public void setWidget(WWidget widget){
-            this.widget = widget;
-        }
-    }
-
-    class TransparentButton extends WButton {
-
-        @Nullable
-        private Icon icon = null;
-        @Nullable
-        private Text label;
-
-        @Nullable
-        private Runnable onHover = null;
-
-        @Nullable
-        private Runnable onHoverLost = null;
-
-        private boolean recentlyHovered = false;
-
-        private boolean clicked = false;
-
-        public TransparentButton(Icon icon, Text label) {
-            super();
-            this.icon = icon;
-            this.label = label;
-        }
-
-        public TransparentButton() {
-            super();
-            this.icon = null;
-            this.label = null;
-        }
-
-        @Environment(EnvType.CLIENT)
-        @Override
-        public void tick() {
-            if(isHovered()) { // onHover
-                recentlyHovered = true;
-                if(onHover != null) {onHover.run();}
-            } else {
-                if(recentlyHovered) { // onHoverLost
-                    recentlyHovered = false;
-                    if(onHoverLost != null) {onHoverLost.run();}
-                }
-            }
-        }
-
-        /**
-         * Gets the hover handler of this button.
-         *
-         * @return the hover handler
-         * @since 2.2.0
-         */
-        @Nullable
-        public Runnable getOnHover() {
-            return onHover;
-        }
-
-        /**
-         * Sets the hover handler of this button.
-         *
-         * @param onHover the new hover handler
-         * @return this button
-         */
-        public WButton setOnHover(@Nullable Runnable onHover) {
-            this.onHover = onHover;
-            return this;
-        }
-
-        /**
-         * Gets the click handler of this button.
-         *
-         * @return the hover lost handler
-         * @since 2.2.0
-         */
-        @Nullable
-        public Runnable getOnHoverLost() {
-            return onHoverLost;
-        }
-
-        /**
-         * Sets the hover lost handler of this button.
-         *
-         * @param onHoverLost the new hover lost handler
-         * @return this button
-         */
-        public WButton setOnHoverLost(@Nullable Runnable onHoverLost) {
-            this.onHoverLost = onHoverLost;
-            return this;
-        }
-
-        @Environment(EnvType.CLIENT)
-        @Override
-        public void paint(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
-            boolean hovered = (mouseX>=0 && mouseY>=0 && mouseX<getWidth() && mouseY<getHeight());
-            int state = 1; //1=regular. 2=hovered. 0=disabled.
-            if (hovered || isFocused()) {
-                state = 2;
-            }
-
-            float px = 1/256f;
-            float buttonLeft = 0 * px;
-            float buttonTop = (46 + (state*20)) * px;
-            int halfWidth = getWidth()/2;
-            if (halfWidth>198) halfWidth=198;
-            float buttonWidth = halfWidth*px;
-            float buttonHeight = 20*px;
-
-            float buttonEndLeft = (200-(getWidth()/2)) * px;
-
-            Identifier texture = new Identifier("gui:textures/void.png"); //new Identifier("libgui", "textures/widget/dark_widgets.png");
-            ScreenDrawing.texturedRect(matrices, x, y, getWidth()/2, 20, texture, buttonLeft, buttonTop, buttonLeft+buttonWidth, buttonTop+buttonHeight, 0xFFFAEE);
-            ScreenDrawing.texturedRect(matrices, x+(getWidth()/2), y, getWidth()/2, 20, texture, buttonEndLeft, buttonTop, 200*px, buttonTop+buttonHeight, 0xFFFAEE);
-
-            if (icon != null) {
-                icon.paint(matrices, x + 1, y + 1, 16);
-            }
-
-            if (label != null) {
-                int color = 0xE0E0E0;
-
-                int xOffset = (icon != null && alignment == HorizontalAlignment.LEFT) ? 18 : 0;
-                ScreenDrawing.drawStringWithShadow(matrices, label.asOrderedText(), alignment, x + xOffset, y + ((20 - 8) / 2), width, color);
-            }
-        }
-
-        public TransparentButton setOnClick(@Nullable Runnable onClick) {
-            return (TransparentButton) super.setOnClick(onClick);
-        }
-
-        public void setClicked(boolean clicked) {
-            this.clicked = clicked;
-        }
-        @Environment(EnvType.CLIENT)
-        @Override
-        public InputResult onClick(int x, int y, int button) {
-            clicked = !clicked;
-            return super.onClick(x, y, button);
-        }
-
-        @Override
-        public TransparentButton setLabel(Text label) {
-            this.label = label;
-            return this;
-        }
-
-        @Override
-        public TransparentButton setIcon(Icon icon) {
-            this.icon = icon;
-            return this;
-        }
-    }
-
     class NextPage implements Runnable {
 
         @Override
@@ -523,7 +317,7 @@ public class GrimoireGui extends LightweightGuiDescription {
             List<Component> displayedButtons = getButtonsSpellWheelDisplayed(nbSpells);
             for(int i = 0; i < displayedButtons.size(); i++) {
                 TransparentButton currentButton = (TransparentButton) displayedButtons.get(i).getWidget();
-                if(currentButton.clicked) {
+                if(currentButton.isClicked()) {
                     if(firstSwap == -1) {
                         firstSwap = i;
                     } else { // Swapping spells

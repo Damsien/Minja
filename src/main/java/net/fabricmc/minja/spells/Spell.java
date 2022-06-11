@@ -26,7 +26,7 @@ public abstract class Spell {
     abstract public void cast(LivingEntity player);
 
     public String quickDescription() {
-        return getName() + ": " + getManaCost() + " mana";
+        return "(" + getType() + ") " + getName();
     }
 
     public String getName() {

@@ -8,6 +8,7 @@ import io.github.cottonmc.cotton.gui.widget.*;
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment;
 import io.github.cottonmc.cotton.gui.widget.data.InputResult;
 import io.github.cottonmc.cotton.gui.widget.data.Insets;
+import io.github.cottonmc.cotton.gui.widget.data.VerticalAlignment;
 import io.github.cottonmc.cotton.gui.widget.icon.Icon;
 import io.github.cottonmc.cotton.gui.widget.icon.TextureIcon;
 import net.fabricmc.api.EnvType;
@@ -194,8 +195,26 @@ public class GrimoireGui extends LightweightGuiDescription {
         WLabel pageNumber = new WLabel(new LiteralText("Page : " + currentPage + "/" + pages.size()));
         components.add(new Component(pageNumber, 5, 0, 3, 1));
 
-        WLabel spellDescription = new WLabel(new LiteralText(""));
-        components.add(new Component(spellDescription, 0, 2, 6, 1));
+        WLabel title = new WLabel(new LiteralText(""));
+        title.setVerticalAlignment(VerticalAlignment.CENTER);
+        components.add(new Component(title, 0, 1, 3, 1));
+
+        WLabel text = new WLabel(new LiteralText(""));
+        text.setVerticalAlignment(VerticalAlignment.CENTER);
+        components.add(new Component(text, 0, 2, 6, 1));
+
+        WLabel manaCost = new WLabel(new LiteralText(""));
+        manaCost.setVerticalAlignment(VerticalAlignment.CENTER);
+        manaCost.setHorizontalAlignment(HorizontalAlignment.RIGHT);
+        components.add(new Component(manaCost, 0, 3, 1, 1));
+
+        WSprite manaIcon = new WSprite(new Identifier("gui:textures/void.png"));
+        components.add(new Component(manaIcon, 1, 3, 1, 1));
+
+        WLabel swap = new WLabel(new LiteralText(""));
+        swap.setHorizontalAlignment(HorizontalAlignment.CENTER);
+        swap.setVerticalAlignment(VerticalAlignment.CENTER);
+        components.add(new Component(swap, 1, 9, 6, 1));
 
         /* SPELL WHEEL */
 
@@ -211,9 +230,9 @@ public class GrimoireGui extends LightweightGuiDescription {
         for(Component currentComponent : getButtonsSpellWheelDisplayed(nbSpells)) {
             TransparentButton currentButton = (TransparentButton) currentComponent.getWidget();
             currentButton.setIcon(new TextureIcon(spells.get(currentSpell).getIcon()));
-            currentComponent.setWidget(currentButton.setOnHover(new AddSpellDescription(currentSpell, spellDescription)));
-            currentComponent.setWidget(currentButton.setOnHoverLost(new RemoveSpellDescription(spellDescription)));
-            currentComponent.setWidget(currentButton.setOnClick(new SwapSpells(nbSpells, selectedSpell, player)));
+            currentComponent.setWidget(currentButton.setOnHover(new AddSpellDescription(currentSpell, title, text, manaCost, manaIcon)));
+            currentComponent.setWidget(currentButton.setOnHoverLost(new RemoveSpellDescription(title, text, manaCost, manaIcon)));
+            currentComponent.setWidget(currentButton.setOnClick(new SwapSpells(nbSpells, selectedSpell, player, swap)));
             components.add(currentComponent);
             currentSpell++;
         }
@@ -430,29 +449,53 @@ public class GrimoireGui extends LightweightGuiDescription {
 
         private final int spellNumber;
 
+        private final WLabel description;
+
         private final WLabel spellDescription;
 
-        public AddSpellDescription(int spellNumber, WLabel spellDescription) {
+        private final WLabel manaCost;
+
+        private final WSprite manaIcon;
+
+        public AddSpellDescription(int spellNumber, WLabel description, WLabel spellDescription, WLabel manaCost, WSprite manaIcon) {
             this.spellNumber = spellNumber;
+            this.description = description;
             this.spellDescription = spellDescription;
+            this.manaCost = manaCost;
+            this.manaIcon = manaIcon;
         }
         @Override
         public void run() {
+            description.setText(Text.of("Description :"));
             spellDescription.setText(Text.of(player.getSpell(spellNumber).quickDescription()));
+            manaCost.setText(Text.of(String.valueOf(player.getSpell(spellNumber).getManaCost())));
+            manaIcon.setImage(new Identifier("gui:textures/manadroplet.png"));
             refresh();
         }
     }
 
     class RemoveSpellDescription implements Runnable {
 
+        private final WLabel description;
+
         private final WLabel spellDescription;
 
-        public RemoveSpellDescription(WLabel spellDescription) {
+        private final WLabel manaCost;
+
+        private final WSprite manaIcon;
+
+        public RemoveSpellDescription(WLabel description, WLabel spellDescription, WLabel manaCost, WSprite manaIcon) {
+            this.description = description;
             this.spellDescription = spellDescription;
+            this.manaCost = manaCost;
+            this.manaIcon = manaIcon;
         }
         @Override
         public void run() {
+            description.setText(Text.of(""));
             spellDescription.setText(Text.of(""));
+            manaCost.setText(Text.of(""));
+            manaIcon.setImage(new Identifier("gui:textures/void.png"));
             refresh();
         }
     }
@@ -465,10 +508,13 @@ public class GrimoireGui extends LightweightGuiDescription {
 
         private PlayerMinja player;
 
-        public SwapSpells(int nbSpells, int selectedSpell, PlayerMinja player) {
+        private final WLabel swap;
+
+        public SwapSpells(int nbSpells, int selectedSpell, PlayerMinja player, WLabel swap) {
             this.nbSpells = nbSpells;
             this.selectedSpell = selectedSpell;
             this.player = player;
+            this.swap = swap;
         }
 
         @Override
@@ -492,11 +538,18 @@ public class GrimoireGui extends LightweightGuiDescription {
                         NetworkEvent.updateSpellIndex(selectedSpell);
                         ((TransparentButton) displayedButtons.get(firstSwap).getWidget()).setClicked(false);
                         ((TransparentButton) displayedButtons.get(i).getWidget()).setClicked(false);
+                        firstSwap = -1;
+                        update();
                         break;
                     }
                 }
             }
-            update();
+            if(firstSwap != -1) {
+                swap.setText(Text.of("Swapping : " + player.getSpell(firstSwap).getName()));
+            } else {
+                swap.setText(Text.of(""));
+            }
+            refresh();
         }
     }
 }

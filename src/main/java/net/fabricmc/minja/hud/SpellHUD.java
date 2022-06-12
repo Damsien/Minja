@@ -12,6 +12,7 @@ import net.minecraft.client.render.WorldRenderer;
 import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.command.argument.EntityAnchorArgumentType;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.LiteralText;
 import net.minecraft.util.math.Vec3d;
@@ -33,10 +34,6 @@ import net.minecraft.util.math.Vec3d;
 public class SpellHUD {
 
     private MinecraftClient minecraft;
-    private WorldRenderer worldRenderer;
-    private TextRenderer fontRenderer;
-
-    private ItemRenderer itemRenderer;
     private PlayerMinja player;
 
     private static CartesianPoint centre;
@@ -63,9 +60,6 @@ public class SpellHUD {
 
     public void updateClient(MinecraftClient client) {
         minecraft = client;
-        worldRenderer = minecraft.worldRenderer;
-        fontRenderer = minecraft.textRenderer;
-        itemRenderer = minecraft.getItemRenderer();
         player = (PlayerMinja) minecraft.player;
     }
 

@@ -27,6 +27,7 @@ import net.minecraft.util.registry.Registry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import tests.mouse.ClientServerCallFlow;
+import tests.mouse.Priorite;
 import tests.mouse.SideCallFlow;
 
 
@@ -93,6 +94,8 @@ public class Minja implements ModInitializer {
 	private static ClientServerCallFlow RUNE0 = new ClientServerCallFlow(new FabricItemSettings().group(MinjaTestGroup).maxCount(1).maxDamage(0));
 
 	private static SideCallFlow RUNE1 = new SideCallFlow(new FabricItemSettings().group(MinjaTestGroup).maxCount(1).maxDamage(0));
+
+	private static Priorite RUNE2 = new Priorite(new FabricItemSettings().group(MinjaTestGroup).maxCount(1).maxDamage(0));
 	/* ****************************************************************** */
 	/**
 	 * Regardless of if a spell is linked to an item, every spell has to be an 'Entity' in the game.
@@ -185,6 +188,9 @@ public class Minja implements ModInitializer {
 		LOGGER.info("Test");
 
 		Registry.register(Registry.ITEM, new Identifier("test", "rune1"), RUNE1);
+		LOGGER.info("Test");
+
+		Registry.register(Registry.ITEM, new Identifier("test", "rune2"), RUNE2);
 		LOGGER.info("Test");
 
 		//Register every Minja structure

@@ -5,7 +5,9 @@ import net.fabricmc.minja.objects.MinjaItem;
 import net.fabricmc.minja.util.Messenger;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.Hand;
+import net.minecraft.util.TypedActionResult;
 import net.minecraft.world.World;
 
 public class ClientServerCallFlow extends MinjaItem {
@@ -29,7 +31,6 @@ public class ClientServerCallFlow extends MinjaItem {
         return MinjaEvent.SUCCEED;
     }
 
-
     @Override public MinjaEvent onLeftClickClientMaintained(World world, PlayerEntity playerEntity, Hand hand, boolean otherClickSelected) {
         Messenger.sendMessage(playerEntity, "§3Left click §bMAINTAINED §3from §6CLIENT");
         return MinjaEvent.SUCCEED;
@@ -49,6 +50,36 @@ public class ClientServerCallFlow extends MinjaItem {
     @Override public MinjaEvent onLeftClickServerReleased(World world, PlayerEntity playerEntity, Hand hand, boolean otherClickSelected) {
         Messenger.sendMessage(playerEntity, "§4Left click §cRELEASED §4from §6SERVER");
         return MinjaEvent.SUCCEED;
+    }
+
+    @Override public TypedActionResult<ItemStack> onRightClickClientPressed(World world, PlayerEntity playerEntity, Hand hand, boolean otherClickSelected) {
+        Messenger.sendMessage(playerEntity, "§2Left click §aPRESSED §2from §6CLIENT");
+        return TypedActionResult.success(playerEntity.getStackInHand(hand));
+    }
+    @Override public TypedActionResult<ItemStack> onRightClickServerPressed(World world, PlayerEntity playerEntity, Hand hand, boolean otherClickSelected) {
+        Messenger.sendMessage(playerEntity, "§2Left click §aPRESSED §2from §dSERVER");
+        return TypedActionResult.success(playerEntity.getStackInHand(hand));
+    }
+
+    @Override public TypedActionResult<ItemStack> onRightClickClientMaintained(World world, PlayerEntity playerEntity, Hand hand, boolean otherClickSelected) {
+        Messenger.sendMessage(playerEntity, "§3Left click §bMAINTAINED §3from §6CLIENT");
+        return TypedActionResult.success(playerEntity.getStackInHand(hand));
+    }
+
+    @Override public TypedActionResult<ItemStack> onRightClickServerMaintained(World world, PlayerEntity playerEntity, Hand hand, boolean otherClickSelected) {
+        Messenger.sendMessage(playerEntity, "§3Left click §bMAINTAINED §3from §dSERVER");
+        return TypedActionResult.success(playerEntity.getStackInHand(hand));
+    }
+
+
+    @Override public TypedActionResult<ItemStack> onRightClickClientReleased(World world, PlayerEntity playerEntity, Hand hand, boolean otherClickSelected) {
+        Messenger.sendMessage(playerEntity, "§4Left click §cRELEASED §4from §6CLIENT");
+        return TypedActionResult.success(playerEntity.getStackInHand(hand));
+    }
+
+    @Override public TypedActionResult<ItemStack> onRightClickServerReleased(World world, PlayerEntity playerEntity, Hand hand, boolean otherClickSelected) {
+        Messenger.sendMessage(playerEntity, "§4Left click §cRELEASED §4from §6SERVER");
+        return TypedActionResult.success(playerEntity.getStackInHand(hand));
     }
 
 }

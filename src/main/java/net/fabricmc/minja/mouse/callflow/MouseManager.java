@@ -97,6 +97,8 @@ public class MouseManager {
      */
     public MinjaEvent triggerLeftClickAction(World w, PlayerEntity u, Hand h, Side s) {
 
+        if(isRightClickEnabledOnClient) return MinjaEvent.SUCCEED;
+
         // Get the targeted callFlow
         GenericCallFlow<MinjaEvent> callFlow = (s == Side.CLIENT) ?  leftClickClient : leftClickServer;
 

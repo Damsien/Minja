@@ -13,6 +13,10 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+/**
+ * Display of the mana bar
+ *
+ */
 @Mixin(InGameHud.class)
 public abstract class InGameHudMixin extends DrawableHelper {
 
@@ -57,7 +61,6 @@ public abstract class InGameHudMixin extends DrawableHelper {
 
             // draw one mana droplet at a time
             for (int i = 0; i < 10; i++) {
-                // TODO : Move (currently hide) the mana bar if the player is riding
                 int j = width - i * 8 - 9;
                 // get the texture of the mana
                 RenderSystem.setShaderTexture(0, MANA_ICON);
@@ -79,21 +82,9 @@ public abstract class InGameHudMixin extends DrawableHelper {
     }
 
     // Methods needed but not modified so @Shadow
-
     @Shadow
     private PlayerEntity getCameraPlayer() {
         return null;
     }
-/*
-    @Shadow
-    private LivingEntity getRiddenEntity() {
-        return null;
-    }
-
-    @Shadow
-    private int getHeartCount(LivingEntity entity) {
-        return 0;
-    }
-*/
 
 }

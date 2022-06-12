@@ -5,7 +5,6 @@ import net.fabricmc.minja.enumerations.Side;
 /**
  * Exception raised when a method is called in an incorrect context.
  *
- * @author      Tom Froment
  */
 public class InvalidContextException extends RuntimeException {
 

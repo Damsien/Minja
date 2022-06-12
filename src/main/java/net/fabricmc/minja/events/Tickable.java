@@ -5,7 +5,6 @@ import net.fabricmc.minja.enumerations.Side;
 /**
  *  Events related to tick system
  *
- *  @author      Tom Froment
  */
 public interface Tickable {
 

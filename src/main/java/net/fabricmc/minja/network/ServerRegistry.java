@@ -23,7 +23,6 @@ import java.util.Objects;
 /**
  * Registry for all global functions
  *
- * @author      Tom Froment
  */
 public class ServerRegistry {
 
@@ -32,7 +31,6 @@ public class ServerRegistry {
     /**
      * Register all the global functions
      *
-     * @author      Tom Froment
      */
     public static void registerAllEvents() {
 
@@ -132,7 +130,6 @@ public class ServerRegistry {
     /**
      * Representation of the position of a block to compare two objects BlockPos
      *
-     * @author      Tom Froment
      */
     static private class RetentionPosition {
         int x;

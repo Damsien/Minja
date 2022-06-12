@@ -3,7 +3,6 @@ package net.fabricmc.minja.enumerations;
 /**
  *  Side of an event
  *
- *  @author      Tom Froment
  */
 public enum Side {
 

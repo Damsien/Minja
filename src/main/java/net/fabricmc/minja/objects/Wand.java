@@ -24,7 +24,6 @@ import net.minecraft.world.World;
  *		<li> cast it if he/she has enough mana with a left click (when pressing or releasing depending on the spell) </li>
  * </ul>
  *
- * @author 	Tom Froment
  *
  */
 

@@ -12,7 +12,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 /**
  *  Events related to a Mouse
  *
- *  @author      Tom Froment
  */
 public interface PlayerEvent {
 

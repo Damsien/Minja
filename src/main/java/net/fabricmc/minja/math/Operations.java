@@ -3,7 +3,6 @@ package net.fabricmc.minja.math;
 /**
  * Mathematical operations
  *
- * @author      Tom Froment
  *
  */
 public class Operations {

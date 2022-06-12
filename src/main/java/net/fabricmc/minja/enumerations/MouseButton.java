@@ -3,7 +3,6 @@ package net.fabricmc.minja.enumerations;
 /**
  *  Identifiable buttons
  *
- * @author      Tom Froment
  */
 public enum MouseButton {
     /**

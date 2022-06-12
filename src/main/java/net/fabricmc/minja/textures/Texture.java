@@ -7,7 +7,6 @@ import org.spongepowered.asm.mixin.Mixin;
 /**
  * Representation of a texture
  *
- * @author Tom Froment
  */
 public abstract class Texture {
 

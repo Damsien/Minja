@@ -16,7 +16,6 @@ import java.awt.*;
 /**
  * Tool for drawing objects of different nature in a HUD
  *
- * @author     Tom Froment
  */
 public class Renderer extends DrawableHelper {
 

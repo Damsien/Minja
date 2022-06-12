@@ -16,7 +16,6 @@ import java.util.List;
 /**
  * Send data packet to the "Server" to keep Client and Server Up To Date
  *
- * @author      Tom Froment
  */
 public class NetworkEvent {
 

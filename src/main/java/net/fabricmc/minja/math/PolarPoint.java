@@ -3,7 +3,6 @@ package net.fabricmc.minja.math;
 /**
  * Representation of a Polar point in a two-dimensional frame of reference
  *
- * @author      Tom Froment
  *
  */
 public class PolarPoint {

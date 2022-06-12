@@ -28,8 +28,6 @@ import net.minecraft.util.math.Vec3d;
  *  <li>The player must interact with it to choose his current spell, preferably by "blocking" his mouse. Its display should be only when desired by the player (GUI)</li>
  * </ul>
  *
- *
- * @author      Tom Froment
  */
 public class SpellHUD {
 

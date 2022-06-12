@@ -31,8 +31,6 @@ import java.util.List;
 /**
  * Injection to the class PlayerEntity
  *
- * @author      Damien Dassieu
- * @author      Tom Froment
  */
 @Mixin(PlayerEntity.class)
 public abstract class PlayerEntityMixin implements PlayerMinja, PlayerEvent {

@@ -13,7 +13,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 /**
  * Injection to the class InGameHud to add Spell wheel.
  *
- * @author      Tom Froment
  */
 @Mixin(InGameHud.class)
 public abstract class SpellHudMixin {

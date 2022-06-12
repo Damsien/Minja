@@ -3,7 +3,6 @@ package net.fabricmc.minja.enumerations;
 /**
  *  State of a cancellable event
  *
- * @author      Tom Froment
  */
 public enum MinjaEvent {
 

@@ -5,7 +5,6 @@ import net.minecraft.util.Identifier;
 /**
  * Texture useful for the Spell wheel HUD
  *
- * @author Tom Froment
  */
 public class SpellHUDTexture {
 

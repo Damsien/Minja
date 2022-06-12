@@ -18,7 +18,6 @@ import net.minecraft.world.World;
  *  Mouse click manager that centralizes all the functional part into an Item
  *
  *
- * @author      Tom Froment
  */
 public class MouseManager {
 

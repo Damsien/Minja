@@ -9,7 +9,6 @@ import net.fabricmc.minja.mouse.context.Context;
  *
  * @see GenericCallFlow
  *
- * @author      Tom Froment
  */
 public abstract class LeftClickCallFlow<EventCallback> extends GenericCallFlow<EventCallback> {
 

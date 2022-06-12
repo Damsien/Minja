@@ -5,7 +5,6 @@ import net.minecraft.util.Identifier;
 /**
  * Texture of a Soul Spark.
  *
- * @author Tom Froment
  */
 public class SoulSparkTexture extends Texture {
 

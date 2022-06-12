@@ -12,7 +12,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 /**
  * Injection to the class LivingEntity
  *
- * @author      Tom Froment
  */
 @Mixin(LivingEntity.class)
 public class LivingEntityMixin {

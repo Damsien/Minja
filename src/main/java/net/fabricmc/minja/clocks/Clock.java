@@ -30,8 +30,6 @@ package net.fabricmc.minja.clocks;
  *}
  * </pre>
  *
- * @author      Tom Froment
- * @author      Damien Dassieu
  *
  */
 public abstract class Clock implements Runnable {

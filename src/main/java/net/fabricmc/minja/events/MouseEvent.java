@@ -11,7 +11,6 @@ import net.minecraft.world.World;
 /**
  *  Events related to the mouse
  *
- *  @author      Tom Froment
  */
 public interface MouseEvent {
 

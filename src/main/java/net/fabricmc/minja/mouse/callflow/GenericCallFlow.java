@@ -24,7 +24,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
  *
  * @param <EventCallback> Type of return of callback functions
  *
- * @author      Tom Froment
  */
 public abstract class GenericCallFlow<EventCallback> {
 

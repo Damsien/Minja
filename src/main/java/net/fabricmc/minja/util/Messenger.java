@@ -8,7 +8,6 @@ import java.awt.*;
 /**
  * Tool for send a message to a player
  *
- * @author     Tom Froment
  */
 public class Messenger {
 

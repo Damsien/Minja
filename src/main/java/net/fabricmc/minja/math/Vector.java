@@ -7,7 +7,6 @@ import net.minecraft.util.math.Vec3d;
 /**
  * Additional tool to perform operations on vectors (Vec3d)
  *
- * @author      Tom Froment
  */
 public class Vector {
 

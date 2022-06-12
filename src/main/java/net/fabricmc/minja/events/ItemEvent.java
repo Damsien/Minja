@@ -11,7 +11,6 @@ import net.minecraft.world.World;
 /**
  *  Events related to an Item
  *
- *  @author      Tom Froment
  */
 public interface ItemEvent {
 

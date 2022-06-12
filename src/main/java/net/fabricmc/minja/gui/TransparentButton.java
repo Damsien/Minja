@@ -12,7 +12,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
 
-class TransparentButton extends WButton {
+public class TransparentButton extends WButton {
 
     @Nullable
     private Icon icon = null;

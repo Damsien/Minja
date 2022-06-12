@@ -2,7 +2,7 @@ package net.fabricmc.minja.gui;
 
 import io.github.cottonmc.cotton.gui.widget.WWidget;
 
-class Component {
+public class Component {
     private int[] coords;
     private WWidget widget;
 

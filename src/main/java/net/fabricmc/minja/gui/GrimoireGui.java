@@ -21,7 +21,6 @@ import java.util.*;
 
 public class GrimoireGui extends LightweightGuiDescription {
 
-    public int cpt = 0;
     private static BackgroundPainter BACKGROUND = BackgroundPainter.createNinePatch(
             new Identifier("gui:textures/grimoiretexture.png")
     );

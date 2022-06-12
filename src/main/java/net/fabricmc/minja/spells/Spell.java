@@ -25,27 +25,27 @@ public abstract class Spell {
 
     abstract public void cast(LivingEntity player);
 
-    public String quickDescription() {
+    public final String quickDescription() {
         return "(" + getType() + ") " + getName();
     }
 
-    public String getName() {
+    public final String getName() {
         return name;
     }
 
-    public int getManaCost() {
+    public final int getManaCost() {
         return manaCost;
     }
 
-    public Texture getTexture() {
+    public final Texture getTexture() {
         return texture;
     }
 
-    public Identifier getIcon() {
+    public final Identifier getIcon() {
         return icon;
     }
 
-    public String getType() {
+    public final String getType() {
         return type;
     }
 }

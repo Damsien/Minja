@@ -22,6 +22,10 @@ import net.minecraft.util.registry.Registry;
 
 import java.util.UUID;
 
+/**
+ * Minja is the loaded first loaded when the Mod is initializing.
+ * It is used for registering Minja spell entities in order to be rendered by the game
+ */
 public class MinjaClient implements ClientModInitializer {
     public static final Identifier PacketID = new Identifier("spells", "spawn_packet");
     @Override

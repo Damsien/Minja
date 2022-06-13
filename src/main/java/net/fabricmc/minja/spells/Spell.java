@@ -8,6 +8,10 @@ import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
 
+/**
+ * Spell defines attributes of a spell and a cast method
+ *
+ */
 public abstract class Spell {
     private String name;
     private int manaCost;
@@ -23,8 +27,18 @@ public abstract class Spell {
         this.type = type;
     }
 
+    /**
+     * Cast the spell. Activated by a wand hold by player
+     *
+     * @param player Player holding the wand
+     */
     abstract public void cast(LivingEntity player);
 
+    /**
+     * Quick description of the spell
+     *
+     * @return "(SpellType) SpellName"
+     */
     public final String quickDescription() {
         return "(" + getType() + ") " + getName();
     }

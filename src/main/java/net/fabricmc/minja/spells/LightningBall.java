@@ -7,6 +7,10 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 
+/**
+ * LightningBall is a spell summoning LightningBallEntity
+ *
+ */
 public class LightningBall extends SpellProjectile {
 
     public LightningBall() {
@@ -15,6 +19,7 @@ public class LightningBall extends SpellProjectile {
 
     @Override
     public void cast(LivingEntity player) {
+        // Summoning the lightning ball projectile with the use of LightningBallItem
         LightningBallItem.getLightningBall().use(player.world, (PlayerEntity) player, Hand.MAIN_HAND);
     }
 }

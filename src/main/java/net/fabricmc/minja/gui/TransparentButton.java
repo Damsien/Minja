@@ -12,21 +12,45 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * TransparentButton is a WButton without any background (basic background of Minecraft buttons)
+ * TransparentButton also defines a onHover/onHoverLost method because the coloration of the background isn't applied
+ *
+ */
 public class TransparentButton extends WButton {
 
+    /**
+     * Icon is the skin of the button as the background is transparent
+     */
     @Nullable
     private Icon icon = null;
+
+    /**
+     * A text can be displayed at the right of the icon
+     */
     @Nullable
     private Text label;
 
+    /**
+     * Runnable executed when the button is hovered
+     */
     @Nullable
     private Runnable onHover = null;
 
+    /**
+     * Runnable executed when the button was hovered
+     */
     @Nullable
     private Runnable onHoverLost = null;
 
+    /**
+     * True when hovered put to false when onHoverLost has been executed
+     */
     private boolean recentlyHovered = false;
 
+    /**
+     * True when the button is clicked once, false if twice (This boolean can be set with setClicked)
+     */
     private boolean clicked = false;
 
     public TransparentButton(Icon icon, Text label) {
@@ -41,6 +65,9 @@ public class TransparentButton extends WButton {
         this.label = null;
     }
 
+    /**
+     * Method called by the game on each tick
+     */
     @Environment(EnvType.CLIENT)
     @Override
     public void tick() {
@@ -56,10 +83,9 @@ public class TransparentButton extends WButton {
     }
 
     /**
-     * Gets the hover handler of this button.
+     * Get the hover runnable
      *
-     * @return the hover handler
-     * @since 2.2.0
+     * @return the hover runnable
      */
     @Nullable
     public Runnable getOnHover() {
@@ -67,10 +93,10 @@ public class TransparentButton extends WButton {
     }
 
     /**
-     * Sets the hover handler of this button.
+     * Set the hover runnable
      *
-     * @param onHover the new hover handler
-     * @return this button
+     * @param onHover the new hover runnable
+     * @return this button with the new hover runnable
      */
     public WButton setOnHover(@Nullable Runnable onHover) {
         this.onHover = onHover;
@@ -78,10 +104,9 @@ public class TransparentButton extends WButton {
     }
 
     /**
-     * Gets the click handler of this button.
+     * Get the hover lost runnable
      *
-     * @return the hover lost handler
-     * @since 2.2.0
+     * @return the hover lost runnable
      */
     @Nullable
     public Runnable getOnHoverLost() {
@@ -89,16 +114,64 @@ public class TransparentButton extends WButton {
     }
 
     /**
-     * Sets the hover lost handler of this button.
+     * Set the hover lost runnable
      *
-     * @param onHoverLost the new hover lost handler
-     * @return this button
+     * @param onHoverLost the new hover lost runnable
+     * @return this button with the new hover lost runnable
      */
     public WButton setOnHoverLost(@Nullable Runnable onHoverLost) {
         this.onHoverLost = onHoverLost;
         return this;
     }
 
+    /**
+     * Set the click runnable
+     *
+     * @param onClick the new click runnable
+     * @return this button with the new click runnable
+     */
+    public TransparentButton setOnClick(@Nullable Runnable onClick) {
+        return (TransparentButton) super.setOnClick(onClick);
+    }
+
+    /**
+     * Set the clicked boolean
+     *
+     * @param clicked the new value of clicked
+     */
+    public void setClicked(boolean clicked) {
+        this.clicked = clicked;
+    }
+
+    /**
+     * Get the clicked boolean
+     *
+     * @return the value of clicked
+     */
+    public boolean isClicked() {
+        return this.clicked;
+    }
+
+    /**
+     * Method called on button click
+     * This method also modify the boolean clicked before executing onClick runnable
+     *
+     * @param x the position of the mouse
+     * @param y the coordinates of the event
+     * @param button the button pressed of the mouse
+     * @return Input result
+     */
+    @Environment(EnvType.CLIENT)
+    @Override
+    public InputResult onClick(int x, int y, int button) {
+        clicked = !clicked;
+        return super.onClick(x, y, button);
+    }
+
+    /**
+     * Method called by the panel containing this button
+     *
+     */
     @Environment(EnvType.CLIENT)
     @Override
     public void paint(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
@@ -118,7 +191,7 @@ public class TransparentButton extends WButton {
 
         float buttonEndLeft = (200-(getWidth()/2)) * px;
 
-        Identifier texture = new Identifier("gui:textures/void.png"); //new Identifier("libgui", "textures/widget/dark_widgets.png");
+        Identifier texture = new Identifier("gui:textures/void.png"); // Basic background of a button : new Identifier("libgui", "textures/widget/dark_widgets.png");
         ScreenDrawing.texturedRect(matrices, x, y, getWidth()/2, 20, texture, buttonLeft, buttonTop, buttonLeft+buttonWidth, buttonTop+buttonHeight, 0xFFFAEE);
         ScreenDrawing.texturedRect(matrices, x+(getWidth()/2), y, getWidth()/2, 20, texture, buttonEndLeft, buttonTop, 200*px, buttonTop+buttonHeight, 0xFFFAEE);
 
@@ -134,31 +207,24 @@ public class TransparentButton extends WButton {
         }
     }
 
-    public TransparentButton setOnClick(@Nullable Runnable onClick) {
-        return (TransparentButton) super.setOnClick(onClick);
-    }
-
-    public void setClicked(boolean clicked) {
-        this.clicked = clicked;
-    }
-
-    public boolean isClicked() {
-        return this.clicked;
-    }
-
-    @Environment(EnvType.CLIENT)
-    @Override
-    public InputResult onClick(int x, int y, int button) {
-        clicked = !clicked;
-        return super.onClick(x, y, button);
-    }
-
+    /**
+     * Set the label
+     *
+     * @param label the new value of label
+     * @return this button with the new label
+     */
     @Override
     public TransparentButton setLabel(Text label) {
         this.label = label;
         return this;
     }
 
+    /**
+     * Set the icon
+     *
+     * @param icon the new value of icon
+     * @return this button with the new icon
+     */
     @Override
     public TransparentButton setIcon(Icon icon) {
         this.icon = icon;

@@ -2,6 +2,10 @@ package net.fabricmc.minja.gui;
 
 import io.github.cottonmc.cotton.gui.widget.WWidget;
 
+/**
+ * Component references a widget with its coordinates
+ *
+ */
 public class Component {
     private int[] coords;
     private WWidget widget;

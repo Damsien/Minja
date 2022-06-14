@@ -7,6 +7,10 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 
+/**
+ * Spark is a spell summoning SparkEntity
+ *
+ */
 public class Spark extends SpellProjectile {
 
     public Spark() {
@@ -15,7 +19,7 @@ public class Spark extends SpellProjectile {
 
     @Override
     public void cast(LivingEntity player) {
-
+        // Summoning the lightning ball projectile with the use of an item
         SparkItem.getSpark().use(player.world, (PlayerEntity) player, Hand.MAIN_HAND);
     }
 }

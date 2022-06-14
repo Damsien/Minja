@@ -10,6 +10,9 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.registry.Registry;
 
+/**
+ * Class used to render entities in the game
+ */
 public class EntitySpawnPacket {
     public static Packet<?> create(Entity e, Identifier packetID) {
         if (e.world.isClient)

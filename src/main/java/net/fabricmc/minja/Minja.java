@@ -4,7 +4,6 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
-import net.fabricmc.minja.enumerations.Environment;
 import net.fabricmc.minja.objects.Grimoire;
 import net.fabricmc.minja.objects.Wand;
 import net.fabricmc.minja.spells.*;
@@ -21,7 +20,6 @@ import net.minecraft.entity.SpawnGroup;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import org.slf4j.Logger;
@@ -35,8 +33,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Minja is the class that if first used when the MOD is launching.
- * It is used for initialisation of minja items, spells, etc
+ * Minja is the first loaded class when the Mod is initializing.
+ * It is used for all Minja initializations
  */
 public class Minja implements ModInitializer {
 
@@ -73,7 +71,7 @@ public class Minja implements ModInitializer {
 					new Identifier("minja_test"))
 			.icon(() -> new ItemStack(Wand.getWand())).build();
 	/**
-	 * Every item created by Minja has to be instancied one here
+	 * Every item created by Minja has to be instancied once
 	 */
 	private static Wand WAND = new Wand(new FabricItemSettings().group(MinjaItemGroup).maxCount(1).maxDamage(0));
 	private static Grimoire GRIMOIRE = new Grimoire(new FabricItemSettings().group(MinjaItemGroup).maxCount(1).maxDamage(0));
@@ -98,8 +96,8 @@ public class Minja implements ModInitializer {
 	private static Priorite RUNE2 = new Priorite(new FabricItemSettings().group(MinjaTestGroup).maxCount(1).maxDamage(0));
 	/* ****************************************************************** */
 	/**
-	 * Regardless of if a spell is linked to an item, every spell has to be an 'Entity' in the game.
-	 * Every spell Entity is registered here
+	 * Regardless of if a spell is linked to an item, every SpellProjectile must have an 'Entity' in the game.
+	 * Every Spell Entity is registered here
 	 */
 	public static final EntityType<LightningBallEntity> LightningBallEntityType = Registry.register(
 			Registry.ENTITY_TYPE,
@@ -133,15 +131,14 @@ public class Minja implements ModInitializer {
 	 ********************************************************************* */
 
 	/**
-	 * CETTE LIGNE DOIT ETRE EXPLIQUEE : ARNAUD ???
-	 * En plus spells_map n'est jamais utilisé, normal ?
-	 * TODO : A EXPLIQUER
+	 * Map<SpellName, SpellObject> with all spells in it
 	 */
 	public static Map<String, Spell> SPELLS_MAP = initializeAllSpells();
 
 	/**
-	 * CETTE FINCTION DOIT ETRE EXPLIQUEE : DAMIEN
-	 * TODO : A EXPLIQUER
+	 * Method initializing all spells of Minja
+	 *
+	 * @return Map<SpellName, SpellObject> with all spells in it
 	 */
 	private static Map<String, Spell> initializeAllSpells() {
 		Map<String, Spell> map = new HashMap<String, Spell>();
@@ -162,7 +159,7 @@ public class Minja implements ModInitializer {
 
 	/**
 	 * This code runs as soon as Minecraft is in a mod-load-ready state.
-	 * It is used to initialize (register) every item we created so it can be in the game.
+	 * It is used to initialize (register) every item we created, so it can be in the game.
 	 * Warning : some things (like resources) may still be uninitialized.
 	 */
 	@Override

@@ -84,6 +84,7 @@ public abstract class PlayerEntityMixin implements PlayerMinja, PlayerEvent {
      */
     @Inject(at = @At("TAIL"), method = "<init>")
     private void init(World world, BlockPos pos, float yaw, GameProfile profile, CallbackInfo info) {
+        // Currently unlocking all spells for player
         for(Spell spell : Minja.SPELLS_MAP.values()) {
             this.addSpell(spell);
         }

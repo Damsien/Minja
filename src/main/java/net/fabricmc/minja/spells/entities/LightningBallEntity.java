@@ -18,6 +18,10 @@ import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
+/**
+ * LightningBallEntity is an entity summoning a lightning bolt on collision with any block or entity
+ *
+ */
 public class LightningBallEntity extends ThrownItemEntity {
 
         public LightningBallEntity(EntityType<LightningBallEntity> lightningBallEntityEntityType, World world) {
@@ -56,32 +60,57 @@ public class LightningBallEntity extends ThrownItemEntity {
 
         }
 
+    /**
+     * Method called automatically by the game when LightningBallEntity hit an entity
+     * A lightning bolt is summoned at its position
+     *
+     * @param entityHitResult Entity hit
+     */
     protected void onEntityHit(EntityHitResult entityHitResult) {
         super.onEntityHit(entityHitResult);
         Entity entity = entityHitResult.getEntity();
+        // Trigger LightningBallEntity effect
         effect(entity.getPos());
     }
 
+    /**
+     * Method called automatically by the game when LightningBallEntity hit a block
+     * A lightning bolt is summoned at its position
+     *
+     * @param hitResult Block hit
+     */
     protected void onCollision(HitResult hitResult) {
         super.onCollision(hitResult);
+        // Trigger LightningBallEntity effect
         effect(hitResult.getPos());
-        // Deleting entity
+        // Deleting LightningBallEntity
         if (!this.world.isClient) {
             this.world.sendEntityStatus(this, (byte)3);
             this.kill();
         }
     }
 
+    /**
+     * Method called automatically by the game when LightningBallEntity go into water
+     * A lightning bolt is summoned at its position
+     *
+     */
     protected void onSwimmingStart() {
         super.onSwimmingStart();
+        // Trigger LightningBallEntity effect
         effect(this.getPos());
-        // Deleting entity
+        // Deleting LightningBallEntity
         if (!this.world.isClient) {
             this.world.sendEntityStatus(this, (byte)3);
             this.kill();
         }
     }
 
+    /**
+     * Method generalising the effect of the spell, here, spawning the lightning ball
+     *
+     * @param pos Coordinates where the lightning bolt must be summoned
+     */
     private void effect(Vec3d pos) {
         LightningEntity lightning = new LightningEntity(EntityType.LIGHTNING_BOLT, world);
         lightning.setPosition(pos);
